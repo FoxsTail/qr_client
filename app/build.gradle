@@ -1,0 +1,87 @@
+apply plugin: 'com.android.application'
+
+
+
+android {
+    if (project.hasProperty("devBuild")) {
+        splits.abi.enable = false
+        splits.density.enable = false
+        aaptOptions.cruncherEnabled = false
+    }
+
+    compileSdkVersion 27
+    buildToolsVersion '27.0.2'
+
+    defaultConfig {
+
+        applicationId "com.lis.qr_client"
+
+        /*set to minSdk 21 to make faster*/
+        minSdkVersion 21
+        targetSdkVersion 27
+        multiDexEnabled true
+
+        /*reset to multi lang back when everything is done*/
+        resConfigs "en", "rus", "ua"
+        resConfigs "xhdpi"
+
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        /*jackOptions {
+            enabled true
+        }*/
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        //pickFirst  'META-INF/*'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/notice.txt'
+    }
+}
+
+
+
+
+dependencies {
+    //db
+    //compile 'com.idescout.sql:sqlscout-server:2.0'
+    //betterCode
+    //android
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.0', {
+        //  exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'org.projectlombok:lombok:1.16.20'
+    compile 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+}
+
+configurations {
+    //temporary, replace in the place which was pointed in the warning about "android smth is already has it"
+    all {
+        // exclude module: 'httpclient'
+        exclude module: 'commons-logging'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.1'
+}
+
+
+

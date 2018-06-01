@@ -1,0 +1,21 @@
+/* ------- Достать файл бд SQLite ------- */
+
+adb shell "run-as com.lis.qr_proj chmod 666 /data/data/com.lis.qr_proj/databases/Mydb"
+
+adb exec-out run-as com.lis.qr_proj cat databases/Mydb > copied.db
+#or
+(файл должен быть создан в месте получения C:\mydb.db)
+
+adb pull /data/data/com.lis.qr_proj/databases/Mydb C:\mydb.db
+
+adb shell "run-as com.lis.qr_proj chmod 600 /data/data/com.lis.qr_proj/databases/Mydb"
+
+//--------------------//
+
+adb shell "run-as com.yourappName cat /data/data/com.yourappName/files/myfile.txt > /sdcard/Downloads/myfile.txt"
+
+adb pull /sdcard/Downloads/myfile.txt
+
+/*----------                    ----------*/
+
+
