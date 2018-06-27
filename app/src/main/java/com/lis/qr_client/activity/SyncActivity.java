@@ -61,7 +61,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
         dbHelper = new DBHelper(this);
         db = dbHelper.getWritableDatabase();
 
-        initCursor(this);
+        initCursor();
 
     }
 
@@ -76,7 +76,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (item.getItemId()) {
             case R.id.menu_sync: {
-                new HttpClient(this).execute();
+                new HttpClient().execute();
             }
             break;
         }
@@ -93,7 +93,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
             break;
             case R.id.btnDel: {
                 db.delete("user", null, null);
-                initCursor(this);
+                initCursor();
                 btnNext.setEnabled(false);
             }
             break;
@@ -134,7 +134,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
 
     //---------------- Cursor --------------------//
 
-    private void initCursor(Context mContext) {
+    private void initCursor() {
         cursor = db.query("user", new String[]{"username", "email"},
                 null, null, null, null, null);
 
@@ -148,7 +148,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
             tvEmail.setText(cursor.getString(emailColumnIndex));
             btnNext.setEnabled(true);
         } else {
-            Toast.makeText(mContext, "DB is empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "DB is empty", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -171,14 +171,11 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
     class HttpClient extends AsyncTask<Void, Integer, Void> {
         private Context mContext;
 
-        public HttpClient(Context mContext) {
-            this.mContext = mContext;
-        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Toast.makeText(mContext, "Start synchronization", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Start synchronization", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -215,7 +212,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            initCursor(mContext);
+            initCursor();
         }
     }
 }

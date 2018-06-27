@@ -9,4 +9,7 @@
     <string name="name">Name:</string>
     <string name="del">Delete</string>
     <string name="test">Test</string>
+    <string name="message">some message</string>
+    <string name="scan">Scan QR-code</string>
+    <string name="create_qr">Create qr-code from data</string>
 </resources>

@@ -31,8 +31,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     SQLiteDatabase db;
 
-    SyncClient syncClient;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,9 +79,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     cv.put("password", password);
                     cv.put("email", email);
 
-                    long i = db.insert("user", null, cv);
-
-                    log.info("----User successfully added----" + i);
+                    long i;
+                    db.beginTransaction();
+                    try {
+                         i = db.insert("user", null, cv);
+                        db.setTransactionSuccessful();
+                        log.info("----User successfully added----" + i);
+                    }finally {
+                        db.endTransaction();
+                    }
                     etName.setText("");
                     etPassword.setText("");
                     etEmail.setText("");
@@ -114,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             break;
             case R.id.btnSync: {
 
-                new SyncClient(this).execute();
+                new SyncClient().execute();
                 log.info("----Synchronizing----");
             }
             break;
@@ -126,17 +130,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     class SyncClient extends AsyncTask<Void, Void, Void>{
         private ProgressBar progressBar = findViewById(R.id.progressBar);
-        private Context mContext;
 
-        public SyncClient(Context mContext) {
-            this.mContext = mContext;
-        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
              progressBar.setVisibility(View.VISIBLE);
-            Toast.makeText(mContext, "Synchronization", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Synchronization", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             progressBar.setVisibility(View.INVISIBLE);
-            Toast.makeText(mContext, "Done!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Done!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
