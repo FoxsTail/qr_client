@@ -31,7 +31,7 @@
             android:text="@string/scan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnScan"
+            android:id="@+id/btnScanQr"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="136dp"
             android:layout_marginLeft="148dp" app:layout_constraintLeft_toLeftOf="parent"/>
@@ -40,10 +40,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnCreateQr" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/btnScan" android:layout_marginLeft="0dp"
-            app:layout_constraintLeft_toLeftOf="@+id/btnScan"/>
-
-
+            app:layout_constraintTop_toBottomOf="@+id/btnScanQr" android:layout_marginLeft="0dp"
+            app:layout_constraintLeft_toLeftOf="@+id/btnScanQr"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:srcCompat="@color/zxing_status_text"
+            android:id="@+id/ivScan" android:layout_marginTop="110dp"
+            app:layout_constraintTop_toBottomOf="@+id/btnCreateQr" android:layout_marginLeft="44dp"
+            app:layout_constraintLeft_toLeftOf="@+id/btnCreateQr"/>
 
 
 </android.support.constraint.ConstraintLayout>

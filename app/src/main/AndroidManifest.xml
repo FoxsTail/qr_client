@@ -37,7 +37,9 @@
         <activity android:name=".activity.ScannerActivity">
         </activity>
         -->
-        <activity android:name=".activity.QrCreationActivity">
+        <activity android:name=".activity.ScannerActivity$QrCreationActivity">
+        </activity>
+        <activity android:name=".activity.CameraActivity">
         </activity>
     </application>
 
