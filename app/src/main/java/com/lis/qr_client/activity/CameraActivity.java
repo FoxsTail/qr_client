@@ -183,9 +183,15 @@ public class CameraActivity extends AppCompatActivity {
             d(TAG, "---OnPreviewFrame-----");
 
             /*skip the first preview frame, cause after second start it keeps
-            * old info, thus duplicates result.*/
-            if(skipFirstPreviewFrame == 0){
-                skipFirstPreviewFrame = 1;
+            * old info, thus duplicates result.
+            *
+            * Sometimes it works, sometimes no, idk how to fix this shit
+            * */
+
+            //TODO:  try to replace with manual SurfaceView creation or Buffer, it may help
+
+            if(skipFirstPreviewFrame < 3){
+                skipFirstPreviewFrame ++;
                 d(TAG, "---Magic happend-----");
                 return;
             }
