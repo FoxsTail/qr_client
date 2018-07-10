@@ -1,0 +1,68 @@
+  //----------------------Take photo, save to inmemory/ show on screen---------------//
+
+    File directory;
+    ImageView ivScan;
+
+    ivScan = findViewById(R.id.ivScan);
+
+
+  /*Intent to take photos, an app to handle was found -> startActivityForResult, put this on the button */
+
+             /*       //take usual photo put on screen/def storage
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                createDirectoryForPhotos();
+                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                    //intent.putExtra(MediaStore.EXTRA_OUTPUT, generateFileUri(TYPE_PHOTO));
+                    startActivityForResult(cameraIntent, REQUEST_CODE_PHOTO);
+                }*/
+
+
+      /*Show usual photo on the screen, put this in the onActivityResult*/
+
+
+       /*   if(resultCode == RESULT_OK){
+              if(requestCode == REQUEST_CODE_PHOTO){
+
+                  Bundle bundle = intent.getExtras();
+
+                  if(bundle != null){
+                      Object obj = bundle.get("data");
+
+                      if(obj instanceof Bitmap){
+                          Bitmap bitmap = (Bitmap) obj;
+                          ivScan.setImageBitmap(bitmap);
+
+                          log.info("Image bitmap " +bitmap.getHeight()+ " "+ bitmap.getWidth());
+                      }
+                  }
+              }
+          }*/
+
+            private Uri generateFileUri(int type_photo) {
+                  File file = null;
+
+                  if (type_photo == TYPE_PHOTO) {
+                      file = new File(directory.getPath() + "/photo_" + System.currentTimeMillis() + ".jpg");
+                      log.info("dir path " + directory.getAbsolutePath());
+                      log.info("file path" + file.getAbsolutePath());
+                  }
+
+                  return Uri.fromFile(file);
+              }
+
+
+               private void createDirectoryForPhotos() {
+                      directory = new File(
+                              Environment
+                                      .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                              "MyFolder");
+                      if (!directory.exists())
+                          directory.mkdirs();
+                  }
+
+
+
+         //-----------------------------------------------------------------//
+
+
+

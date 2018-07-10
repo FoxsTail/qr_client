@@ -29,16 +29,12 @@ public class ScannerActivity extends AppCompatActivity implements View.OnClickLi
         System.loadLibrary("iconv");
     }
 
-    File directory;
-
     final int TYPE_PHOTO = 1;
-    final int REQUEST_CODE_PHOTO = 1;
+    final int REQUEST_SCAN_QR = 1;
 
     TextView tvScanFormat;
     TextView tvScanContent;
     Button btnScan, btnCreateQr;
-
-    ImageView ivScan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +49,6 @@ public class ScannerActivity extends AppCompatActivity implements View.OnClickLi
         btnCreateQr = findViewById(R.id.btnCreateQr);
         btnCreateQr.setOnClickListener(this);
 
-        ivScan = findViewById(R.id.ivScan);
-
-
     }
 
     @Override
@@ -69,18 +62,9 @@ public class ScannerActivity extends AppCompatActivity implements View.OnClickLi
             }
             break;
 
-            /*Intent to take photos, an app to handle was found -> startActivityForResult */
             case R.id.btnScanQr: {
                 Intent intent = new Intent(this, CameraActivity.class);
-                startActivity(intent);
-
-             /*   //take photo put on screen/def storage
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                createDirectoryForPhotos();
-                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                    //intent.putExtra(MediaStore.EXTRA_OUTPUT, generateFileUri(TYPE_PHOTO));
-                    startActivityForResult(cameraIntent, REQUEST_CODE_PHOTO);
-                }*/
+                startActivityForResult(intent, REQUEST_SCAN_QR);
             }
             break;
         }
@@ -98,57 +82,18 @@ public class ScannerActivity extends AppCompatActivity implements View.OnClickLi
         log.info("-----------on result-------");
 
         if (resultCode == RESULT_OK) {
+            if(requestCode == REQUEST_SCAN_QR) {
 
-            String result = intent.getStringExtra("scan");
+                String result = intent.getStringExtra("scan");
 
-            Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-
+                Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+            }
         } else if (resultCode == RESULT_CANCELED) {
 
             Toast.makeText(this, "Great mission was canceled", Toast.LENGTH_LONG).show();
         }
 
-        /*Show photo on the screen*/
-      /*  if(resultCode == RESULT_OK){
-            if(requestCode == REQUEST_CODE_PHOTO){
 
-                Bundle bundle = intent.getExtras();
-
-                if(bundle != null){
-                    Object obj = bundle.get("data");
-
-                    if(obj instanceof Bitmap){
-                        Bitmap bitmap = (Bitmap) obj;
-                        ivScan.setImageBitmap(bitmap);
-
-                        log.info("Image bitmap " +bitmap.getHeight()+ " "+ bitmap.getWidth());
-                    }
-                }
-            }
-        }*/
-    }
-
-
-    private Uri generateFileUri(int type_photo) {
-        File file = null;
-
-        if (type_photo == TYPE_PHOTO) {
-            file = new File(directory.getPath() + "/photo_" + System.currentTimeMillis() + ".jpg");
-            log.info("dir path " + directory.getAbsolutePath());
-            log.info("file path" + file.getAbsolutePath());
-        }
-
-        return Uri.fromFile(file);
-    }
-
-
-    private void createDirectoryForPhotos() {
-        directory = new File(
-                Environment
-                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "MyFolder");
-        if (!directory.exists())
-            directory.mkdirs();
     }
 
     //class for AsyncQRGenerator calling. We had to use intent. Otherwise

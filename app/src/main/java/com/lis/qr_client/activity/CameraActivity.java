@@ -170,8 +170,6 @@ public class CameraActivity extends AppCompatActivity {
         }
     };
 
-    /*------------------*/
-
 
 
     /*read data from preview pic*/
@@ -188,7 +186,7 @@ public class CameraActivity extends AppCompatActivity {
             * Sometimes it works, sometimes no, idk how to fix this shit
             * */
 
-            //TODO:  try to replace with manual SurfaceView creation or Buffer, it may help
+            //TODO: try to replace with manual SurfaceView creation or PreviewCallbackWithBuffer, it may help
 
             if(skipFirstPreviewFrame < 3){
                 skipFirstPreviewFrame ++;
