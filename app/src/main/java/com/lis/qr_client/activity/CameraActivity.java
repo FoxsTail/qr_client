@@ -16,12 +16,15 @@ import java.io.IOException;
 
 import static android.util.Log.d;
 
+//TODO:hardwork in ui thread, if instant run is off the app will crash. Change to AsyncTask the hardwork then u can turn off instant run
 public class CameraActivity extends AppCompatActivity {
 
     /*Methods run in this order:
     onCreate, Previewer, OnResume, safeCameraOpen, SurfCreated,
     SurfChanged, (multiple) onPreviewFrame, (when found) OnPause,
     ReleaseCamera, SurfDestroyed*/
+
+    /*Scan every frame for qr-code existing, if there is one, parse for data and transfer to the parent activity*/
 
     private SurfaceView svScan;
     int skipFirstPreviewFrame;
@@ -37,6 +40,8 @@ public class CameraActivity extends AppCompatActivity {
 
     private final int CAMERA_ID = 0;
     public static final String TAG = "Camera";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,13 +220,13 @@ public class CameraActivity extends AppCompatActivity {
                 String scanTextResult = null;
                 for (Symbol sym : symbols) {
                     scanTextResult = sym.getData();
-                    Toast.makeText(getApplicationContext(), scanTextResult, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), scanTextResult, Toast.LENGTH_LONG).show();
                     barcodeScanned = true;
                 }
         /*Return scanned data to the parent activity*/
                 if (barcodeScanned) {
                     Intent intent = new Intent();
-                    intent.putExtra("scan", scanTextResult);
+                    intent.putExtra("scan_result", scanTextResult);
                     setResult(RESULT_OK, intent);
                     finish();
                 }

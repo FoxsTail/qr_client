@@ -84,7 +84,7 @@ public class ScannerActivity extends AppCompatActivity implements View.OnClickLi
         if (resultCode == RESULT_OK) {
             if(requestCode == REQUEST_SCAN_QR) {
 
-                String result = intent.getStringExtra("scan");
+                String result = intent.getStringExtra("scan_result");
 
                 Toast.makeText(this, result, Toast.LENGTH_LONG).show();
             }

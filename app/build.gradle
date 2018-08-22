@@ -8,17 +8,15 @@ android {
         splits.density.enable = false
         aaptOptions.cruncherEnabled = false
     }
-
-    compileSdkVersion 28
+    compileSdkVersion 27
     buildToolsVersion '27.0.2'
-
     defaultConfig {
 
         applicationId "com.lis.qr_client"
 
         /*set to minSdk 21 to make faster*/
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 27
         multiDexEnabled true
 
         /*reset to multi lang back when everything is done*/
@@ -48,6 +46,8 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/notice.txt'
     }
+    productFlavors {
+    }
 }
 
 
@@ -56,27 +56,27 @@ android {
 dependencies {
     //db
     //compile 'com.idescout.sql:sqlscout-server:2.0'
-
     //betterCode
-
     //qr-code
     compile files('libs/zbar.jar')
-
     //android
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.0', {
         //  exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    //compile 'com.android.support:appcompat-v7:28.0.0-alpha3'
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    //compile 'com.android.support:support-media-compat:28.0.0-alpha3'
+    //compile 'com.android.support:support-v4:28.0.0-alpha3'
     compile 'com.google.zxing:core:3.3.0'
     compile 'com.journeyapps:zxing-android-embedded:3.5.0'
     compile 'org.projectlombok:lombok:1.16.20'
     compile 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
-    //compile 'com.android.support:appcompat-v7:27.0.2'
-    compile group: 'com.android.support', name: 'appcompat-v7', version: '28.0.0-alpha3'
-    compile group: 'com.android.support', name: 'support-media-compat', version: '28.0.0-alpha3'
-    compile group: 'com.android.support', name: 'support-v4', version: '28.0.0-alpha3'
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.android.support:support-media-compat:27.0.2'
+    compile 'com.android.support:support-v4:27.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     provided 'org.glassfish:javax.annotation:10.0-b28'
@@ -93,6 +93,7 @@ configurations {
 task wrapper(type: Wrapper) {
     gradleVersion = '4.1'
 }
+
 
 
 
