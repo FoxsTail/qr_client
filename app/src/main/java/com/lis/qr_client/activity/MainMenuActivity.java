@@ -6,6 +6,8 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Camera;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,9 +19,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lis.qr_client.R;
 import lombok.extern.java.Log;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Log
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener {
@@ -35,6 +39,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     private String qr_hidden_key = "hidden";
     private Object qr_hidden_value;
+
+    static Handler handler;
 
 
     @Override
@@ -53,6 +59,13 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         btnScanQR = findViewById(R.id.btnScanQR);
         btnScanQR.setOnClickListener(this);
 
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                showDialog(DIALOG_SCANNED_CODE);
+            }
+        };
+
 
     }
 
@@ -67,6 +80,14 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             }
             break;
             case R.id.btnProfile: {
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        handler.sendEmptyMessage(1);
+
+                    }
+                }).start();
             }
             break;
 
@@ -80,11 +101,46 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+
+    /*
+    If scan was successful, returned alertDialog with parsed data
+    */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {
+            return;
+        }
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_SCAN_QR) {
+
+                final String scan_result = data.getStringExtra("scan_result");
+
+                /*show alertDialog with scanned data*/
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        /*converts gotten data from json to map*/
+                        scannedMap = scannedJsonToMap(scan_result);
+                        handler.sendEmptyMessage(1);}
+
+                }).start();
+
+              //  showDialog(DIALOG_SCANNED_CODE);
+
+            }
+        } else if (resultCode == RESULT_CANCELED) {
+            Toast.makeText(this, "Great mission was canceled", Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public void onBackPressed() {
         showDialog(DIALOG_EXIT);
     }
 
+
+    //--------------------Dialog-----------------------//
     @Override
     protected Dialog onCreateDialog(int id) {
         log.info("-----OnCreateDialog-----");
@@ -133,8 +189,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
 
     /*
-            defines alertDialog answer buttons
-        */
+        defines alertDialog answer buttons
+    */
     DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -152,29 +208,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         }
     };
 
-    /*
-    If scan was successful, returned alertDialog with parsed data
-    */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data == null) {
-            return;
-        }
+    //----------------------------------------//
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_SCAN_QR) {
 
-                /*converts gotten data from json to map*/
-                String scan_result = data.getStringExtra("scan_result");
-                scannedMap = scannedJsonToMap(scan_result);
-
-                /*show alertDialog with scanned data*/
-                showDialog(DIALOG_SCANNED_CODE);
-            }
-        } else if (resultCode == RESULT_CANCELED) {
-            Toast.makeText(this, "Great mission was canceled", Toast.LENGTH_LONG).show();
-        }
-    }
 
 
     /*

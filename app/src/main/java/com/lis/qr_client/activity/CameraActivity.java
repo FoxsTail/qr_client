@@ -2,19 +2,21 @@ package com.lis.qr_client.activity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
-import android.widget.Toast;
 import com.lis.qr_client.R;
 import net.sourceforge.zbar.*;
 
 import java.io.IOException;
 
 import static android.util.Log.d;
+import static android.util.Log.e;
 
 //TODO:hardwork in ui thread, if instant run is off the app will crash. Change to AsyncTask the hardwork then u can turn off instant run
 public class CameraActivity extends AppCompatActivity {
@@ -32,6 +34,8 @@ public class CameraActivity extends AppCompatActivity {
     private SurfaceHolder surfaceHolder;
     private Camera mCamera;
     private Handler autoFocusHandler;
+
+    private CameraHandlerThread cameraHandlerThread;
 
     ImageScanner scanner;
 
@@ -76,7 +80,23 @@ public class CameraActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         d(TAG, "---onResume-----");
-        safeCameraOpen(CAMERA_ID);
+        threadCameraOpen(CAMERA_ID);
+    }
+
+    //---------CameraOpen----------//
+
+    /*
+    * Usual safe camera open, HandlerThread that runs camera opening in the new thread;
+    * thread camera open which init instance of cameraHandlerThread and runs openCamera method.
+    * */
+
+    public void threadCameraOpen(int camera_id){
+        if(cameraHandlerThread == null){
+            cameraHandlerThread = new CameraHandlerThread("CameraHandlerThread");
+        }
+        d(TAG, "----Camera Thread handler----");
+
+        cameraHandlerThread.openCamera(camera_id);
     }
 
     private void safeCameraOpen(int id) {
@@ -88,6 +108,50 @@ public class CameraActivity extends AppCompatActivity {
             d(TAG, "failed to open Camera");
             e.printStackTrace();
         }
+    }
+
+    /*
+    Run openCamera in the additional thread
+    */
+    class CameraHandlerThread extends HandlerThread{
+
+        Handler handler;
+
+        public CameraHandlerThread(String name) {
+            super(name);
+            start();
+            handler = new Handler(getLooper());
+        }
+
+        synchronized void cameraOpenNotify(){
+
+            d(TAG, "----Notify!----");
+            notify();
+        }
+
+        public void openCamera(final int camera_id) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    d(TAG, "----In the run----");
+                    safeCameraOpen(camera_id);
+                    cameraOpenNotify();
+
+                }
+            });
+
+            try {
+               synchronized (this){
+                   d(TAG, "----Wait for it...----");
+                   wait();
+
+               }
+            } catch (InterruptedException e) {
+                e(TAG, "----Wait was Interrupted----");
+
+            }
+        }
+
     }
 
 
@@ -103,7 +167,12 @@ public class CameraActivity extends AppCompatActivity {
         d(TAG, "---Release Camera-----");
         if (mCamera != null) {
             previewing = false;
-            mCamera.setPreviewCallback(null);
+            mCamera.setPreviewCallbackWithBuffer(null);
+            try{
+                mCamera.stopPreview();
+            }catch (Exception e){
+
+            }
             mCamera.release();
             mCamera = null;
         }
@@ -138,7 +207,17 @@ public class CameraActivity extends AppCompatActivity {
             try {
                 mCamera.setDisplayOrientation(90);
                 mCamera.setPreviewDisplay(surfaceHolder);
-                mCamera.setPreviewCallback(previewCallback);
+
+            /*
+            get the pic size for setting the buffer size
+            */
+                Camera.Size previewSize = mCamera.getParameters().getPreviewSize();
+                int dataBufferSize=(int)(previewSize.height*previewSize.width*
+                        (ImageFormat.getBitsPerPixel(mCamera.getParameters().getPreviewFormat())/8.0));
+                mCamera.addCallbackBuffer(new byte[dataBufferSize]);
+
+
+                mCamera.setPreviewCallbackWithBuffer(previewCallback);
                 mCamera.startPreview();
                 previewing = true;
                 mCamera.autoFocus(autoFocusCallback);
@@ -191,10 +270,11 @@ public class CameraActivity extends AppCompatActivity {
             * Sometimes it works, sometimes no, idk how to fix this shit
             * */
 
-            //TODO: try to replace with manual SurfaceView creation or PreviewCallbackWithBuffer, it may help
-
-            if(skipFirstPreviewFrame < 3){
+            if(skipFirstPreviewFrame < 1){
                 skipFirstPreviewFrame ++;
+                /*return data to user to use the same buffer*/
+                mCamera.addCallbackBuffer(data);
+                data = null;
                 d(TAG, "---Magic happend-----");
                 return;
             }
@@ -204,18 +284,25 @@ public class CameraActivity extends AppCompatActivity {
 
             Image barcode = new Image(size.width, size.height, "Y800");
             barcode.setData(data);
+/*
+ Analyze image
+*/
 
-    /* Analyze image */
             int result = scanner.scanImage(barcode);
 
             if (result != 0) {
-        /* ... stop preview ... */
+/*
+ ... stop preview ...
+*/
                 previewing = false;
-                mCamera.setPreviewCallback(null);
+                mCamera.setPreviewCallbackWithBuffer(null);
                 mCamera.stopPreview();
 
 
-        /* Get and show scanned data*/
+/*
+ Get and show scanned data
+*/
+
                 SymbolSet symbols = scanner.getResults();
                 String scanTextResult = null;
                 for (Symbol sym : symbols) {
@@ -223,7 +310,10 @@ public class CameraActivity extends AppCompatActivity {
                     //Toast.makeText(getApplicationContext(), scanTextResult, Toast.LENGTH_LONG).show();
                     barcodeScanned = true;
                 }
-        /*Return scanned data to the parent activity*/
+/*
+Return scanned data to the parent activity
+*/
+
                 if (barcodeScanned) {
                     Intent intent = new Intent();
                     intent.putExtra("scan_result", scanTextResult);
@@ -231,10 +321,9 @@ public class CameraActivity extends AppCompatActivity {
                     finish();
                 }
 
-
             }
+            /*return data to user to use the same buffer*/
+           mCamera.addCallbackBuffer(data);
         }
     };
-
-
 }

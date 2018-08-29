@@ -71,7 +71,7 @@ public class ScannerActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    //TODO: Replace toast with small scan info window
+    // Replaced toast with small scan info window in the MainMenu
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (intent == null) {

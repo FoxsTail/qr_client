@@ -56,9 +56,10 @@ android {
 dependencies {
     //db
     //compile 'com.idescout.sql:sqlscout-server:2.0'
-    //betterCode
+
     //qr-code
     compile files('libs/zbar.jar')
+
     //android
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.0', {
@@ -66,15 +67,15 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     //compile 'com.android.support:appcompat-v7:28.0.0-alpha3'
-    compile 'com.android.support:appcompat-v7:27.0.2'
     //compile 'com.android.support:support-media-compat:28.0.0-alpha3'
     //compile 'com.android.support:support-v4:28.0.0-alpha3'
+    compile 'com.android.support:appcompat-v7:27.0.2'
     compile 'com.google.zxing:core:3.3.0'
+    compile 'com.android.support:appcompat-v7:27.0.2'
     compile 'com.journeyapps:zxing-android-embedded:3.5.0'
     compile 'org.projectlombok:lombok:1.16.20'
     compile 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
-    compile 'com.android.support:appcompat-v7:27.0.2'
     compile 'com.android.support:support-media-compat:27.0.2'
     compile 'com.android.support:support-v4:27.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -93,6 +94,7 @@ configurations {
 task wrapper(type: Wrapper) {
     gradleVersion = '4.1'
 }
+
 
 
 
