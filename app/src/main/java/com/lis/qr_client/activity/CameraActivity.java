@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +19,7 @@ import java.io.IOException;
 import static android.util.Log.d;
 import static android.util.Log.e;
 
-//TODO:hardwork in ui thread, if instant run is off the app will crash. Change to AsyncTask the hardwork then u can turn off instant run
+//TODO:wtf unlock camera is?
 public class CameraActivity extends AppCompatActivity {
 
     /*Methods run in this order:
@@ -44,7 +45,6 @@ public class CameraActivity extends AppCompatActivity {
 
     private final int CAMERA_ID = 0;
     public static final String TAG = "Camera";
-
 
 
     @Override
@@ -80,7 +80,24 @@ public class CameraActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         d(TAG, "---onResume-----");
-        threadCameraOpen(CAMERA_ID);
+
+        /*Separate thread with handler camera open*/
+        //fast af, but keeps old info only God knows where, sometimes can crash u
+        //  threadCameraOpen(CAMERA_ID);
+
+
+        /*Async camera open*/
+        //Ok at emulator, at my phone just makes NullPointer, cause the mCamera object isn't ready on time, too fast i guess
+        //new AsyncCameraOpen().execute();
+
+        /*Main thread camera open*/
+
+        //usual long open, at my phone - great, at the emulator -
+        // sometimes can go to the magic land of "screen doesn't answer"
+
+        //at my phone the issue of instant crashing - NullPoiner, camera failed to init on time, God knows why
+        safeCameraOpen(CAMERA_ID);
+
     }
 
     //---------CameraOpen----------//
@@ -90,8 +107,8 @@ public class CameraActivity extends AppCompatActivity {
     * thread camera open which init instance of cameraHandlerThread and runs openCamera method.
     * */
 
-    public void threadCameraOpen(int camera_id){
-        if(cameraHandlerThread == null){
+    public void threadCameraOpen(int camera_id) {
+        if (cameraHandlerThread == null) {
             cameraHandlerThread = new CameraHandlerThread("CameraHandlerThread");
         }
         d(TAG, "----Camera Thread handler----");
@@ -107,13 +124,16 @@ public class CameraActivity extends AppCompatActivity {
         } catch (Exception e) {
             d(TAG, "failed to open Camera");
             e.printStackTrace();
+            CameraActivity.this.finish();
         }
+       // mCamera = Camera.open(id);
+
     }
 
     /*
     Run openCamera in the additional thread
     */
-    class CameraHandlerThread extends HandlerThread{
+    class CameraHandlerThread extends HandlerThread {
 
         Handler handler;
 
@@ -123,7 +143,7 @@ public class CameraActivity extends AppCompatActivity {
             handler = new Handler(getLooper());
         }
 
-        synchronized void cameraOpenNotify(){
+        synchronized void cameraOpenNotify() {
 
             d(TAG, "----Notify!----");
             notify();
@@ -141,11 +161,11 @@ public class CameraActivity extends AppCompatActivity {
             });
 
             try {
-               synchronized (this){
-                   d(TAG, "----Wait for it...----");
-                   wait();
+                synchronized (this) {
+                    d(TAG, "----Wait for it...----");
+                    wait();
 
-               }
+                }
             } catch (InterruptedException e) {
                 e(TAG, "----Wait was Interrupted----");
 
@@ -155,11 +175,31 @@ public class CameraActivity extends AppCompatActivity {
     }
 
 
+    //----AsyncTask Camera Open----------//
+
+    class AsyncCameraOpen extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            e(TAG, "----Do opening in background----");
+            safeCameraOpen(CAMERA_ID);
+
+            //in case of wait() in surfaceChange
+           //synchronized (this){notify();}
+            return null;
+        }
+
+    }
+
+
+//----------------------------------------------------//
+
+
     @Override
     protected void onPause() {
         super.onPause();
         d(TAG, "---OnPause-----");
         releaseCameraAndPreview();
+
     }
 
     private void releaseCameraAndPreview() {
@@ -168,9 +208,9 @@ public class CameraActivity extends AppCompatActivity {
         if (mCamera != null) {
             previewing = false;
             mCamera.setPreviewCallbackWithBuffer(null);
-            try{
+            try {
                 mCamera.stopPreview();
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
             mCamera.release();
@@ -204,6 +244,21 @@ public class CameraActivity extends AppCompatActivity {
                 // ignore: tried to stop a non-existent preview
             }
 
+    //---------------------------------------------------------------//
+            /*for asynctask, if camera opens too long*/
+            //still ain't gonna work
+          /*  try {
+                if (mCamera == null) {
+                    synchronized (this) {
+                        d(TAG, "----Wait for it...----");
+                        wait();
+                    }
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
+    //---------------------------------------------------------------//
+
             try {
                 mCamera.setDisplayOrientation(90);
                 mCamera.setPreviewDisplay(surfaceHolder);
@@ -212,8 +267,8 @@ public class CameraActivity extends AppCompatActivity {
             get the pic size for setting the buffer size
             */
                 Camera.Size previewSize = mCamera.getParameters().getPreviewSize();
-                int dataBufferSize=(int)(previewSize.height*previewSize.width*
-                        (ImageFormat.getBitsPerPixel(mCamera.getParameters().getPreviewFormat())/8.0));
+                int dataBufferSize = (int) (previewSize.height * previewSize.width *
+                        (ImageFormat.getBitsPerPixel(mCamera.getParameters().getPreviewFormat()) / 8.0));
                 mCamera.addCallbackBuffer(new byte[dataBufferSize]);
 
 
@@ -222,9 +277,15 @@ public class CameraActivity extends AppCompatActivity {
                 previewing = true;
                 mCamera.autoFocus(autoFocusCallback);
 
-            } catch (IOException e) {
-                Log.d("Camera", "Error starting camera preview: " + e.getMessage());
+                //--------------If u get a NullPointer at somewhere in methods above----------------//
+                //Your camera object is instantiated only if there is no Exception.
+                //So, if this exception happens, camera == null
+                //------------------------------//
 
+            } catch (IOException | NullPointerException   e) {
+                Log.d("Camera", "Error starting camera preview: " + e.getMessage());
+                d(TAG, e.getStackTrace().toString());
+                finish();
             }
         }
 
@@ -270,11 +331,10 @@ public class CameraActivity extends AppCompatActivity {
             * Sometimes it works, sometimes no, idk how to fix this shit
             * */
 
-            if(skipFirstPreviewFrame < 1){
-                skipFirstPreviewFrame ++;
+            if (skipFirstPreviewFrame < 3) {
+                skipFirstPreviewFrame++;
                 /*return data to user to use the same buffer*/
                 mCamera.addCallbackBuffer(data);
-                data = null;
                 d(TAG, "---Magic happend-----");
                 return;
             }
@@ -323,7 +383,7 @@ Return scanned data to the parent activity
 
             }
             /*return data to user to use the same buffer*/
-           mCamera.addCallbackBuffer(data);
+            mCamera.addCallbackBuffer(data);
         }
     };
 }

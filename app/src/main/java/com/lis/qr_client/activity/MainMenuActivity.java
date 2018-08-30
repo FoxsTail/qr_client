@@ -115,19 +115,21 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             if (requestCode == REQUEST_SCAN_QR) {
 
                 final String scan_result = data.getStringExtra("scan_result");
-
+                //TODO: after data returns the app sometimes just done or crush for unknown reason; could be thread issue
                 /*show alertDialog with scanned data*/
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        /*converts gotten data from json to map*/
+                       /* converts gotten data from json to map*/
                         scannedMap = scannedJsonToMap(scan_result);
-                        handler.sendEmptyMessage(1);}
+                        handler.sendEmptyMessage(1);
+                    }
 
                 }).start();
 
-              //  showDialog(DIALOG_SCANNED_CODE);
-
+                /*All in main thread version*/
+             /*   scannedMap = scannedJsonToMap(scan_result);
+                showDialog(DIALOG_SCANNED_CODE);*/
             }
         } else if (resultCode == RESULT_CANCELED) {
             Toast.makeText(this, "Great mission was canceled", Toast.LENGTH_LONG).show();
