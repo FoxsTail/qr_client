@@ -2,12 +2,11 @@ package com.lis.qr_client.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Camera;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -22,21 +21,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
-import com.lis.qr_client.pojo.Address;
 import lombok.extern.java.Log;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -83,7 +79,16 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         dbHelper = new DBHelper(this);
         db = dbHelper.getWritableDatabase();
 
-        db.delete("address", null, null);
+        //TODO:remove on production
+        /*delete all data in address*/
+        db.beginTransaction();
+        try {
+            db.delete("address", null, null);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
 
         handler = new Handler() {
             @Override
@@ -105,6 +110,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btnInventory: {
                 new AsyncInventory().execute();
                 Intent intent = new Intent(this, InventoryParamSelectActivity.class);
+                startActivity(intent);
             }
             break;
             case R.id.btnProfile: {
@@ -291,9 +297,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-
-
-
     /*Gets city, street, number from api;
      parses;
      puts to the sqlite*/
@@ -309,44 +312,95 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         @Override
         protected Void doInBackground(Void... voids) {
+            log.info("----Do in background----");
 
             /*request to the main db to get multiple maps with "city, street, numbers", which are available*/
             String url = "http://10.0.3.2:8090/addresses/only_address";
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            ResponseEntity<List<Map<String, Object>>> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<Map<String, Object>>>() {
-                    });
+            String table_name = "address";
 
-            /*parsing*/
-            List<Map<String, Object>> addresses = responseEntity.getBody();
+            /*connect to the url and put the result in sqlite table*/
+            try {
+                saveDataFromGetUrl(restTemplate, url, table_name);
 
-            for (Map<String, Object> address : addresses) {
-
-                ContentValues cv = mapToContextValueParser(address);
-
-                db.insert("address", null, cv);
-
+            } catch (ResourceAccessException e) {
+                log.warning("Failed to connect to " + url);
+                log.warning("Failure cause: " + e.getMessage() + "\n" + e.getStackTrace().toString());
             }
 
+//log track
+            /*show me what u have*/
+            Cursor cursor = db.query("address", null, null, null, null, null, null, null);
+            dbHelper.logCursor(cursor, "Address");
+//------
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Toast.makeText(getApplicationContext(), "Done!", LENGTH_SHORT).show();
             pbInventory.setVisibility(View.INVISIBLE);
             btnInventory.setVisibility(View.VISIBLE);
         }
     }
 
-    protected ContentValues mapToContextValueParser(Map<String, Object> mapToParse) {
+
+    //-----Additional methods-------//
+
+    /*connects to the given url and put the result in sqlite table*/
+    protected void saveDataFromGetUrl(RestTemplate restTemplate, String url, String table_name) throws ResourceAccessException {
+        log.info("----Getting data----");
+
+        ResponseEntity<List<Map<String, Object>>> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Map<String, Object>>>() {
+                });
+
+            /*parsing*/
+        List<Map<String, Object>> mapList = responseEntity.getBody();
+
+            /*put into the given table (internal db)*/
+        putMapListIntoTheTable(mapList, table_name);
+    }
+
+
+    /*Puts list of maps into the table (internal db)*/
+    protected void putMapListIntoTheTable(List<Map<String, Object>> mapList, String table_name) {
+        ContentValues cv;
+
+        log.info("----Putting to sql----");
+
+        /*transaction for safe operation*/
+        db.beginTransaction();
+        try {
+            for (Map<String, Object> address : mapList) {
+
+                /*converts map to the context value*/
+                cv = mapToContextValueParser(address);
+
+                /*insert to the internal db*/
+                long insert_res = db.insert(table_name, null, cv);
+//log track
+                log.info("----loaded----: " + insert_res);
+
+            }
+
+            db.setTransactionSuccessful();
+            log.info("----all is ok----");
+        } finally {
+            db.endTransaction();
+            log.info("----End----");
+        }
+
+    }
+
+    /*Converts map to a ContextValue obj*/
+    private ContentValues mapToContextValueParser(Map<String, Object> mapToParse) {
         ContentValues cv = new ContentValues();
+        log.info("-----Making cv---");
 
         for (Map.Entry<String, Object> map : mapToParse.entrySet()) {
-                cv.put(map.getKey(), map.getValue().toString());
-                log.info("-------------"+map.getKey()+" "+map.getValue().toString()+"-----------");
+            cv.put(map.getKey(), map.getValue().toString());
         }
 
         return cv;

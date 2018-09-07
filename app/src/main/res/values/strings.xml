@@ -16,4 +16,7 @@
     <string name="Inventory">Inventory</string>
     <string name="Profile">Profile</string>
     <string name="ScanQR">Scan QR-code</string>
+    <string name="select_address">Select address</string>
+    <string name="select_room">Select room</string>
+    <string name="start">Start</string>
 </resources>

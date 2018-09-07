@@ -64,10 +64,4 @@
             app:layout_constraintLeft_toLeftOf="@+id/btnInventory"
             android:visibility="invisible"
             app:layout_constraintHorizontal_bias="0.47"/>
-    <CheckedTextView
-            android:text="CheckedTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/checkedTextView"
-            android:textSize="18sp" android:checkMarkTint="@android:color/holo_red_dark"
-            android:checkMark="@android:color/holo_red_light" tools:ignore="HardcodedText"/>
 </android.support.constraint.ConstraintLayout>
