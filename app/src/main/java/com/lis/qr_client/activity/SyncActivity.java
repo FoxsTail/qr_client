@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.data.DBHelperOld;
 import com.lis.qr_client.pojo.User;
 import lombok.extern.java.Log;
 import org.springframework.core.ParameterizedTypeReference;
@@ -38,7 +39,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
     int emailColumnIndex;
 
     SQLiteDatabase db;
-    DBHelper dbHelper;
+    DBHelperOld dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
         btnTest = findViewById(R.id.btnTest);
         btnTest.setOnClickListener(this);
 
-        dbHelper = new DBHelper(this);
+        dbHelper = new DBHelperOld(this);
         db = dbHelper.getWritableDatabase();
 
         initCursor();

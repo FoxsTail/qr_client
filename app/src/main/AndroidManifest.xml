@@ -43,6 +43,8 @@
         </activity>
         <activity android:name=".tries.ThreadLoopActivity">
         </activity>
+        <activity android:name=".activity.InventoryParamSelectActivity">
+        </activity>
     </application>
 
 </manifest>

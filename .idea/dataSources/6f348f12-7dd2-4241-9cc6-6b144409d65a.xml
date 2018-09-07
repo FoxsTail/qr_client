@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="qr_project@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.4">
+    <root id="1"/>
+    <schema id="2" parent="1" name="qr_project">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="first_maria"/>
+    <schema id="4" parent="1" name="fox_db"/>
+    <schema id="5" parent="1" name="fox_db1"/>
+    <schema id="6" parent="1" name="information_schema"/>
+    <schema id="7" parent="1" name="mysql"/>
+    <schema id="8" parent="1" name="performance_schema"/>
+    <schema id="9" parent="1" name="sys"/>
+    <schema id="10" parent="1" name="test"/>
+    <table id="11" parent="2" name="address"/>
+    <table id="12" parent="2" name="city"/>
+    <table id="13" parent="2" name="department"/>
+    <table id="14" parent="2" name="direction"/>
+    <table id="15" parent="2" name="equipment"/>
+    <table id="16" parent="2" name="personal_data"/>
+    <table id="17" parent="2" name="phone_number"/>
+    <table id="18" parent="2" name="position"/>
+    <table id="19" parent="2" name="qr_image"/>
+    <table id="20" parent="2" name="room"/>
+    <table id="21" parent="2" name="technical_platform"/>
+    <table id="22" parent="2" name="user"/>
+    <table id="23" parent="2" name="workplace"/>
+    <column id="24" parent="11" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="25" parent="11" name="street">
+      <Position>2</Position>
+      <DataType>varchar(200)|0</DataType>
+    </column>
+    <column id="26" parent="11" name="number">
+      <Position>3</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="27" parent="11" name="id_city">
+      <Position>4</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <index id="28" parent="11" name="address_id_uindex">
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="29" parent="11" name="fk_address_city">
+      <ColNames>id_city</ColNames>
+    </index>
+    <key id="30" parent="11" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="31" parent="11" name="address_id_uindex">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>address_id_uindex</UnderlyingIndexName>
+    </key>
+    <foreign-key id="32" parent="11" name="fk_address_city">
+      <ColNames>id_city</ColNames>
+      <RefSchemaName>qr_project</RefSchemaName>
+      <RefTableName>city</RefTableName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="33" parent="12" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="34" parent="12" name="city">
+      <Position>2</Position>
+      <DataType>varchar(150)|0</DataType>
+    </column>
+    <index id="35" parent="12" name="city_city_uindex">
+      <ColNames>city</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="36" parent="12" name="city_id_uindex">
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="37" parent="12" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="38" parent="12" name="city_id_uindex">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>city_id_uindex</UnderlyingIndexName>
+    </key>
+    <key id="39" parent="12" name="city_city_uindex">
+      <ColNames>city</ColNames>
+      <UnderlyingIndexName>city_city_uindex</UnderlyingIndexName>
+    </key>
+    <column id="40" parent="13" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="41" parent="13" name="department">
+      <Position>2</Position>
+      <DataType>varchar(300)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="42" parent="13" name="id_direction">
+      <Position>3</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <index id="43" parent="13" name="department_id_uindex">
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="44" parent="13" name="fk_department_direction">
+      <ColNames>id_direction</ColNames>
+    </index>
+    <key id="45" parent="13" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="46" parent="13" name="department_id_uindex">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>department_id_uindex</UnderlyingIndexName>
+    </key>
+    <foreign-key id="47" parent="13" name="fk_department_direction">
+      <ColNames>id_direction</ColNames>
+      <RefSchemaName>qr_project</RefSchemaName>
+      <RefTableName>direction</RefTableName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="48" parent="14" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="49" parent="14" name="direction">
+      <Position>2</Position>
+      <DataType>varchar(300)|0</DataType>
+    </column>
+    <index id="50" parent="14" name="direction_direction_uindex">
+      <ColNames>direction</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="51" parent="14" name="direction_id_uindex">
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="52" parent="14" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="53" parent="14" name="direction_id_uindex">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>direction_id_uindex</UnderlyingIndexName>
+    </key>
+    <key id="54" parent="14" name="direction_direction_uindex">
+      <ColNames>direction</ColNames>
+      <UnderlyingIndexName>direction_direction_uindex</UnderlyingIndexName>
+    </key>
+    <column id="55" parent="15" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="56" parent="15" name="inventory_num">
+      <Position>2</Position>
+      <DataType>varchar(30)|0</DataType>
+    </column>
+    <column id="57" parent="15" name="room">
+      <Position>3</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <index id="58" parent="15" name="equipment_id_uindex">
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="59" parent="15" name="equipment_inventory_num_uindex">
+      <ColNames>inventory_num</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="60" parent="15" name="fk_equipment_room">
+      <ColNames>room</ColNames>
+    </index>
+    <key id="61" parent="15" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="62" parent="15" name="equipment_id_uindex">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>equipment_id_uindex</UnderlyingIndexName>
+    </key>
+    <key id="63" parent="15" name="equipment_inventory_num_uindex">
+      <ColNames>inventory_num</ColNames>
+      <UnderlyingIndexName>equipment_inventory_num_uindex</UnderlyingIndexName>
+    </key>
+    <foreign-key id="64" parent="15" name="fk_equipment_room">
+      <ColNames>room</ColNames>
+      <RefSchemaName>qr_project</RefSchemaName>
+      <RefTableName>room</RefTableName>
+      <RefColNames>room</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>set-null</OnDelete>
+    </foreign-key>
+    <column id="65" parent="16" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="66" parent="16" name="name">
+      <Position>2</Position>
+      <DataType>varchar(45)|0</DataType>
+    </column>
+    <column id="67" parent="16" name="surname">
+      <Position>3</Position>
+      <DataType>varchar(45)|0</DataType>
+    </column>
+    <column id="68" parent="16" name="patronymic">
+      <Position>4</Position>
+      <DataType>varchar(45)|0</DataType>
+    </column>
+    <column id="69" parent="16" name="passport">
+      <Position>5</Position>
+      <DataType>varchar(45)|0</DataType>
+    </column>
+    <column id="70" parent="16" name="inn">
+      <Position>6</Position>
+      <DataType>varchar(20)|0</DataType>
+    </column>
+    <column id="71" parent="16" name="room">
+      <Position>7</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="72" parent="16" name="id_user">
+      <Position>8</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="73" parent="16" name="fk_data_user">
+      <ColNames>id_user</ColNames>
+    </index>
+    <index id="74" parent="16" name="fk_personal_data_room">
+      <ColNames>room</ColNames>
+    </index>
+    <index id="75" parent="16" name="id_UNIQUE">
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="76" parent="16" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="77" parent="16" name="id_UNIQUE">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>id_UNIQUE</UnderlyingIndexName>
+    </key>
+    <foreign-key id="78" parent="16" name="fk_personal_data_room">
+      <ColNames>room</ColNames>
+      <RefSchemaName>qr_project</RefSchemaName>
+      <RefTableName>room</RefTableName>
+      <RefColNames>room</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>set-null</OnDelete>
+    </foreign-key>
+    <foreign-key id="79" parent="16" name="fk_data_user">
+      <ColNames>id_user</ColNames>
+      <RefSchemaName>qr_project</RefSchemaName>
+      <RefTableName>user</RefTableName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="80" parent="17" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="81" parent="17" name="phone_number">
+      <Position>2</Position>
+      <DataType>varchar(45)|0</DataType>
+    </column>
+    <column id="82" parent="17" name="id_data">
+      <Position>3</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <index id="83" parent="17" name="fk_phone_personal_data">
+      <ColNames>id_data</ColNames>
+    </index>
+    <index id="84" parent="17" name="id_UNIQUE">
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="85" parent="17" name="phone_number_phone_number_uindex">
+      <ColNames>phone_number</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="86" parent="17" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="87" parent="17" name="id_UNIQUE">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>id_UNIQUE</UnderlyingIndexName>
+    </key>
+    <key id="88" parent="17" name="phone_number_phone_number_uindex">
+      <ColNames>phone_number</ColNames>
+      <UnderlyingIndexName>phone_number_phone_number_uindex</UnderlyingIndexName>
+    </key>
+    <foreign-key id="89" parent="17" name="fk_phone_personal_data">
+      <ColNames>id_data</ColNames>
+      <RefSchemaName>qr_project</RefSchemaName>
+      <RefTableName>personal_data</RefTableName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="90" parent="18" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="91" parent="18" name="position">
+      <Position>2</Position>
+      <DataType>varchar(250)|0</DataType>
+    </column>
+    <index id="92" parent="18" name="position_id_uindex">
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="93" parent="18" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="94" parent="18" name="position_id_uindex">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>position_id_uindex</UnderlyingIndexName>
+    </key>
+    <column id="95" parent="19" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="96" parent="19" name="name">
+      <Position>2</Position>
+      <DataType>varchar(200)|0</DataType>
+    </column>
+    <column id="97" parent="19" name="data">
+      <Position>3</Position>
+      <DataType>mediumblob|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="98" parent="19" name="qr_image_id_uindex">
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="99" parent="19" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="100" parent="19" name="qr_image_id_uindex">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>qr_image_id_uindex</UnderlyingIndexName>
+    </key>
+    <column id="101" parent="20" name="room">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="102" parent="20" name="room_room_uindex">
+      <ColNames>room</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="103" parent="20" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>room</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="104" parent="20" name="room_room_uindex">
+      <ColNames>room</ColNames>
+      <UnderlyingIndexName>room_room_uindex</UnderlyingIndexName>
+    </key>
+    <column id="105" parent="21" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="106" parent="21" name="floor">
+      <Position>2</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="107" parent="21" name="room">
+      <Position>3</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="108" parent="21" name="id_address">
+      <Position>4</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <index id="109" parent="21" name="fk_technical_platform_room">
+      <ColNames>room</ColNames>
+    </index>
+    <index id="110" parent="21" name="fk_tech_platrofm_address">
+      <ColNames>id_address</ColNames>
+    </index>
+    <index id="111" parent="21" name="technical_platform_id_uindex">
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="112" parent="21" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="113" parent="21" name="technical_platform_id_uindex">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>technical_platform_id_uindex</UnderlyingIndexName>
+    </key>
+    <foreign-key id="114" parent="21" name="fk_technical_platform_room">
+      <ColNames>room</ColNames>
+      <RefSchemaName>qr_project</RefSchemaName>
+      <RefTableName>room</RefTableName>
+      <RefColNames>room</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>set-null</OnDelete>
+    </foreign-key>
+    <foreign-key id="115" parent="21" name="fk_tech_platrofm_address">
+      <ColNames>id_address</ColNames>
+      <RefSchemaName>qr_project</RefSchemaName>
+      <RefTableName>address</RefTableName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="116" parent="22" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="117" parent="22" name="username">
+      <Position>2</Position>
+      <DataType>varchar(45)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="118" parent="22" name="email">
+      <Position>3</Position>
+      <DataType>varchar(60)|0</DataType>
+    </column>
+    <column id="119" parent="22" name="password">
+      <Position>4</Position>
+      <DataType>varchar(45)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="120" parent="22" name="id_tp">
+      <Position>5</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="121" parent="22" name="column_6">
+      <Position>6</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="122" parent="22" name="id_wp">
+      <Position>7</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <index id="123" parent="22" name="email_UNIQUE">
+      <ColNames>email</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="124" parent="22" name="fk_user_technical_platform">
+      <ColNames>id_tp</ColNames>
+    </index>
+    <index id="125" parent="22" name="fk_user_workplace">
+      <ColNames>id_wp</ColNames>
+    </index>
+    <index id="126" parent="22" name="username_UNIQUE">
+      <ColNames>username</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="127" parent="22" name="user_id_uindex">
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="128" parent="22" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="129" parent="22" name="user_id_uindex">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>user_id_uindex</UnderlyingIndexName>
+    </key>
+    <key id="130" parent="22" name="username_UNIQUE">
+      <ColNames>username</ColNames>
+      <UnderlyingIndexName>username_UNIQUE</UnderlyingIndexName>
+    </key>
+    <key id="131" parent="22" name="email_UNIQUE">
+      <ColNames>email</ColNames>
+      <UnderlyingIndexName>email_UNIQUE</UnderlyingIndexName>
+    </key>
+    <foreign-key id="132" parent="22" name="fk_user_technical_platform">
+      <ColNames>id_tp</ColNames>
+      <RefSchemaName>qr_project</RefSchemaName>
+      <RefTableName>technical_platform</RefTableName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>set-null</OnDelete>
+    </foreign-key>
+    <foreign-key id="133" parent="22" name="fk_user_workplace">
+      <ColNames>id_wp</ColNames>
+      <RefSchemaName>qr_project</RefSchemaName>
+      <RefTableName>workplace</RefTableName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>set-null</OnDelete>
+    </foreign-key>
+    <column id="134" parent="23" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="135" parent="23" name="id_position">
+      <Position>2</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="136" parent="23" name="id_department">
+      <Position>3</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="137" parent="23" name="remote_workstation">
+      <Position>4</Position>
+      <DataType>tinyint(1)|0</DataType>
+    </column>
+    <index id="138" parent="23" name="fk_workplace_department">
+      <ColNames>id_department</ColNames>
+    </index>
+    <index id="139" parent="23" name="fk_workplace_position">
+      <ColNames>id_position</ColNames>
+    </index>
+    <index id="140" parent="23" name="workplace_id_uindex">
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="141" parent="23" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="142" parent="23" name="workplace_id_uindex">
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>workplace_id_uindex</UnderlyingIndexName>
+    </key>
+    <foreign-key id="143" parent="23" name="fk_workplace_position">
+      <ColNames>id_position</ColNames>
+      <RefSchemaName>qr_project</RefSchemaName>
+      <RefTableName>position</RefTableName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>set-null</OnDelete>
+    </foreign-key>
+    <foreign-key id="144" parent="23" name="fk_workplace_department">
+      <ColNames>id_department</ColNames>
+      <RefSchemaName>qr_project</RefSchemaName>
+      <RefTableName>department</RefTableName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+  </database-model>
+</dataSource>

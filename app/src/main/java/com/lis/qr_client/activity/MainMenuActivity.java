@@ -3,39 +3,58 @@ package com.lis.qr_client.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Camera;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lis.qr_client.R;
+import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.pojo.Address;
 import lombok.extern.java.Log;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 @Log
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btnFormulyar, btnInventory, btnProfile, btnScanQR;
     private TextView tvDialogChange;
+    private ProgressBar pbInventory;
 
     private final int REQUEST_SCAN_QR = 1;
     private static final int DIALOG_EXIT = -1;
     private static final int DIALOG_SCANNED_CODE = 1;
 
     private HashMap<String, Object> scannedMap;
+
+    DBHelper dbHelper;
+    SQLiteDatabase db;
 
     private String qr_hidden_key = "hidden";
     private Object qr_hidden_value;
@@ -59,6 +78,13 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         btnScanQR = findViewById(R.id.btnScanQR);
         btnScanQR.setOnClickListener(this);
 
+        pbInventory = findViewById(R.id.pbInventory);
+
+        dbHelper = new DBHelper(this);
+        db = dbHelper.getWritableDatabase();
+
+        db.delete("address", null, null);
+
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -77,6 +103,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             }
             break;
             case R.id.btnInventory: {
+                new AsyncInventory().execute();
+                Intent intent = new Intent(this, InventoryParamSelectActivity.class);
             }
             break;
             case R.id.btnProfile: {
@@ -260,5 +288,67 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         }
         return null;
+    }
+
+
+
+
+
+    /*Gets city, street, number from api;
+     parses;
+     puts to the sqlite*/
+    class AsyncInventory extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            btnInventory.setVisibility(View.INVISIBLE);
+            pbInventory.setVisibility(View.VISIBLE);
+            Toast.makeText(getApplicationContext(), "Loading adresses...", LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            /*request to the main db to get multiple maps with "city, street, numbers", which are available*/
+            String url = "http://10.0.3.2:8090/addresses/only_address";
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            ResponseEntity<List<Map<String, Object>>> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null,
+                    new ParameterizedTypeReference<List<Map<String, Object>>>() {
+                    });
+
+            /*parsing*/
+            List<Map<String, Object>> addresses = responseEntity.getBody();
+
+            for (Map<String, Object> address : addresses) {
+
+                ContentValues cv = mapToContextValueParser(address);
+
+                db.insert("address", null, cv);
+
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(getApplicationContext(), "Done!", LENGTH_SHORT).show();
+            pbInventory.setVisibility(View.INVISIBLE);
+            btnInventory.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected ContentValues mapToContextValueParser(Map<String, Object> mapToParse) {
+        ContentValues cv = new ContentValues();
+
+        for (Map.Entry<String, Object> map : mapToParse.entrySet()) {
+                cv.put(map.getKey(), map.getValue().toString());
+                log.info("-------------"+map.getKey()+" "+map.getValue().toString()+"-----------");
+        }
+
+        return cv;
     }
 }
