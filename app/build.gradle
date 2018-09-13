@@ -60,6 +60,10 @@ dependencies {
     //qr-code
     compile files('libs/zbar.jar')
 
+    //code
+
+    compile 'org.apache.commons:commons-collections4:4.1'
+
     //android
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.0', {
@@ -94,6 +98,7 @@ configurations {
 task wrapper(type: Wrapper) {
     gradleVersion = '4.1'
 }
+
 
 
 

@@ -29,19 +29,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
         //--------Equipment--------
 
-        sqLiteDatabase.execSQL("create table phone_number (" +
-                "id integer primary key autoincrement," +
-                "phone_number text);");
-
-        //--------Equipment--------
-
         sqLiteDatabase.execSQL("create table room (" +
                 "room integer primary key);");
 
         //--------Address--------
 
         sqLiteDatabase.execSQL("create table address(" +
-                "id integer primary key autoincrement," +
+                "id integer primary key," +
                 "city text, "+
                 "street text, "+
                 "number text);");

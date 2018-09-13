@@ -1,4 +1,4 @@
-package com.lis.qr_client.qr_resolver;
+package com.lis.qr_client.async_helpers;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
