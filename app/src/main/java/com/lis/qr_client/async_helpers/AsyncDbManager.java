@@ -186,8 +186,10 @@ public class AsyncDbManager {
 
             /*if we have activity to run*/
             if (isNextActivityLauncher) {
-                Intent intent = new Intent(context, classTostart);
-                context.startActivity(intent);
+                if (classTostart != null) {
+                    Intent intent = new Intent(context, classTostart);
+                    context.startActivity(intent);
+                }
             }
 
             /*if we have a thread to run*/

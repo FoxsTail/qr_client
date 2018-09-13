@@ -27,10 +27,18 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         log.info("--Create Database----");
 
-        //--------Equipment--------
+        //--------Room--------
 
         sqLiteDatabase.execSQL("create table room (" +
                 "room integer primary key);");
+
+        //--------Equipment--------
+
+        sqLiteDatabase.execSQL("create table equipment(" +
+                "inventory_num text primary key," +
+                "vendor text, "+
+                "type text);");
+
 
         //--------Address--------
 

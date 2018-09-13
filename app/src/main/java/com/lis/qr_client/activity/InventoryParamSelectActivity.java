@@ -21,12 +21,14 @@ import java.util.List;
 import java.util.Map;
 
 @Log
-public class InventoryParamSelectActivity extends AppCompatActivity {
+public class InventoryParamSelectActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int LOAD_ADDRESS = 1;
     public static final int LOAD_ROOMS = 2;
 
 
     private Spinner spinAddress, spinRoom;
+    private ProgressBar pbLoadEquipment;
+    private Button btnStart;
     private Context context = this;
 
     DBHelper dbHelper;
@@ -34,11 +36,12 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
 
     Cursor cursor;
 
-    List<Integer> rooms = new ArrayList<>();
+    List rooms = new ArrayList<>();
     BidiMap<Integer, String> addresses = new DualHashBidiMap<>();
 
 
     String table_to_select = "address";
+    String chosen_room = null;
 
     Thread thread;
     static Handler handler;
@@ -54,20 +57,47 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
         spinRoom = findViewById(R.id.spinRoom);
 //        spinRoom.setEnabled(false);
 
+        pbLoadEquipment = findViewById(R.id.pbLoadEquipment);
+        pbLoadEquipment.setVisibility(View.INVISIBLE);
+
+        btnStart = findViewById(R.id.btnStart);
+        btnStart.setOnClickListener(this);
+
+
         /*get data from sqlite*/
         dbHelper = new DBHelper(this);
         db = dbHelper.getWritableDatabase();
 
         handler = new Handler(handlerCallback);
 
-//------------------------------
 
         thread = new Thread(runLoadAddress);
         thread.start();
 
-//-------------------------------
 
     }
+
+    /**/
+
+    @Override
+    public void onClick(View v) {
+        /*if the value is empty*/
+        if (chosen_room.equals(" ")) {
+            log.info("---Nothing is selected (room)---");
+            Toast.makeText(this, "Choose the room!", Toast.LENGTH_SHORT).show();
+        } else {
+
+            String url = "http://10.0.3.2:8090/equipments/room/" + chosen_room;
+            String table_name = "equipment";
+            AsyncDbManager asyncDbManager = new AsyncDbManager(table_name, url, context, dbHelper, db, btnStart,
+                    pbLoadEquipment, InventoryListActivity.class,
+                    true, true);
+            asyncDbManager.runAsyncMapListLoader();
+        }
+    }
+
+    //--------Spinners stuff----------//
+
 
     /*Handler callback*/
 
@@ -78,12 +108,12 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
             switch (msg.what) {
                 case LOAD_ADDRESS: {
                     log.info("---Prepare address spinner---");
-                    spinnerPrepare(spinAddress, (String[]) msg.obj, "Address");
+                    spinnerPrepare(spinAddress, (List<Object>) msg.obj, "Address");
                     break;
                 }
                 case LOAD_ROOMS: {
                     log.info("---Prepare room spinner---");
-                    spinnerPrepare(spinRoom, (Object[]) msg.obj, "Room");
+                    spinnerPrepare(spinRoom, (List<Object>) msg.obj, "Room");
                     break;
                 }
             }
@@ -92,11 +122,12 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
         }
     };
 
+
     /**
      * Prepares spinner: sets adapter with passed data, prompt, itemSelected listener
      */
 
-    private void spinnerPrepare(Spinner spinner, Object[] spinner_array, String spinner_prompt) {
+    private void spinnerPrepare(Spinner spinner, List spinner_array, String spinner_prompt) {
 
         ArrayAdapter<Object> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinner_array);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -114,6 +145,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
      * loads rooms when address id selected
      */
 
+    //TODO: ! replace address-room-equipment to address-tech_platform(room from here we use)-equipment
     AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -127,12 +159,18 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
                     /*get value from selected Item*/
                     String selected_value = parent.getItemAtPosition(position).toString();
 
+                    /*if the value is empty*/
+                    if (selected_value.equals(" ")) {
+                        log.info("---Nothing is selected (address)---");
+                        break;
+                    }
+
                     /*get id_address from address value*/
                     int id_address = addresses.getKey(selected_value);
-                    log.info("---address id is "+id_address+"---");
+                    log.info("---address id is " + id_address + "---");
 
 
-                    /*request to the db to get rooms*/
+                    /*params for request*/
                     //TODO:replace 10.0.3.2:8090 with some constant path in production
                     String url = "http://10.0.3.2:8090/addresses/rooms/" + id_address;
                     String table_name = "room";
@@ -148,6 +186,8 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
                 case R.id.spinRoom: {
                     log.info("---spin Room selected---");
 
+                    /*get value from selected Item*/
+                    chosen_room = parent.getItemAtPosition(position).toString();
                     break;
                 }
             }
@@ -159,6 +199,8 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
         }
     };
 
+
+    //------------Runnable--------------//
 
     /**
      * Load rooms
@@ -175,25 +217,28 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
 
             System.out.println("-----Romz-----");
 
-            for(Integer room: rooms){
+            for (Object room : rooms) {
                 System.out.println("----------");
                 System.out.println(room);
             }
 
-            Integer[] room_strings = rooms.toArray(new Integer[0]);
-
             log.info("---Call handler---");
 
-            Message msg = handler.obtainMessage(LOAD_ROOMS, room_strings);
+            Message msg = handler.obtainMessage(LOAD_ROOMS, rooms);
             handler.sendMessage(msg);
 
         }
     };
 
 
-    /**parse cursor to List*/
+    /**
+     * parse cursor to List
+     */
     private List cursorToList(Cursor cursor) {
         List convertedList = new ArrayList();
+
+        /*first empty value for the spinner*/
+        convertedList.add(" ");
 
         if (cursor != null) {
             if (cursor.moveToNext()) {
@@ -235,7 +280,11 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
             }
 //------
                /*set first elem null*/
-            String[] address_strings = addresses.values().toArray(new String[0]);
+            //String[] address_strings = addresses.values().toArray(new String[0]);
+
+            List<String> address_strings = new ArrayList<>();
+            address_strings.add(" ");
+            address_strings.addAll(addresses.values());
 
             log.info("---Call handler---");
 
@@ -256,9 +305,6 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
 
         StringBuilder sb = new StringBuilder();
         int temp_id = 0;
-
-        /*----for the first select item*/
-        convertedMap.put(0, "Select");
 
 
         if (cursor != null) {

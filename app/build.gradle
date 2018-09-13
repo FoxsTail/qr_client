@@ -62,8 +62,6 @@ dependencies {
 
     //code
 
-    compile 'org.apache.commons:commons-collections4:4.1'
-
     //android
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.0', {
@@ -75,6 +73,7 @@ dependencies {
     //compile 'com.android.support:support-v4:28.0.0-alpha3'
     compile 'com.android.support:appcompat-v7:27.0.2'
     compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'org.apache.commons:commons-collections4:4.1'
     compile 'com.google.zxing:core:3.3.0'
     compile 'com.journeyapps:zxing-android-embedded:3.5.0'
     compile 'org.projectlombok:lombok:1.16.20'
@@ -98,6 +97,8 @@ configurations {
 task wrapper(type: Wrapper) {
     gradleVersion = '4.1'
 }
+
+
 
 
 

@@ -47,6 +47,8 @@
         </activity>
         <activity android:name=".tries.TestActivity">
         </activity>
+        <activity android:name=".activity.InventoryListActivity">
+        </activity>
     </application>
 
 </manifest>
