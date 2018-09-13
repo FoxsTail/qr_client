@@ -12,6 +12,7 @@ import android.widget.*;
 import com.lis.qr_client.R;
 import com.lis.qr_client.async_helpers.AsyncDbManager;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.utilities.Utility;
 import lombok.extern.java.Log;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
@@ -45,6 +46,8 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
     Thread thread;
     static Handler handler;
+
+    Utility utility = new Utility();
 
 
     @Override
@@ -213,7 +216,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
             cursor = db.query("room", null, null, null, null,
                     null, null);
 
-            rooms = cursorToList(cursor);
+            rooms = utility.cursorToList(cursor);
 
             System.out.println("-----Romz-----");
 
@@ -230,27 +233,6 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         }
     };
 
-
-    /**
-     * parse cursor to List
-     */
-    private List cursorToList(Cursor cursor) {
-        List convertedList = new ArrayList();
-
-        /*first empty value for the spinner*/
-        convertedList.add(" ");
-
-        if (cursor != null) {
-            if (cursor.moveToNext()) {
-                do {
-                    convertedList.add(cursor.getInt(cursor.getColumnIndex("room")));
-
-                } while (cursor.moveToNext());
-            }
-        }
-
-        return convertedList;
-    }
 
 
     /**
@@ -269,7 +251,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
                     null, null);
 
         /*parse cursor to BidiMap*/
-            addresses = cursorToBidiMap(cursor);
+            addresses = utility.cursorToBidiMap(cursor);
 
         /*creates adapter, transfer data from array to the listView*/
 //--log
@@ -295,41 +277,5 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
     };
 
 
-    /**
-     * parse cursor to BidiMap<Integer, String>
-     */
-//TODO:sort to get an empty val??
-    private BidiMap<Integer, String> cursorToBidiMap(Cursor cursor) {
-        log.info("---Cursor to bidiMap---");
-        BidiMap<Integer, String> convertedMap = new DualHashBidiMap<>();
 
-        StringBuilder sb = new StringBuilder();
-        int temp_id = 0;
-
-
-        if (cursor != null) {
-            if (cursor.moveToNext()) {
-                do {
-
-                    /*take id and address separately*/
-                    for (byte i = 0; i < cursor.getColumnCount(); i++) {
-
-                        if (i == 0) {
-                            temp_id = cursor.getInt(i);
-                        } else {
-                            sb.append(cursor.getString(i) + " ");
-                        }
-                    }
-                    if (temp_id != 0) {
-                        convertedMap.put(temp_id, sb.toString());
-                    }
-                    sb.setLength(0);
-                } while (cursor.moveToNext());
-            }
-        } else {
-            log.warning("Cursor is null");
-        }
-
-        return convertedMap;
-    }
 }

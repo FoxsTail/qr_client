@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.lis.qr_client.interfaces.IUserDatabaseHandler;
 import com.lis.qr_client.pojo.User;
+import com.lis.qr_client.utilities.Utility;
 import lombok.extern.java.Log;
 
 import java.util.List;
@@ -15,7 +16,11 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final int DB_VERSION=1;
+    private Utility utility = new Utility();
 
+    public Utility getUtility() {
+        return utility;
+    }
 
     public DBHelper(Context context) {
         super(context, "qr_db", null, DB_VERSION);
@@ -35,7 +40,8 @@ public class DBHelper extends SQLiteOpenHelper {
         //--------Equipment--------
 
         sqLiteDatabase.execSQL("create table equipment(" +
-                "inventory_num text primary key," +
+                "id integer primary key," +
+                "inventory_num text," +
                 "vendor text, "+
                 "type text);");
 
@@ -82,21 +88,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public void logCursor(Cursor cursor, String title) {
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                log.info(title + ". " + cursor.getCount() + " rows");
-                do {
-                    for (String column_names : cursor.getColumnNames()) {
-                        log.info(cursor.getString(cursor.getColumnIndex(column_names)) + ";");
-                    }
-                    log.info("--------");
-                } while (cursor.moveToNext());
-            }
-        } else {
-            log.warning("Cursor is null");
-        }
-    }
+
 
 
 }

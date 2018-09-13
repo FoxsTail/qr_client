@@ -38,7 +38,7 @@ public class JoinActivity extends AppCompatActivity {
 
         cursor = db.query("user", null, null, null, null, null, null);
 
-        dbHelper.logCursor(cursor, "---User---");
+        dbHelper.getUtility().logCursor(cursor, "---User---");
         cursor.close();
 
 
@@ -46,7 +46,7 @@ public class JoinActivity extends AppCompatActivity {
                 "from user as U inner join personal_data as PD " +
                 "on U.id_pData=PD.id where id<?", new String[]{"4"});
 
-        dbHelper.logCursor(cursor, "---User with data---");
+        dbHelper.getUtility().logCursor(cursor, "---User with data---");
         cursor.close();
 
         /*cursor = db.rawQuery("select PD.data_name as Data, PN.phone_number as Phone " +
@@ -54,7 +54,7 @@ public class JoinActivity extends AppCompatActivity {
                 "on PD.id_phone_number=PN.id", null);*/
 
         cursor = db.rawQuery("select * from personal_data", null);
-        dbHelper.logCursor(cursor, "---Data with phone number---");
+        dbHelper.getUtility().logCursor(cursor, "---Data with phone number---");
         cursor.close();
     }
 

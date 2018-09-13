@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.utilities.Utility;
 import lombok.extern.java.Log;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -50,6 +51,8 @@ public class AsyncDbManager {
     private Class activityTostart;
     private Runnable runnableToStart;
 
+    private Utility utility = new Utility();
+
     /*in case you need a button transformation and switch to the next activity*/
 
     public AsyncDbManager(String table_name, String url, Context context,
@@ -68,16 +71,6 @@ public class AsyncDbManager {
     }
 
     /*Simple db loader*/
-
-    public AsyncDbManager(String table_name, String column_name, String url, Context context, DBHelper dbHelper, SQLiteDatabase db, boolean isMapList) {
-        this.table_name = table_name;
-        this.column_name = column_name;
-        this.url = url;
-        this.context = context;
-        this.dbHelper = dbHelper;
-        this.db = db;
-        this.isMapList = isMapList;
-    }
 
     public AsyncDbManager(String table_name, String column_name, String url,
                           Context context, DBHelper dbHelper, SQLiteDatabase db, boolean isMapList, Runnable runnableToStart) {
@@ -166,7 +159,7 @@ public class AsyncDbManager {
 //log track
             /*show me what u have*/
             Cursor cursor = db.query(table_name, null, null, null, null, null, null, null);
-            dbHelper.logCursor(cursor, table_name);
+            dbHelper.getUtility().logCursor(cursor, table_name);
             cursor.close();
 //------
             if (isNextActivityLauncher) {
@@ -226,41 +219,10 @@ public class AsyncDbManager {
         List<Object> list = responseEntity.getBody();
 
             /*put into the given table (internal db)*/
-        putListToTable(list, table_name, column_name);
+        utility.putListToTable(list, table_name, column_name, db);
     }
 
-    /**
-     * Puts list into the table (internal db)
-     */
-    private void putListToTable(List<Object> list, String table_name, String column_name) {
-        ContentValues cv = new ContentValues();
 
-        log.info("----Putting to sql----");
-
-        /*transaction for safe operation*/
-        db.beginTransaction();
-        try {
-            for (Object object : list) {
-
-                /*put data from list  to the context value*/
-                cv.put(column_name, object.toString());
-                log.info(column_name + " " + object.toString());
-
-                /*insert to the internal db*/
-                long insert_res = db.insert(table_name, null, cv);
-//log track
-                log.info("----loaded----: " + insert_res);
-
-            }
-
-            db.setTransactionSuccessful();
-            log.info("----all is ok----");
-        } finally {
-            db.endTransaction();
-            log.info("----End----");
-        }
-
-    }
 
 
     //-----MapList-----//
@@ -282,60 +244,18 @@ public class AsyncDbManager {
         List<Map<String, Object>> mapList = responseEntity.getBody();
 
             /*put into the given table (internal db)*/
-        putMapListIntoTheTable(mapList, table_name);
+        utility.putMapListIntoTheTable(mapList, table_name, db);
     }
 
 
-    /**
-     * Puts list of maps into the table (internal db)
-     */
-
-    private void putMapListIntoTheTable(List<Map<String, Object>> mapList, String table_name) {
-        ContentValues cv;
-
-        log.info("----Putting to sql----");
-
-        /*transaction for safe operation*/
-        db.beginTransaction();
-        try {
-            for (Map<String, Object> address : mapList) {
-
-                /*converts map to the context value*/
-                cv = mapToContextValueParser(address);
-
-                /*insert to the internal db*/
-                long insert_res = db.insert(table_name, null, cv);
-//log track
-                log.info("----loaded----: " + insert_res);
-
-            }
-
-            db.setTransactionSuccessful();
-            log.info("----all is ok----");
-        } finally {
-            db.endTransaction();
-            log.info("----End----");
-        }
-
-    }
-
-    /**
-     * Converts map to a ContextValue obj
-     */
-
-    private ContentValues mapToContextValueParser(Map<String, Object> mapToParse) {
-        ContentValues cv = new ContentValues();
-        log.info("-----Making cv---");
-
-        for (Map.Entry<String, Object> map : mapToParse.entrySet()) {
-            cv.put(map.getKey(), map.getValue().toString());
-        }
-
-        return cv;
-    }
 
 
     //----Getters-----
+
+
+    public Utility getUtility() {
+        return utility;
+    }
 
     public Button getBtn() {
         return btn;
