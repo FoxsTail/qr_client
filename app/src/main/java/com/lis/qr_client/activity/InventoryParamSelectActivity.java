@@ -43,6 +43,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
     String table_to_select = "address";
     String chosen_room = null;
+    String chosen_address = null;
 
     Thread thread;
     static Handler handler;
@@ -85,18 +86,24 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
     @Override
     public void onClick(View v) {
         /*if the value is empty*/
-        if (chosen_room.equals(" ")) {
-            log.info("---Nothing is selected (room)---");
-            Toast.makeText(this, "Choose the room!", Toast.LENGTH_SHORT).show();
+        if ( chosen_address == null || chosen_room == null) {
+            log.info("---Address or Room is null. Err.--");
+            return;
+        }
+
+        if ( chosen_address.equals(" ") || chosen_room.equals(" ")) {
+            log.info("---Nothing is selected--");
+            Toast.makeText(this, "Choose the address and the room!", Toast.LENGTH_SHORT).show();
         } else {
 
             String url = "http://10.0.3.2:8090/equipments/room/" + chosen_room;
             String table_name = "equipment";
             AsyncDbManager asyncDbManager = new AsyncDbManager(table_name, url, context, dbHelper, db, btnStart,
                     pbLoadEquipment, InventoryListActivity.class,
-                    true, true);
+                    true, true, chosen_room);
             asyncDbManager.runAsyncMapListLoader();
         }
+
     }
 
     //--------Spinners stuff----------//
@@ -160,16 +167,16 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
                     log.info("---spin Address selected---");
 
                     /*get value from selected Item*/
-                    String selected_value = parent.getItemAtPosition(position).toString();
+                    chosen_address = parent.getItemAtPosition(position).toString();
 
                     /*if the value is empty*/
-                    if (selected_value.equals(" ")) {
+                    if (chosen_address.equals(" ")) {
                         log.info("---Nothing is selected (address)---");
                         break;
                     }
 
                     /*get id_address from address value*/
-                    int id_address = addresses.getKey(selected_value);
+                    int id_address = addresses.getKey(chosen_address);
                     log.info("---address id is " + id_address + "---");
 
 
@@ -234,7 +241,6 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
     };
 
 
-
     /**
      * Load Address from SQLite;
      * Put in the BidiMap;
@@ -275,7 +281,6 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
         }
     };
-
 
 
 }

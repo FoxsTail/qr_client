@@ -3,11 +3,15 @@ package com.lis.qr_client.utilities;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.java.Log;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +22,26 @@ import java.util.Map;
 
 @Log
 public class Utility {
+
+
+      /**
+    Input - string with json after qr code scanning,
+     output - parsed to HashMap<String, Object> json
+    */
+
+    public HashMap<String, Object> scannedJsonToMap(String scan_result) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        HashMap<String, Object> jsonMap = new HashMap<>();
+        try {
+            jsonMap = mapper.readValue(scan_result, new TypeReference<Map<String, String>>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return jsonMap;
+    }
+
 
     /**
      * parse cursor to List

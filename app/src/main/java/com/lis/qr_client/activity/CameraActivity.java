@@ -81,16 +81,16 @@ public class CameraActivity extends AppCompatActivity {
         super.onResume();
         d(TAG, "---onResume-----");
 
-        /*Separate thread with handler camera open*/
+        /**Separate thread with handler camera open*/
         //fast af, but keeps old info only God knows where, sometimes can crash u
         //  threadCameraOpen(CAMERA_ID);
 
 
-        /*Async camera open*/
+        /**Async camera open*/
         //Ok at emulator, at my phone just makes NullPointer, cause the mCamera object isn't ready on time, too fast i guess
         //new AsyncCameraOpen().execute();
 
-        /*Main thread camera open*/
+        /**Main thread camera open*/
 
         //usual long open, at my phone - great, at the emulator -
         // sometimes can go to the magic land of "screen doesn't answer"

@@ -41,6 +41,7 @@ public class AsyncDbManager {
     private String table_name;
     private String url;
     private String column_name;
+    private Object extra_data;
 
     private Context context;
     private DBHelper dbHelper;
@@ -57,7 +58,7 @@ public class AsyncDbManager {
 
     public AsyncDbManager(String table_name, String url, Context context,
                           DBHelper dbHelper, SQLiteDatabase db, Button btn, ProgressBar pb, Class activityTostart,
-                          boolean isNextActivityLauncher, boolean isMapList) {
+                          boolean isNextActivityLauncher, boolean isMapList, Object extra_data) {
         this.isNextActivityLauncher = isNextActivityLauncher;
         this.isMapList = isMapList;
         this.table_name = table_name;
@@ -68,6 +69,7 @@ public class AsyncDbManager {
         this.btn = btn;
         this.pb = pb;
         this.activityTostart = activityTostart;
+        this.extra_data = extra_data;
     }
 
     /*Simple db loader*/
@@ -180,7 +182,12 @@ public class AsyncDbManager {
             /*if we have activity to run*/
             if (isNextActivityLauncher) {
                 if (classTostart != null) {
+
                     Intent intent = new Intent(context, classTostart);
+
+                    if (extra_data != null) {
+                        intent.putExtra("room", extra_data.toString());
+                    }
                     context.startActivity(intent);
                 }
             }
@@ -223,8 +230,6 @@ public class AsyncDbManager {
     }
 
 
-
-
     //-----MapList-----//
 
     /**
@@ -246,8 +251,6 @@ public class AsyncDbManager {
             /*put into the given table (internal db)*/
         utility.putMapListIntoTheTable(mapList, table_name, db);
     }
-
-
 
 
     //----Getters-----

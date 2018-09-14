@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lis.qr_client.R;
 import com.lis.qr_client.async_helpers.AsyncDbManager;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.utilities.Utility;
 import lombok.extern.java.Log;
 
 import java.io.IOException;
@@ -49,6 +50,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     String table_name = "address";
     String url = "http://10.0.3.2:8090/addresses/only_address";
+
+    private Utility utility = new Utility();
 
 
     @Override
@@ -94,23 +97,11 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 /*load all available strings from ext db, starts new Db*/
 
                 new AsyncDbManager(table_name, url, this, dbHelper, db, btnInventory, pbInventory,
-                        InventoryParamSelectActivity.class,true, true).runAsyncMapListLoader();
+                        InventoryParamSelectActivity.class,true, true, null).runAsyncMapListLoader();
 
-
-/*
-                Intent intent = new Intent(this, InventoryParamSelectActivity.class);
-                startActivity(intent);*/
             }
             break;
             case R.id.btnProfile: {
-                new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        handler.sendEmptyMessage(1);
-
-                    }
-                }).start();
             }
             break;
 
@@ -139,12 +130,13 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
                 final String scan_result = data.getStringExtra("scan_result");
                 //TODO: after data returns the app sometimes just done or crush for unknown reason; could be thread issue
+
                 /*show alertDialog with scanned data*/
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                        /* converts gotten data from json to map*/
-                        scannedMap = scannedJsonToMap(scan_result);
+                        scannedMap = utility.scannedJsonToMap(scan_result);
                         handler.sendEmptyMessage(1);
                     }
 
@@ -235,28 +227,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     //----------------------------------------//
 
-
-
-
-    /*
-    Input - string with json after qr code scanning,
-     output - parsed to HashMap<String, Object> json
-    */
-
-    public HashMap<String, Object> scannedJsonToMap(String scan_result) {
-        ObjectMapper mapper = new ObjectMapper();
-
-        HashMap<String, Object> jsonMap = new HashMap<>();
-        try {
-            jsonMap = mapper.readValue(scan_result, new TypeReference<Map<String, String>>() {
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return jsonMap;
-    }
-
-
     /*
      Parsing scannedMap, hidden value saves in the global var,
      other data build into a plain string
@@ -285,5 +255,18 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         return null;
     }
 
+    //-----Getters
 
+
+    public Utility getUtility() {
+        return utility;
+    }
+
+    public HashMap<String, Object> getScannedMap() {
+        return scannedMap;
+    }
+
+    public static Handler getHandler() {
+        return handler;
+    }
 }
