@@ -18,16 +18,16 @@ import java.util.Map;
 
 /**
  * Utility class for different small, repetitive tasks
- * */
+ */
 
 @Log
 public class Utility {
 
 
-      /**
-    Input - string with json after qr code scanning,
-     output - parsed to HashMap<String, Object> json
-    */
+    /**
+     * Input - string with json after qr code scanning,
+     * output - parsed to HashMap<String, Object> json
+     */
 
     public HashMap<String, Object> scannedJsonToMap(String scan_result) {
         ObjectMapper mapper = new ObjectMapper();
@@ -64,12 +64,49 @@ public class Utility {
         return convertedList;
     }
 
+    /**
+     * parse cursor to List<Map<String, Object>>
+     */
+
+    public List<Map<String, Object>> cursorToMapList(Cursor cursor) {
+        int id_index_column = cursor.getColumnIndex("id");
+
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        Map<String, Object> temp_map;
+
+        if (cursor != null) {
+            if (cursor.moveToNext()) {
+                do {
+                    temp_map = new HashMap<>();
+                    /*take id and address separately*/
+                    for (byte i = 0; i < cursor.getColumnCount(); i++) {
+                        if (i == id_index_column) {
+                            temp_map.put(cursor.getColumnName(i), cursor.getInt(i));
+                        } else {
+                            log.info(cursor.getColumnName(i) + cursor.getString(i));
+                            temp_map.put(cursor.getColumnName(i), cursor.getString(i));
+                        }
+                    }
+                    mapList.add(temp_map);
+
+                } while (cursor.moveToNext());
+            }
+            return mapList;
+        } else {
+            log.warning("Cursor is null");
+            return mapList;
+        }
+    }
+
 
     /**
      * parse cursor to BidiMap<Integer, String>
-     *
-     *  !!! Works only with tables where id column exists
-     *
+     * <p>
+     * !!! Works only with tables where id column exists
+     * <p>
+     * Value in bidimap will be combined values from all the table for one record
+     * <p>
+     * id=1 value= "Name Surname Date etc"
      */
 
 
@@ -109,7 +146,10 @@ public class Utility {
         return convertedMap;
     }
 
-    /**Cursor logging*/
+
+    /**
+     * Cursor logging
+     */
     public void logCursor(Cursor cursor, String title) {
         if (cursor != null) {
             if (cursor.moveToFirst()) {
@@ -130,7 +170,7 @@ public class Utility {
     /**
      * Puts list into the table (internal db)
      */
-    public void putListToTable(List<Object> list, String table_name, String column_name, SQLiteDatabase db) {
+    public void putListToTableColumn(List<Object> list, String table_name, String column_name, SQLiteDatabase db) {
         ContentValues cv = new ContentValues();
 
         log.info("----Putting to sql----");
@@ -159,7 +199,6 @@ public class Utility {
         }
 
     }
-
 
 
     /**
@@ -204,7 +243,11 @@ public class Utility {
         log.info("-----Making cv---");
 
         for (Map.Entry<String, Object> map : mapToParse.entrySet()) {
-            cv.put(map.getKey(), map.getValue().toString());
+            if (map.getValue() != null) {
+                cv.put(map.getKey(), map.getValue().toString());
+            }else{
+                cv.put(map.getKey(), (String) null);
+            }
         }
 
         return cv;

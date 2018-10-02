@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/items_textViews"
+             android:layout_gravity="center|top"
+             android:layout_marginTop="10dp"
+             android:layout_marginBottom="5dp">
+<!--
+
+
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/items_textViews"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+
+
+>
+    <TextView
+            android:text="@string/type"
+            android:layout_gravity="center|left"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:id="@+id/tvItemType" android:layout_row="1"
+            android:layout_column="0" android:textStyle="italic" android:textColor="@color/colorBlack"
+            android:textSize="18sp"/>
+    <TextView
+            android:text="@string/equipment_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:id="@+id/tvItemName"
+            android:layout_row="0" android:layout_column="1"
+            android:textSize="20sp" android:textColor="@color/colorBlack"/>
+    <TextView
+            android:text="@string/inventory_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|center_horizontal"
+            android:layout_gravity="center|right"
+            android:id="@+id/tvItemInventoryNum"
+            android:layout_weight="0.33"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:textSize="18sp" android:textColor="@color/colorBlack"/>
+
+
+
+-->
+        </GridLayout>

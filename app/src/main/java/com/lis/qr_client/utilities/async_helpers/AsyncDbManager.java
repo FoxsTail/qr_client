@@ -1,6 +1,5 @@
-package com.lis.qr_client.async_helpers;
+package com.lis.qr_client.utilities.async_helpers;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,7 +8,6 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.utilities.Utility;
 import lombok.extern.java.Log;
@@ -20,9 +18,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Map;
 
@@ -205,7 +200,6 @@ public class AsyncDbManager {
 
     //-----Additional methods-------//
 
-
     //-----List----//
 
     /**
@@ -226,7 +220,7 @@ public class AsyncDbManager {
         List<Object> list = responseEntity.getBody();
 
             /*put into the given table (internal db)*/
-        utility.putListToTable(list, table_name, column_name, db);
+        utility.putListToTableColumn(list, table_name, column_name, db);
     }
 
 

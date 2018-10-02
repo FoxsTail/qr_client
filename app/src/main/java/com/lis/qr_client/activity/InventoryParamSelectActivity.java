@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import com.lis.qr_client.R;
-import com.lis.qr_client.async_helpers.AsyncDbManager;
+import com.lis.qr_client.utilities.async_helpers.AsyncDbManager;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.utilities.Utility;
 import lombok.extern.java.Log;
@@ -232,7 +232,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
                 System.out.println(room);
             }
 
-            log.info("---Call handler---");
+            log.info("---Call dialogHandler---");
 
             Message msg = handler.obtainMessage(LOAD_ROOMS, rooms);
             handler.sendMessage(msg);
@@ -244,7 +244,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
     /**
      * Load Address from SQLite;
      * Put in the BidiMap;
-     * Pass the address array to the handler with LOAD_ADDRESS arg;
+     * Pass the address array to the dialogHandler with LOAD_ADDRESS arg;
      */
     //TODO: put in the onResume() ?
     public Runnable runLoadAddress = new Runnable() {
@@ -274,7 +274,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
             address_strings.add(" ");
             address_strings.addAll(addresses.values());
 
-            log.info("---Call handler---");
+            log.info("---Call dialogHandler---");
 
             Message msg = handler.obtainMessage(LOAD_ADDRESS, address_strings);
             handler.sendMessage(msg);

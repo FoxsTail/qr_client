@@ -41,9 +41,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("create table equipment(" +
                 "id integer primary key," +
-                "inventory_num text," +
+                "type text, "+
                 "vendor text, "+
-                "type text);");
+                "series text, "+
+                "model text, "+
+                "inventory_num text," +
+                "room integer);");
 
 
         //--------Address--------

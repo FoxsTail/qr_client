@@ -60,7 +60,9 @@ dependencies {
     //qr-code
     compile files('libs/zbar.jar')
 
-    //code
+    //front
+    compile 'com.android.support:cardview-v7:27.0.2'
+    compile 'com.android.support:recyclerview-v7:27.0.2'
 
     //android
     compile fileTree(include: ['*.jar'], dir: 'libs')

@@ -8,7 +8,7 @@
     <string name="email">Email:</string>
     <string name="name">Name:</string>
     <string name="del">Delete</string>
-    <string name="test">Test</string>
+    <string name="equipments">Test</string>
     <string name="message">some message</string>
     <string name="scan">Scan QR-code</string>
     <string name="create_qr">Create qr-code from data</string>
@@ -20,4 +20,11 @@
     <string name="select_room">Select room</string>
     <string name="start">Start</string>
     <string name="listLabel">Room</string>
+    <string name="equipment_name">Equipment name</string>
+    <string name="inventory_number">Inventory Number</string>
+    <string name="id">Id</string>
+    <string name="type">Type</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="inventory_scan_result">Inventory Scan Result</string>
 </resources>

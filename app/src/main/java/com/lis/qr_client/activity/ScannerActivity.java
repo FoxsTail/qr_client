@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.lis.qr_client.R;
-import com.lis.qr_client.async_helpers.AsyncQRGenerator;
+import com.lis.qr_client.utilities.async_helpers.AsyncQRGenerator;
 
 @lombok.extern.java.Log
 public class ScannerActivity extends AppCompatActivity implements View.OnClickListener {

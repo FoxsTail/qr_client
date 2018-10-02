@@ -81,9 +81,9 @@ public class CameraActivity extends AppCompatActivity {
         super.onResume();
         d(TAG, "---onResume-----");
 
-        /**Separate thread with handler camera open*/
+        /**Separate thread with dialogHandler camera open*/
         //fast af, but keeps old info only God knows where, sometimes can crash u
-        //  threadCameraOpen(CAMERA_ID);
+          //threadCameraOpen(CAMERA_ID);
 
 
         /**Async camera open*/
@@ -111,7 +111,7 @@ public class CameraActivity extends AppCompatActivity {
         if (cameraHandlerThread == null) {
             cameraHandlerThread = new CameraHandlerThread("CameraHandlerThread");
         }
-        d(TAG, "----Camera Thread handler----");
+        d(TAG, "----Camera Thread dialogHandler----");
 
         cameraHandlerThread.openCamera(camera_id);
     }
@@ -149,18 +149,19 @@ public class CameraActivity extends AppCompatActivity {
             notify();
         }
 
+ /*?????????????????????????????????????????????????????????????????????*/
         public void openCamera(final int camera_id) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    d(TAG, "----In the run----");
+                    d(TAG, "----Try to open camera----");
                     safeCameraOpen(camera_id);
-                    cameraOpenNotify();
+                  //  cameraOpenNotify();
 
                 }
             });
 
-            try {
+          /*  try {
                 synchronized (this) {
                     d(TAG, "----Wait for it...----");
                     wait();
@@ -169,7 +170,7 @@ public class CameraActivity extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e(TAG, "----Wait was Interrupted----");
 
-            }
+            }*/
         }
 
     }

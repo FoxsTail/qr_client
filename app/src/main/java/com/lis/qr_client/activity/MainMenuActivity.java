@@ -1,8 +1,5 @@
 package com.lis.qr_client.activity;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
@@ -14,15 +11,13 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lis.qr_client.R;
-import com.lis.qr_client.async_helpers.AsyncDbManager;
+import com.lis.qr_client.utilities.async_helpers.AsyncDbManager;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.utilities.Utility;
+import com.lis.qr_client.utilities.dialog_fragment.ScanDialogFragment;
 import lombok.extern.java.Log;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,11 +28,11 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private TextView tvDialogChange;
     private ProgressBar pbInventory;
 
-    private final int REQUEST_SCAN_QR = 1;
-    private static final int DIALOG_EXIT = -1;
-    private static final int DIALOG_SCANNED_CODE = 1;
+    protected final int REQUEST_SCAN_QR = 1;
+    protected static final int DIALOG_EXIT = -1;
+    protected static final int DIALOG_SCANNED_CODE = 1;
 
-    private HashMap<String, Object> scannedMap;
+    protected HashMap<String, Object> scannedMap;
 
     DBHelper dbHelper;
     SQLiteDatabase db;
@@ -45,7 +40,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private String qr_hidden_key = "hidden";
     private Object qr_hidden_value;
 
-    static Handler handler;
+    static Handler dialogHandler;
 
 
     String table_name = "address";
@@ -75,15 +70,26 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         dbHelper = new DBHelper(this);
         db = dbHelper.getWritableDatabase();
 
-        handler = new Handler() {
+        dialogHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                showDialog(DIALOG_SCANNED_CODE);
+                ScanDialogFragment dialogFragment = new ScanDialogFragment();
+                Bundle bundle = new Bundle();
+
+                String scanned_msg = scannedMapToMsg(scannedMap);
+
+                bundle.putString(ScanDialogFragment.ARG_TITLE, "Scan Result");
+                bundle.putString(ScanDialogFragment.ARG_MESSAGE, scanned_msg);
+
+                dialogFragment.setArguments(bundle);
+                dialogFragment.show(getFragmentManager(), "qr_scan");
+
             }
         };
 
 
     }
+
 
     @Override
     public void onClick(View v) {
@@ -97,11 +103,19 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 /*load all available strings from ext db, starts new Db*/
 
                 new AsyncDbManager(table_name, url, this, dbHelper, db, btnInventory, pbInventory,
-                        InventoryParamSelectActivity.class,true, true, null).runAsyncMapListLoader();
+                        InventoryParamSelectActivity.class, true, true, null).runAsyncMapListLoader();
 
             }
             break;
             case R.id.btnProfile: {
+                ScanDialogFragment dialogFragment = new ScanDialogFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putString(ScanDialogFragment.ARG_TITLE, "Scan");
+                bundle.putString(ScanDialogFragment.ARG_MESSAGE, "Bla bla balala");
+                dialogFragment.setArguments(bundle);
+
+                dialogFragment.show(getFragmentManager(), "Profile");
             }
             break;
 
@@ -129,7 +143,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             if (requestCode == REQUEST_SCAN_QR) {
 
                 final String scan_result = data.getStringExtra("scan_result");
-                //TODO: after data returns the app sometimes just done or crush for unknown reason; could be thread issue
 
                 /*show alertDialog with scanned data*/
                 new Thread(new Runnable() {
@@ -137,93 +150,16 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                     public void run() {
                        /* converts gotten data from json to map*/
                         scannedMap = utility.scannedJsonToMap(scan_result);
-                        handler.sendEmptyMessage(1);
+                        dialogHandler.sendEmptyMessage(1);
                     }
 
                 }).start();
 
-                /*All in main thread version*/
-             /*   scannedMap = scannedJsonToMap(scan_result);
-                showDialog(DIALOG_SCANNED_CODE);*/
             }
         } else if (resultCode == RESULT_CANCELED) {
             Toast.makeText(this, "Great mission was canceled", Toast.LENGTH_LONG).show();
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        showDialog(DIALOG_EXIT);
-    }
-
-
-    //--------------------Dialog-----------------------//
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        log.info("-----OnCreateDialog-----");
-
-        switch (id) {
-
-            /*shows scanned data in dialog*/
-            case (DIALOG_SCANNED_CODE): {
-                AlertDialog.Builder adb = new AlertDialog.Builder(this);
-
-                adb.setTitle("Scan result");
-
-                /*Convert map to a plain msg*/
-                String scanned_msg = scannedMapToMsg(scannedMap);
-                adb.setMessage(scanned_msg);
-
-                adb.setPositiveButton("Ok", dialogListener);
-
-                return adb.create();
-            }
-            case (DIALOG_EXIT): {
-                Toast.makeText(getApplicationContext(), "Farewell, my beloved friend!", Toast.LENGTH_LONG).show();
-                finish();
-            }
-            break;
-
-        }
-        return super.onCreateDialog(id);
-    }
-
-
-    @Override
-    protected void onPrepareDialog(int id, Dialog dialog) {
-        log.info("-----OnPrepareDialog-----");
-        super.onPrepareDialog(id, dialog);
-        switch (id) {
-            case (DIALOG_SCANNED_CODE): {
-
-                /*Renew dialog window with new data*/
-
-                String scanned_msg = scannedMapToMsg(scannedMap);
-                ((AlertDialog) dialog).setMessage(scanned_msg);
-            }
-        }
-    }
-
-
-    /*
-        defines alertDialog answer buttons
-    */
-    DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case Dialog.BUTTON_POSITIVE: {
-
-                }
-                break;
-                case Dialog.BUTTON_NEGATIVE: {
-                    Toast.makeText(getApplicationContext(), "NO", Toast.LENGTH_LONG).show();
-                    finish();
-                }
-                break;
-            }
-        }
-    };
 
     //----------------------------------------//
 
@@ -232,7 +168,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
      other data build into a plain string
      */
 
-    public String scannedMapToMsg(HashMap<String, Object> scannedMap) {
+    String scannedMapToMsg(HashMap<String, Object> scannedMap) {
         StringBuilder message = new StringBuilder();
 
         if (scannedMap != null) {
@@ -242,31 +178,17 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
                 if (map.getKey().equals(qr_hidden_key)) {
                     qr_hidden_value = map.getValue();
-                    message.append("------hidden---" + qr_hidden_value + "-------");
+                    message.append("------hidden---").append(qr_hidden_value).append("-------");
 
                     break;
                 }
 
-                message.append(map.getKey() + " : " + map.getValue() + "\n");
+                message.append(map.getKey()).append(" : ").append(map.getValue()).append("\n");
             }
             return message.toString();
 
         }
         return null;
     }
-
-    //-----Getters
-
-
-    public Utility getUtility() {
-        return utility;
-    }
-
-    public HashMap<String, Object> getScannedMap() {
-        return scannedMap;
-    }
-
-    public static Handler getHandler() {
-        return handler;
-    }
 }
+
