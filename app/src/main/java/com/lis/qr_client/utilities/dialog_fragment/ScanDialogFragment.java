@@ -1,10 +1,13 @@
 package com.lis.qr_client.utilities.dialog_fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 import com.lis.qr_client.R;
 import lombok.extern.java.Log;
@@ -14,9 +17,6 @@ public class ScanDialogFragment extends DialogFragment {
     public static final String ARG_TITLE = "ScanDialogFragment.Title";
     public static final String ARG_MESSAGE = "ScanDialogFragment.Message";
     protected AlertDialog.Builder builder;
-
-
-
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -67,6 +67,15 @@ public class ScanDialogFragment extends DialogFragment {
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
         log.info("-----Cancel-----");
+    }
+
+    public void callDialog(Context context, DialogFragment dialogFragment, Bundle bundle, String msg, String tag){
+        bundle.putString(ScanDialogFragment.ARG_TITLE, context.getResources().getString(R.string.inventory_scan_result));
+        bundle.putString(ScanDialogFragment.ARG_MESSAGE, msg);
+
+        dialogFragment.setArguments(bundle);
+        /*even if Jesus asks u, don't put the Activity instead of the AppCompatActivity*/
+        dialogFragment.show( ((AppCompatActivity) context).getFragmentManager(), tag);
     }
 
 }

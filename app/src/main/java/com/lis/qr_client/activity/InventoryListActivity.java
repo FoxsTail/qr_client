@@ -109,7 +109,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
                         scanned_msg = "The equipment has already been scanned!";
 
-                        callDialog(dialogFragment, bundle, scanned_msg, dialog_tag);
+                        dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, dialog_tag);
 
                     } else {
 
@@ -117,7 +117,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                         temp_equipments.remove(position);
                         temp_equipments.add(equipment_to_move);
 
-                        callDialog(dialogFragment, bundle, scanned_msg, dialog_tag);
+                        dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, dialog_tag);
 
 
                         log.info("---Notify data changed---");
@@ -126,7 +126,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
                 }else{
                     scanned_msg = "Equipment with inventory number " +inventoryNum+" is not found!";
-                    callDialog(dialogFragment, bundle, scanned_msg, dialog_tag);
+                    dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, dialog_tag);
                 }
             }
         };
@@ -196,7 +196,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     public void onBackPressed() {
         log.info("InventoryListActivity on backPressed");
         ExitDialogFragment exitDialogFragment = new ExitDialogFragment();
-        callDialog(exitDialogFragment, new Bundle(), "Quit the room?", "exit");
+        exitDialogFragment.callDialog(context, exitDialogFragment, new Bundle(), "Quit the room?", "exit");
       //  super.onBackPressed(); вылетает
     }
 
@@ -205,15 +205,6 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    //---Other methodts
-
-    void callDialog(DialogFragment dialogFragment, Bundle bundle, String msg, String tag){
-        bundle.putString(ScanDialogFragment.ARG_TITLE, getString(R.string.inventory_scan_result));
-        bundle.putString(ScanDialogFragment.ARG_MESSAGE, msg);
-
-        dialogFragment.setArguments(bundle);
-        dialogFragment.show(getFragmentManager(), "qr_scan");
-    }
 
 
 }

@@ -1,5 +1,6 @@
 package com.lis.qr_client.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
@@ -41,6 +42,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private Object qr_hidden_value;
 
     static Handler dialogHandler;
+    private Context context = this;
 
 
     String table_name = "address";
@@ -78,12 +80,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
                 String scanned_msg = scannedMapToMsg(scannedMap);
 
-                bundle.putString(ScanDialogFragment.ARG_TITLE, "Scan Result");
-                bundle.putString(ScanDialogFragment.ARG_MESSAGE, scanned_msg);
-
-                dialogFragment.setArguments(bundle);
-                dialogFragment.show(getFragmentManager(), "qr_scan");
-
+                dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, "qr_scan");
             }
         };
 
