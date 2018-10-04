@@ -45,9 +45,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 "vendor text, "+
                 "series text, "+
                 "model text, "+
+                "serial_num text, "+
                 "inventory_num text," +
-                "room integer);");
-
+                "room integer, "+
+                "id_asDetailIn integer,"+
+                "id_tp integer,"+
+                "id_user integer);");
 
         //--------Address--------
 
@@ -58,6 +61,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "number text);");
 
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
