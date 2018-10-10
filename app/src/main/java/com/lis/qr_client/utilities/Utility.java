@@ -3,8 +3,11 @@ package com.lis.qr_client.utilities;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lis.qr_client.pojo.Equipment;
+import com.lis.qr_client.pojo.EquipmentExpanded;
 import lombok.extern.java.Log;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
@@ -96,6 +99,147 @@ public class Utility {
             log.warning("Cursor is null");
             return mapList;
         }
+    }
+
+    /** creates Equipment and EquipmentExpanded from map, returns ParentObject*/
+    public ArrayList<Equipment> mapListToEquipmentList(List<Map<String, Object>> equipmentList) {
+
+        ArrayList<Equipment> parentObjects = new ArrayList<>();
+
+        Equipment equipment;
+        EquipmentExpanded expanded;
+
+        for (Map<String, Object> equipmentMap : equipmentList) {
+
+            /*convert map to object*/
+            equipment = mapToEquipment(equipmentMap);
+            expanded = mapToEquipmentExpanded(equipmentMap);
+
+            /*add to child list*/
+            equipment.getChildObjectList().add(expanded);
+
+            /*add to parent list*/
+            parentObjects.add(equipment);
+        }
+
+        return parentObjects;
+    }
+
+    /**
+     * hand parse map to EquipmentExpanded
+     */
+    public EquipmentExpanded mapToEquipmentExpanded(Map<String, Object> equipmentMap) {
+        String serial_num;
+        Integer id_asDetailIn;
+        Integer id_tp;
+        Integer id_user;
+        Integer room;
+
+
+           /*serial_num*/
+
+        if (equipmentMap.get("serial_num") != null) {
+            serial_num = (String) equipmentMap.get("serial_num");
+        } else {
+            serial_num = "";
+        }
+
+
+        /*id_asDetailIn*/
+
+        if (equipmentMap.get("id_asDetailIn") != null) {
+            id_asDetailIn = Integer.parseInt(equipmentMap.get("id_asDetailIn").toString());
+        } else {
+            id_asDetailIn = null;
+        }
+
+        /*id_tp*/
+
+        if (equipmentMap.get("id_tp") != null) {
+            id_tp = Integer.parseInt(equipmentMap.get("id_tp").toString());
+        } else {
+            id_tp = null;
+        }
+
+        /*id_user*/
+
+        if (equipmentMap.get("id_user") != null) {
+            id_user = Integer.parseInt(equipmentMap.get("id_user").toString());
+        } else {
+            id_user = null;
+        }
+
+        /*room*/
+
+        if (equipmentMap.get("room") != null) {
+            room = Integer.parseInt(equipmentMap.get("room").toString());
+        } else {
+            room = null;
+        }
+
+        return new EquipmentExpanded(serial_num, id_user, id_asDetailIn, id_tp, room);
+    }
+
+
+    /**
+     * hand parse map to Equipment
+     */
+    public Equipment mapToEquipment(Map<String, Object> equipmentMap) {
+        int id;
+        String type;
+        String vendor;
+        String model;
+        String series;
+        String inventory_num;
+
+
+        /*id*/
+
+        if (equipmentMap.get("id") != null) {
+            id = Integer.parseInt(equipmentMap.get("id").toString());
+        } else {
+            id = 0;
+        }
+
+         /*type*/
+
+        if (equipmentMap.get("type") != null) {
+            type = (String) equipmentMap.get("type");
+        } else {
+            type = "";
+        }
+
+        /*name*/
+
+        if (equipmentMap.get("vendor") == null || equipmentMap.get("vendor").equals("null")) {
+            vendor = "";
+        } else {
+            vendor = equipmentMap.get("vendor").toString();
+        }
+
+        if (equipmentMap.get("model") == null || equipmentMap.get("model").equals("null")) {
+            model = "";
+        } else {
+            model = equipmentMap.get("model").toString();
+        }
+
+        if (equipmentMap.get("series") == null || equipmentMap.get("series").equals("null")) {
+            series = "";
+        } else {
+            series = equipmentMap.get("series").toString();
+        }
+
+
+        /*inventory_num*/
+
+        if (equipmentMap.get("inventory_num") != null) {
+            inventory_num = (String) equipmentMap.get("inventory_num");
+        } else {
+            inventory_num = "";
+        }
+
+
+        return new Equipment(id, type, vendor, model, series, inventory_num);
     }
 
 
@@ -245,7 +389,7 @@ public class Utility {
         for (Map.Entry<String, Object> map : mapToParse.entrySet()) {
             if (map.getValue() != null) {
                 cv.put(map.getKey(), map.getValue().toString());
-            }else{
+            } else {
                 cv.put(map.getKey(), (String) null);
             }
         }

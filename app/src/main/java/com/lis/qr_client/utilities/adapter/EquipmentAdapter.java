@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
+import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
 import com.lis.qr_client.R;
 import lombok.extern.java.Log;
 
@@ -16,12 +18,10 @@ import java.util.Map;
 public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.EquipmentViewHolder> {
 
     private List<Map<String, Object>> equipments;
-    private boolean[] selected;
 
     public EquipmentAdapter(List<Map<String, Object>> equipments) {
         log.info("---- EquipmentAdapter constructor---");
         this.equipments = equipments;
-        selected = new boolean[equipments.size()];
     }
 
     @Override
@@ -108,8 +108,8 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.Equi
      */
     class EquipmentViewHolder extends RecyclerView.ViewHolder {
         // TextView tvItemId;
-        TextView tvItemName;
-        TextView tvItemInventoryNum;
+        public TextView tvItemName;
+        public TextView tvItemInventoryNum;
         // TextView tvItemType;
 
         EquipmentViewHolder(View itemView) {
@@ -123,6 +123,7 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.Equi
 
     }
 
+
     //------Getters------
 
 
@@ -130,7 +131,4 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.Equi
         return equipments;
     }
 
-    public boolean[] getSelected() {
-        return selected;
-    }
 }

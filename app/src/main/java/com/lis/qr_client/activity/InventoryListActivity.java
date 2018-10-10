@@ -1,6 +1,5 @@
 package com.lis.qr_client.activity;
 
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,13 +13,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.*;
 import com.lis.qr_client.R;
-import com.lis.qr_client.utilities.adapter.EquipmentAdapter;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.pojo.Equipment;
 import com.lis.qr_client.utilities.Utility;
+import com.lis.qr_client.utilities.adapter.EEA;
 import com.lis.qr_client.utilities.dialog_fragment.ExitDialogFragment;
 import com.lis.qr_client.utilities.dialog_fragment.ScanDialogFragment;
 import lombok.extern.java.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +40,8 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     private SQLiteDatabase db;
 
     private List<Map<String, Object>> equipments;
-    private EquipmentAdapter adapter;
+    private ArrayList<Equipment> parent_equipments;
+    private EEA adapter;
     private String inventoryNum = "inventory_num";
 
     private Utility utility = new Utility();
@@ -94,18 +96,16 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
                 /*get view holder*/
                 View view = rvEquipments.findViewWithTag(inventoryNum);
-
                 if (view != null) {
                     RecyclerView.ViewHolder viewHolder = rvEquipments.findContainingViewHolder(view);
                     int position = viewHolder.getAdapterPosition();
 
-
                     /*replace found equipment to the end of the list*/
-                    List<Map<String, Object>> temp_equipments = adapter.getEquipments();
-                    Map<String, Object> equipment_to_move = temp_equipments.get(position);
-                    Object isSelected = equipment_to_move.get("isSelected");
+                    List<Equipment> temp_parent_equipments = adapter.getmParentItemList();
+                    Equipment equipment_to_move = temp_parent_equipments.get(position);
 
-                    if (isSelected != null && (boolean) isSelected) {
+
+                    if (equipment_to_move.isSelected()) {
 
                         scanned_msg = "The equipment has already been scanned!";
 
@@ -113,19 +113,18 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
                     } else {
 
-                        equipment_to_move.put("isSelected", true);
-                        temp_equipments.remove(position);
-                        temp_equipments.add(equipment_to_move);
+                        equipment_to_move.setSelected(true);
+                        temp_parent_equipments.remove(position);
+                        temp_parent_equipments.add(equipment_to_move);
 
                         dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, dialog_tag);
-
 
                         log.info("---Notify data changed---");
                         rvEquipments.getAdapter().notifyDataSetChanged();
                     }
 
-                }else{
-                    scanned_msg = "Equipment with inventory number " +inventoryNum+" is not found!";
+                } else {
+                    scanned_msg = "Equipment with inventory number " + inventoryNum + " is not found!";
                     dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, dialog_tag);
                 }
             }
@@ -171,12 +170,13 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
         public void run() {
             Toast.makeText(context, "Done loading", Toast.LENGTH_SHORT).show();
 
-            log.info("Create the Adapter");
-            adapter = new EquipmentAdapter(equipments);
-            log.info("Setting the adapter");
+            parent_equipments = utility.mapListToEquipmentList(equipments);
+
+            adapter = new EEA(parent_equipments);
             rvEquipments.setAdapter(adapter);
         }
     };
+
     //-------------------Clicks--------------------//
 
     @Override
@@ -197,14 +197,13 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
         log.info("InventoryListActivity on backPressed");
         ExitDialogFragment exitDialogFragment = new ExitDialogFragment();
         exitDialogFragment.callDialog(context, exitDialogFragment, new Bundle(), "Quit the room?", "exit");
-      //  super.onBackPressed(); вылетает
+        //  super.onBackPressed(); вылетает
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 
 
 }
