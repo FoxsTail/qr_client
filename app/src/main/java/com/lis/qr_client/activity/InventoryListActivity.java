@@ -16,7 +16,7 @@ import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.pojo.Equipment;
 import com.lis.qr_client.utilities.Utility;
-import com.lis.qr_client.utilities.adapter.EEA;
+import com.lis.qr_client.utilities.adapter.ExpandableEquipmentAdapter;
 import com.lis.qr_client.utilities.dialog_fragment.ExitDialogFragment;
 import com.lis.qr_client.utilities.dialog_fragment.ScanDialogFragment;
 import lombok.extern.java.Log;
@@ -41,7 +41,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
     private List<Map<String, Object>> equipments;
     private ArrayList<Equipment> parent_equipments;
-    private EEA adapter;
+    private ExpandableEquipmentAdapter adapter;
     private String inventoryNum = "inventory_num";
 
     private Utility utility = new Utility();
@@ -172,7 +172,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
             parent_equipments = utility.mapListToEquipmentList(equipments);
 
-            adapter = new EEA(parent_equipments);
+            adapter = new ExpandableEquipmentAdapter(parent_equipments);
             rvEquipments.setAdapter(adapter);
         }
     };

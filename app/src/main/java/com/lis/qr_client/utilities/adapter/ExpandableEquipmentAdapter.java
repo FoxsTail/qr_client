@@ -4,26 +4,23 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
 import com.lis.qr_client.R;
 import com.lis.qr_client.pojo.Equipment;
-import com.lis.qr_client.pojo.EquipmentExpanded;
 import lombok.extern.java.Log;
 
 import java.util.List;
 
 @Log
-public class EEA extends RecyclerView.Adapter<EEA.EquipmentViewHolder> {
+public class ExpandableEquipmentAdapter extends RecyclerView.Adapter<ExpandableEquipmentAdapter.EquipmentViewHolder> {
     private List<Equipment> mParentItemList;
 
-    public EEA(List<Equipment> mParentItemList) {
+    public ExpandableEquipmentAdapter(List<Equipment> mParentItemList) {
         this.mParentItemList = mParentItemList;
     }
 

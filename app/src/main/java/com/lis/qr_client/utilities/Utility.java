@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lis.qr_client.pojo.Equipment;
@@ -86,7 +87,7 @@ public class Utility {
                         if (i == id_index_column) {
                             temp_map.put(cursor.getColumnName(i), cursor.getInt(i));
                         } else {
-                            log.info(cursor.getColumnName(i) + cursor.getString(i));
+                            log.info(cursor.getColumnName(i) + " " + cursor.getString(i));
                             temp_map.put(cursor.getColumnName(i), cursor.getString(i));
                         }
                     }
@@ -101,7 +102,9 @@ public class Utility {
         }
     }
 
-    /** creates Equipment and EquipmentExpanded from map, returns ParentObject*/
+    /**
+     * creates Equipment and EquipmentExpanded from map, returns ParentObject
+     */
     public ArrayList<Equipment> mapListToEquipmentList(List<Map<String, Object>> equipmentList) {
 
         ArrayList<Equipment> parentObjects = new ArrayList<>();
@@ -129,6 +132,7 @@ public class Utility {
      * hand parse map to EquipmentExpanded
      */
     public EquipmentExpanded mapToEquipmentExpanded(Map<String, Object> equipmentMap) {
+        String attributes;
         String serial_num;
         Integer id_asDetailIn;
         Integer id_tp;
@@ -136,7 +140,25 @@ public class Utility {
         Integer room;
 
 
-           /*serial_num*/
+        /*attributes*/
+        String equipment_string = (String) equipmentMap.get("attributes");
+        if (equipment_string != null) {
+
+            /*transform string attributes to HashMap*/
+            HashMap<String, Object> attribute_map = attributesStringToHashMap(equipment_string);
+
+            /*parse HashMap to the beautiful string*/
+            if (attribute_map != null) {
+                attributes = hashMapToString(attribute_map);
+            } else {
+                attributes = "";
+            }
+        } else {
+            attributes = "";
+        }
+
+
+        /*serial_num*/
 
         if (equipmentMap.get("serial_num") != null) {
             serial_num = (String) equipmentMap.get("serial_num");
@@ -177,7 +199,40 @@ public class Utility {
             room = null;
         }
 
-        return new EquipmentExpanded(serial_num, id_user, id_asDetailIn, id_tp, room);
+        return new EquipmentExpanded(attributes, serial_num, id_user, id_asDetailIn, id_tp, room);
+    }
+
+
+    /**
+     * Parse HashMap to the beautiful string in format "Key: Value \n"
+     */
+    private String hashMapToString(HashMap<String, Object> attribute_map) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Map.Entry<String, Object> map : attribute_map.entrySet()) {
+            stringBuilder
+                    .append(" ")
+                    .append(map.getKey())
+                    .append(": ")
+                    .append(map.getValue())
+                    .append(";");
+        }
+        return stringBuilder.toString();
+    }
+
+
+    /**
+     * Transform string attributes to HashMap
+     */
+    public HashMap<String, Object> attributesStringToHashMap(String string_json) {
+
+        HashMap<String, Object> attribute_map = null;
+        try {
+            attribute_map = new ObjectMapper().readValue(string_json, HashMap.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return attribute_map;
     }
 
 
@@ -388,7 +443,25 @@ public class Utility {
 
         for (Map.Entry<String, Object> map : mapToParse.entrySet()) {
             if (map.getValue() != null) {
-                cv.put(map.getKey(), map.getValue().toString());
+
+                log.info("----" + map.getKey() + " " + map.getValue().toString() + "------");
+
+
+                /*parse attribute hashMap to {"a":"b"} text for sqlite */
+                if (map.getKey().equals("attributes")){
+                    String string_attributes = null;
+
+                    try {
+                        string_attributes = new ObjectMapper().writeValueAsString(map.getValue());
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                    cv.put(map.getKey(), string_attributes);
+                    break;
+                }
+
+
+                    cv.put(map.getKey(), map.getValue().toString());
             } else {
                 cv.put(map.getKey(), (String) null);
             }

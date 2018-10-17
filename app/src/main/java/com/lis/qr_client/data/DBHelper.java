@@ -47,6 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "model text, "+
                 "serial_num text, "+
                 "inventory_num text," +
+                "attributes text,"+
                 "room integer, "+
                 "id_asDetailIn integer,"+
                 "id_tp integer,"+

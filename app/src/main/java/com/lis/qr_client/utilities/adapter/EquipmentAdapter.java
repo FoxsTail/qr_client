@@ -27,7 +27,7 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.Equi
     @Override
     public EquipmentViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         log.info("----onCreateViewHolder---");
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_item_2, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_expanded_equipment, viewGroup, false);
         return new EquipmentViewHolder(view);
     }
 
