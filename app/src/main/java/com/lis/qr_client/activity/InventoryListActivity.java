@@ -94,9 +94,11 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                 String scanned_msg = scannedMapToMsg(scannedMap);
 
 
+                //TODO:sometimes appears not found equipment. maybe with two list will be better. CREATE! FIX!
                 /*get view holder*/
                 View view = rvEquipments.findViewWithTag(inventoryNum);
                 if (view != null) {
+                    log.info("----------"+view.getTag());
                     RecyclerView.ViewHolder viewHolder = rvEquipments.findContainingViewHolder(view);
                     int position = viewHolder.getAdapterPosition();
 
@@ -112,7 +114,6 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                         dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, dialog_tag);
 
                     } else {
-
                         equipment_to_move.setSelected(true);
                         temp_parent_equipments.remove(position);
                         temp_parent_equipments.add(equipment_to_move);

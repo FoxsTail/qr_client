@@ -211,7 +211,7 @@ public class Utility {
 
         for (Map.Entry<String, Object> map : attribute_map.entrySet()) {
             stringBuilder
-                    .append(" ")
+                    .append("\n")
                     .append(map.getKey())
                     .append(": ")
                     .append(map.getValue())
@@ -448,7 +448,7 @@ public class Utility {
 
 
                 /*parse attribute hashMap to {"a":"b"} text for sqlite */
-                if (map.getKey().equals("attributes")){
+                if (map.getKey().equals("attributes")) {
                     String string_attributes = null;
 
                     try {
@@ -457,11 +457,11 @@ public class Utility {
                         e.printStackTrace();
                     }
                     cv.put(map.getKey(), string_attributes);
-                    break;
-                }
+                } else {
 
 
                     cv.put(map.getKey(), map.getValue().toString());
+                }
             } else {
                 cv.put(map.getKey(), (String) null);
             }
