@@ -51,7 +51,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "room integer, "+
                 "id_asDetailIn integer,"+
                 "id_tp integer,"+
-                "id_user integer);");
+                "id_user integer," +
+                "user_info text);");
 
         //--------Address--------
 

@@ -8,50 +8,20 @@ import java.util.HashMap;
 public class EquipmentExpanded {
     private String mAttributes;
     private String mSerial_num;
-    private String mId_user;
-    private String mId_tp;
-    private String mId_asDetailIn;
-    private String mRoom;
+    private String mUser_Info;
 
 
     public EquipmentExpanded(String attributes, String serial_num,
-                             Integer id_user, Integer id_AsDetailIn, Integer id_tp, Integer room) {
-        this.mAttributes = attributes;
-        this.mSerial_num = serial_num;
-
-        if (id_user != null) {
-            this.mId_user = id_user.toString();
-        } else {
-            this.mId_user = "";
-        }
-
-        if (id_AsDetailIn != null) {
-            this.mId_asDetailIn = id_AsDetailIn.toString();
-        } else {
-            this.mId_asDetailIn = "";
-        }
-
-        if (id_tp != null) {
-            this.mId_tp = id_tp.toString();
-        } else {
-            this.mId_tp = "";
-        }
-
-
-        if (room != null) {
-            this.mRoom = room.toString();
-        } else {
-            this.mRoom = "";
-        }
+                             String user_Info) {
+        mAttributes = attributes;
+        mSerial_num = serial_num;
+        mUser_Info = user_Info;
     }
 
     @Override
     public String toString() {
-        return "Serial number: " + mSerial_num + "\n" +
-                "Attributes: " + mAttributes + "\n" +
-                "User id: " + mId_user + "\n" +
-                "Tp id: " + mId_tp + "\n" +
-                "As detail in: " + mId_asDetailIn + "\n" +
-                "room: " + mRoom;
+        return "Serial number: " + "\n" + mSerial_num + "\n" +
+                "Attributes: "+ mAttributes + "\n" +
+                "Responsible: " + "\n" + mUser_Info;
     }
 }

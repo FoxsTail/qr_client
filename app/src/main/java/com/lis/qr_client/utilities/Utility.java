@@ -134,10 +134,7 @@ public class Utility {
     public EquipmentExpanded mapToEquipmentExpanded(Map<String, Object> equipmentMap) {
         String attributes;
         String serial_num;
-        Integer id_asDetailIn;
-        Integer id_tp;
-        Integer id_user;
-        Integer room;
+        String user_info;
 
 
         /*attributes*/
@@ -167,39 +164,16 @@ public class Utility {
         }
 
 
-        /*id_asDetailIn*/
+        /*user_info*/
 
-        if (equipmentMap.get("id_asDetailIn") != null) {
-            id_asDetailIn = Integer.parseInt(equipmentMap.get("id_asDetailIn").toString());
+        if (equipmentMap.get("user_info") != null) {
+            user_info = equipmentMap.get("user_info").toString();
         } else {
-            id_asDetailIn = null;
+            user_info = "";
         }
 
-        /*id_tp*/
 
-        if (equipmentMap.get("id_tp") != null) {
-            id_tp = Integer.parseInt(equipmentMap.get("id_tp").toString());
-        } else {
-            id_tp = null;
-        }
-
-        /*id_user*/
-
-        if (equipmentMap.get("id_user") != null) {
-            id_user = Integer.parseInt(equipmentMap.get("id_user").toString());
-        } else {
-            id_user = null;
-        }
-
-        /*room*/
-
-        if (equipmentMap.get("room") != null) {
-            room = Integer.parseInt(equipmentMap.get("room").toString());
-        } else {
-            room = null;
-        }
-
-        return new EquipmentExpanded(attributes, serial_num, id_user, id_asDetailIn, id_tp, room);
+        return new EquipmentExpanded(attributes, serial_num, user_info);
     }
 
 
