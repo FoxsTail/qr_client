@@ -27,4 +27,8 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="inventory_scan_result">Inventory Scan Result</string>
+    <string name="port">8090</string>
+    <string name="server_ip">172.36.2.47</string>
+    <string name="emu_ip">10.0.3.2</string>
+
 </resources>

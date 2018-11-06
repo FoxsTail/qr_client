@@ -40,11 +40,15 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
 
     SQLiteDatabase db;
     DBHelperOld dbHelper;
+    String url;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync);
+
+        url = "http://" + getString(R.string.server_ip) + ":" + getString(R.string.port) + "/users/";
 
         tvName = findViewById(R.id.tvUserName);
         tvEmail = findViewById(R.id.tvUserEmail);
@@ -105,7 +109,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                     tvName.setText(user.getUsername());
                     tvEmail.setText(user.getEmail());
                     btnNext.setEnabled(false);
-                }else{
+                } else {
                     tvUsersTitle.setText("User not found");
 
                 }
@@ -183,13 +187,14 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected Void doInBackground(Void... voids) {
             ContentValues cv = new ContentValues();
-            String url = "http://10.0.3.2:8090/users/";
+            // String url = "http://"+R.string.server_ip+":"+R.string.port+"/users/";
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-            ResponseEntity<List<User>> users = restTemplate.exchange(url, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<User>>() {
-                    });
+            if (url != null) {
+                ResponseEntity<List<User>> users = restTemplate.exchange(url, HttpMethod.GET, null,
+                        new ParameterizedTypeReference<List<User>>() {
+                        });
 
             for (User user : users.getBody()) {
                 cv.put("username", user.getUsername());
@@ -200,7 +205,10 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                     log.info("----" + user.toString() + "-- id -- " + i);
                 }
             }
+            }else {
+                log.warning("---URL IS NULL!---");
 
+            }
             //log.info("----" + user.getBody().toString() + "----");
             return null;
         }

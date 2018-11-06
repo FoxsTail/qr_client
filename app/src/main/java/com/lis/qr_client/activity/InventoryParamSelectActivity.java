@@ -51,11 +51,16 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
     Utility utility = new Utility();
 
 
+    String url;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         log.info("-----I'm here!!!!--------");
         setContentView(R.layout.activity_inventory_param_select);
+
+        url = "http://"+getString(R.string.server_ip)+":"+getString(R.string.port);
 
         spinAddress = findViewById(R.id.spinAddress);
         spinRoom = findViewById(R.id.spinRoom);
@@ -96,13 +101,18 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
             Toast.makeText(this, "Choose the address and the room!", Toast.LENGTH_SHORT).show();
         } else {
 
-            String url = "http://10.0.3.2:8090/equipments/room/" + chosen_room;
-            String table_name = "equipment";
-            AsyncDbManager asyncDbManager = new AsyncDbManager(table_name, url, context, dbHelper, db, btnStart,
-                    pbLoadEquipment, InventoryListActivity.class,
-                    true, true, chosen_room);
-            asyncDbManager.runAsyncMapListLoader();
-        }
+            if(url != null) {
+                String url_room = url + "/equipments/room/" + chosen_room;
+                String table_name = "equipment";
+                AsyncDbManager asyncDbManager = new AsyncDbManager(table_name, url_room, context, dbHelper, db, btnStart,
+                        pbLoadEquipment, InventoryListActivity.class,
+                        true, true, chosen_room);
+                asyncDbManager.runAsyncMapListLoader();
+            }else {
+                log.warning("---URL IS NULL---");
+
+            }
+            }
 
     }
 
@@ -181,16 +191,19 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
 
                     /*params for request*/
-                    //TODO:replace 10.0.3.2:8090 with some constant path in production
-                    String url = "http://10.0.3.2:8090/addresses/rooms/" + id_address;
-                    String table_name = "room";
-                    String column_name = "room";
+                    if(url != null) {
+                        String url_address = url + "/addresses/rooms/" + id_address;
+                        String table_name = "room";
+                        String column_name = "room";
 
                     /*async get rooms and put into sqLite*/
-                    AsyncDbManager dbManager = new AsyncDbManager(table_name, column_name, url, context, dbHelper, db, false, runLoadRooms);
-                    log.info("--- call AsyncMapListLoader---");
-                    dbManager.runAsyncMapListLoader();
+                        AsyncDbManager dbManager = new AsyncDbManager(table_name, column_name, url_address, context, dbHelper, db, false, runLoadRooms);
+                        log.info("--- call AsyncMapListLoader---");
+                        dbManager.runAsyncMapListLoader();
+                    }else {
+                        log.warning("---URL IS NULL!---");
 
+                    }
                     break;
                 }
                 case R.id.spinRoom: {

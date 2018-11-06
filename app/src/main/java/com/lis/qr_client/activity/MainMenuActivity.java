@@ -46,7 +46,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
 
     String table_name = "address";
-    String url = "http://10.0.3.2:8090/addresses/only_address";
+    //String url = "http://10.0.3.2:8090/addresses/only_address";
+    String url;
 
     private Utility utility = new Utility();
 
@@ -55,6 +56,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        url = "http://" + getString(R.string.server_ip) + ":" + getString(R.string.port) + "/addresses/only_address";
 
         tvDialogChange = findViewById(R.id.tvDialogChange);
 
@@ -98,10 +101,13 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btnInventory: {
 
                 /*load all available strings from ext db, starts new Db*/
+                if (url != null) {
+                    new AsyncDbManager(table_name, url, this, dbHelper, db, btnInventory, pbInventory,
+                            InventoryParamSelectActivity.class, true, true, null).runAsyncMapListLoader();
+                }else {
+                    log.warning("---URL IS NULL!---");
 
-                new AsyncDbManager(table_name, url, this, dbHelper, db, btnInventory, pbInventory,
-                        InventoryParamSelectActivity.class, true, true, null).runAsyncMapListLoader();
-
+                }
             }
             break;
             case R.id.btnProfile: {
