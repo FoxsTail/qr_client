@@ -15,7 +15,7 @@ import java.util.List;
 @Log
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DB_VERSION=1;
+    public static final int DB_VERSION = 1;
     private Utility utility = new Utility();
 
     public Utility getUtility() {
@@ -41,25 +41,35 @@ public class DBHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("create table equipment(" +
                 "id integer primary key," +
-                "type text, "+
-                "vendor text, "+
-                "series text, "+
-                "model text, "+
-                "serial_num text, "+
+                "type text, " +
+                "vendor text, " +
+                "series text, " +
+                "model text, " +
+                "serial_num text, " +
                 "inventory_num text," +
-                "attributes text,"+
-                "room integer, "+
-                "id_asDetailIn integer,"+
-                "id_tp integer,"+
+                "attributes text," +
+                "room integer, " +
+                "id_asDetailIn integer," +
+                "id_tp integer," +
                 "id_user integer," +
                 "user_info text);");
+
+
+        //--------Inventory--------
+
+        sqLiteDatabase.execSQL("create table inventory(" +
+                "name text," +
+                "inventory_num text primary key," +
+                "room int," +
+                "tp_id);");
+
 
         //--------Address--------
 
         sqLiteDatabase.execSQL("create table address(" +
                 "id integer primary key," +
-                "city text, "+
-                "street text, "+
+                "city text, " +
+                "street text, " +
                 "number text);");
 
     }
@@ -95,9 +105,6 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
     }
-
-
-
 
 
 }

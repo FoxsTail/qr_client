@@ -1,12 +1,13 @@
 package com.lis.qr_client.pojo;
 
 import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
+import com.lis.qr_client.interfaces.InventoryPojo;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 @Data
-public class Equipment implements ParentObject {
+public class Equipment implements ParentObject, InventoryPojo {
     private List<Object> equipmentExpanded = new ArrayList<>();
     private boolean isSelected = false;
 

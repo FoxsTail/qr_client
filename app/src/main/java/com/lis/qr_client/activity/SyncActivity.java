@@ -48,7 +48,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync);
 
-        url = "http://" + getString(R.string.server_ip) + ":" + getString(R.string.port) + "/users/";
+        url = "http://" + getString(R.string.emu_ip) + ":" + getString(R.string.port) + "/users/";
 
         tvName = findViewById(R.id.tvUserName);
         tvEmail = findViewById(R.id.tvUserEmail);

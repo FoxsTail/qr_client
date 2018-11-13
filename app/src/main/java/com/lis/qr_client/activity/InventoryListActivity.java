@@ -15,8 +15,10 @@ import android.widget.*;
 import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.pojo.Equipment;
+import com.lis.qr_client.pojo.Inventory;
 import com.lis.qr_client.utilities.Utility;
 import com.lis.qr_client.utilities.adapter.ExpandableEquipmentAdapter;
+import com.lis.qr_client.utilities.adapter.InventoryAdapter;
 import com.lis.qr_client.utilities.dialog_fragment.ExitDialogFragment;
 import com.lis.qr_client.utilities.dialog_fragment.ScanDialogFragment;
 import lombok.extern.java.Log;
@@ -30,22 +32,36 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
     private static final int REQUEST_SCAN_QR = 1;
 
+    private Cursor cursor;
+    private DBHelper dbHelper;
+    private SQLiteDatabase db;
+
 
     private RecyclerView rvEquipments;
     private TextView tvlistLabel;
     private Button btnScanInventory;
 
-    private Cursor cursor;
-    private DBHelper dbHelper;
-    private SQLiteDatabase db;
+    private List<Map<String, Object>> equipments;
+    private ArrayList<Equipment> parent_equipments;
+
+    /*
+
+    ------equipment------
+
+    private RecyclerView rvEquipments;
 
     private List<Map<String, Object>> equipments;
     private ArrayList<Equipment> parent_equipments;
-    private ExpandableEquipmentAdapter adapter;
-    private String inventoryNum = "inventory_num";
 
+    private ExpandableEquipmentAdapter adapter;
+*/
+
+    private InventoryAdapter adapter;
+    private String inventoryNum = "inventory_num";
     private Utility utility = new Utility();
     private Context context = this;
+
+    String table_to_select;
 
 
     @Override
@@ -80,6 +96,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
         rvEquipments.setLayoutManager(layoutManager);
 
 
+        /***/
         dialogHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -98,23 +115,41 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                 /*get view holder*/
                 View view = rvEquipments.findViewWithTag(inventoryNum);
                 if (view != null) {
-                    log.info("----------"+view.getTag());
+                    log.info("-----TAG-----"+view.getTag());
                     RecyclerView.ViewHolder viewHolder = rvEquipments.findContainingViewHolder(view);
                     int position = viewHolder.getAdapterPosition();
 
-                    /*replace found equipment to the end of the list*/
+/*                  //----------equipment---------
+
+                    *//*replace found equipment to the end of the list*//*
+
                     List<Equipment> temp_parent_equipments = adapter.getmParentItemList();
                     Equipment equipment_to_move = temp_parent_equipments.get(position);
 
+*/
+                    //----------inventory---------
+                    List<Map<String, Object>> temp_parent_equipments = adapter.getInventories();
+                     Map<String, Object> equipment_to_move = temp_parent_equipments.get(position);
 
-                    if (equipment_to_move.isSelected()) {
+
+                    //----------equipment---------
+                   // if (equipment_to_move.isSelected()) {
+
+                    //----------inventory---------
+                    Object isSelected = equipment_to_move.get("isSelected");
+                    if(isSelected != null && (boolean) isSelected){
 
                         scanned_msg = "The equipment has already been scanned!";
 
                         dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, dialog_tag);
 
                     } else {
-                        equipment_to_move.setSelected(true);
+                        //----------equipment---------
+                        // equipment_to_move.setSelected(true);
+
+                        //----------inventory---------
+                        equipment_to_move.put("isSelected", true);
+
                         temp_parent_equipments.remove(position);
                         temp_parent_equipments.add(equipment_to_move);
 
@@ -125,11 +160,15 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                     }
 
                 } else {
+                    log.info("----Equipment with inventory number----");
+
                     scanned_msg = "Equipment with inventory number " + inventoryNum + " is not found!";
                     dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, dialog_tag);
                 }
             }
         };
+
+        /***/
 
         Thread thread = new Thread(runLoadEquipments);
         thread.start();
@@ -138,13 +177,22 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     //--------Runnable------
 
 
+
+
     /**
      * Load equipments from the SQLite
      */
     private Runnable runLoadEquipments = new Runnable() {
         @Override
         public void run() {
-            String table_to_select = "equipment";
+/*
+            //-----equipment------
+            table_to_select = "equipment";
+*/
+
+            //-----inventory------
+            table_to_select = "inventory";
+
 
             cursor = db.query(table_to_select, null, null, null, null, null,
                     null);
@@ -163,6 +211,9 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     };
 
 
+
+
+
     /**
      * Print equipment into the list
      */
@@ -171,12 +222,23 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
         public void run() {
             Toast.makeText(context, "Done loading", Toast.LENGTH_SHORT).show();
 
+/*
+            //--------equipment---------
             parent_equipments = utility.mapListToEquipmentList(equipments);
 
             adapter = new ExpandableEquipmentAdapter(parent_equipments);
+*/
+
+            adapter = new InventoryAdapter(equipments);
+
             rvEquipments.setAdapter(adapter);
+
+            Toast.makeText(context, "Done 2", Toast.LENGTH_SHORT).show();
+
         }
     };
+
+    /***/
 
     //-------------------Clicks--------------------//
 

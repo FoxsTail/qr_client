@@ -60,7 +60,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         log.info("-----I'm here!!!!--------");
         setContentView(R.layout.activity_inventory_param_select);
 
-        url = "http://"+getString(R.string.server_ip)+":"+getString(R.string.port);
+        url = "http://"+getString(R.string.emu_ip)+":"+getString(R.string.port);
 
         spinAddress = findViewById(R.id.spinAddress);
         spinRoom = findViewById(R.id.spinRoom);
@@ -102,8 +102,10 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         } else {
 
             if(url != null) {
-                String url_room = url + "/equipments/room/" + chosen_room;
-                String table_name = "equipment";
+                /*String url_room = url + "/equipments/room/" + chosen_room;
+                String table_name = "equipment";*/
+                String url_room = url + "/inventory/room/" + chosen_room;
+                String table_name = "inventory";
                 AsyncDbManager asyncDbManager = new AsyncDbManager(table_name, url_room, context, dbHelper, db, btnStart,
                         pbLoadEquipment, InventoryListActivity.class,
                         true, true, chosen_room);

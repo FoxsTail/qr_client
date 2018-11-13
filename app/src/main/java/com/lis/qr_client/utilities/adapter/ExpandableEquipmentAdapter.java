@@ -41,7 +41,7 @@ public class ExpandableEquipmentAdapter extends RecyclerView.Adapter<ExpandableE
         }
 
         /*set tag and text in TextViews*/
-        equipmentViewHolder.itemView.setTag(equipment.getMInventory_num());
+         equipmentViewHolder.itemView.setTag(equipment.getMInventory_num());
         equipmentViewHolder.tvItemName.setText(equipment.getEquipmentName());
         equipmentViewHolder.tvItemInventoryNum.setText(equipment.getMInventory_num());
 

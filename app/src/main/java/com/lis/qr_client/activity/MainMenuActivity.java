@@ -46,7 +46,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
 
     String table_name = "address";
-    //String url = "http://10.0.3.2:8090/addresses/only_address";
     String url;
 
     private Utility utility = new Utility();
@@ -57,13 +56,13 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        url = "http://" + getString(R.string.server_ip) + ":" + getString(R.string.port) + "/addresses/only_address";
+        url = "http://" + getString(R.string.emu_ip) + ":" + getString(R.string.port) + "/addresses/only_address";
 
         tvDialogChange = findViewById(R.id.tvDialogChange);
 
         btnFormulyar = findViewById(R.id.btnFormulyar);
         btnFormulyar.setOnClickListener(this);
-        btnInventory = findViewById(R.id.btnInventory);
+        btnInventory = findViewById(R   .id.btnInventory);
         btnInventory.setOnClickListener(this);
         btnProfile = findViewById(R.id.btnProfile);
         btnProfile.setOnClickListener(this);
