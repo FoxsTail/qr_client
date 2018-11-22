@@ -3,15 +3,18 @@ package com.lis.qr_client.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
+import android.view.*;
+
+import android.widget.*;
 import com.lis.qr_client.R;
 import com.lis.qr_client.utilities.async_helpers.AsyncDbManager;
 import com.lis.qr_client.data.DBHelper;
@@ -28,6 +31,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private Button btnFormulyar, btnInventory, btnProfile, btnScanQR;
     private TextView tvDialogChange;
     private ProgressBar pbInventory;
+    private Toolbar toolbar;
+    private ConstraintLayout constraintLayout;
+
 
     protected final int REQUEST_SCAN_QR = 1;
     protected static final int DIALOG_EXIT = -1;
@@ -53,8 +59,39 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //----Full screen
+        Window window = getWindow();
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main_menu);
+
+        /*
+        todo: set dim only for the main window, exclude toolbar
+        idea: get toolbar heidht, get window, set window dim\foreground-toolbar-height
+         */
+
+        //---get framing layout for dimming
+
+        final FrameLayout frameLayout = findViewById(R.id.frame_main_layout);
+        frameLayout.getForeground().setAlpha(0);
+
+        //---set toolbar
+
+        toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setTitle("Main menu");
+            setSupportActionBar(toolbar);
+
+            utility.toolbarSetter(getSupportActionBar(), frameLayout, true);
+        }
+        //--------
+
 
         url = "http://" + getString(R.string.emu_ip) + ":" + getString(R.string.port) + "/addresses/only_address";
 
@@ -62,7 +99,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         btnFormulyar = findViewById(R.id.btnFormulyar);
         btnFormulyar.setOnClickListener(this);
-        btnInventory = findViewById(R   .id.btnInventory);
+        btnInventory = findViewById(R.id.btnInventory);
         btnInventory.setOnClickListener(this);
         btnProfile = findViewById(R.id.btnProfile);
         btnProfile.setOnClickListener(this);
@@ -90,11 +127,71 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
+    //-----------Menu------------//
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        /** alt3 */
+        toolbar.inflateMenu(R.menu.qr_menu);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                log.info("---onMenuItemClick---");
+                return onOptionsItemSelected(menuItem);
+            }});
+
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    /*
+          *Menu from anywhere i want*
+
+        View menu_view = findViewById(R.id.toolbar);
+        PopupMenu popupMenu = new PopupMenu(this, menu_view);
+        getMenuInflater().inflate(R.menu.qr_menu, popupMenu.getMenu());
+        popupMenu.show();
+
+        */
+
+        /*
+
+            *Like search icon expand*
+
+        MenuItem.OnActionExpandListener expandListener = new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                log.info("---nMenuItemActionExpand---");
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                log.info("---nMenuItemActionCollapse---");
+                return true;
+            }
+        };
+
+        MenuItem menuItem = menu.findItem(R.id.qr_menu_item1);
+        menuItem.setOnActionExpandListener(expandListener);
+        */
+
+
+    //---------------------------//
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnFormulyar: {
 
+                Intent intent = new Intent(this, InventoryTabsActivity.class);
+                startActivity(intent);
             }
             break;
             case R.id.btnInventory: {
@@ -103,7 +200,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 if (url != null) {
                     new AsyncDbManager(table_name, url, this, dbHelper, db, btnInventory, pbInventory,
                             InventoryParamSelectActivity.class, true, true, null).runAsyncMapListLoader();
-                }else {
+                } else {
                     log.warning("---URL IS NULL!---");
 
                 }

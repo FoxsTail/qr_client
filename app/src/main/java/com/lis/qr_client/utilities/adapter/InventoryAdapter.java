@@ -1,5 +1,6 @@
 package com.lis.qr_client.utilities.adapter;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,17 +10,21 @@ import android.widget.TextView;
 import com.lis.qr_client.R;
 import lombok.extern.java.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Log
 public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.InventoryViewHolder> {
 
-    List<Map<String, Object>> inventories;
+    List<Map<String, Object>> inventories = new ArrayList<>();
+
 
     public InventoryAdapter(List<Map<String, Object>> inventories) {
         log.info("---- InventoryAdapter constructor---");
         this.inventories = inventories;
+
+
     }
 
     @Override
@@ -29,6 +34,9 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
         return new InventoryViewHolder(view);
     }
 
+
+/*
+    *//*TESTING*//*
     @Override
     public void onBindViewHolder(InventoryViewHolder inventoryViewHolder, int item_id) {
         log.info("----onBindViewHolder---");
@@ -36,10 +44,31 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
 
         Map<String, Object> inventory = inventories.get(item_id);
 
+        for(Map.Entry<String, Object> map: inventory.entrySet()){
+            inventoryViewHolder.tvItemName.setText(map.getKey());
+            inventoryViewHolder.tvItemInventoryNum.setText(map.getValue().toString());
+        }
+    }*/
+
+    @Override
+    public void onBindViewHolder(InventoryViewHolder inventoryViewHolder, int item_id) {
+        log.info("----onBindViewHolder---");
+        log.info("----I is " + item_id + "--");
+
+        Map<String, Object> inventory = inventories.get(item_id);
+
+        log.info("-----------"+inventory+"--------");
+
+/*
+        *//*GREENY*//*
+
         //---if inventory was scanned - mark viewHolder with green
         if (inventory.get("isSelected") != null && (boolean) inventory.get("isSelected")) {
             inventoryViewHolder.itemView.setBackgroundColor(Color.parseColor("#b9f6ca"));
+        }else{
+            inventoryViewHolder.itemView.setBackgroundColor(Color.parseColor("#ffffff"));
         }
+*/
 
         //---check and set name
         Object name = inventory.get("name");
@@ -60,6 +89,8 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
     public int getItemCount() {
         return inventories.size();
     }
+
+
 
     class InventoryViewHolder extends RecyclerView.ViewHolder {
         TextView tvItemName;

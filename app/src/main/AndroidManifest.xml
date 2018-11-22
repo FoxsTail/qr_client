@@ -18,6 +18,21 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <!--
+
+                 TEST
+
+                <activity android:name=".activity.TestActivity">
+                    <intent-filter>
+                        <action android:name="android.intent.action.MAIN"/>
+
+                        <category android:name="android.intent.category.LAUNCHER"/>
+                    </intent-filter>
+                </activity>
+
+                      TEST
+        -->
+
         <activity android:name=".activity.MainMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -37,18 +52,24 @@
         <activity android:name=".activity.ScannerActivity">
         </activity>
         -->
+        <!-- TODO:launchMode = singleTop -->
         <activity android:name=".activity.ScannerActivity$QrCreationActivity">
         </activity>
         <activity android:name=".activity.CameraActivity">
         </activity>
-        <activity android:name=".tries.ThreadLoopActivity">
-        </activity>
-        <activity android:name=".activity.InventoryParamSelectActivity">
+        <activity
+                android:name=".activity.InventoryParamSelectActivity"
+                android:parentActivityName=".activity.MainMenuActivity">
         </activity>
         <activity android:name=".tries.TestActivity">
         </activity>
-        <activity android:name=".activity.InventoryListActivity">
+        <activity android:name=".activity.InventoryListActivity"
+            android:parentActivityName=".activity.InventoryParamSelectActivity">
         </activity>
+        <activity android:name=".activity.InventoryTabsActivity"
+                  android:parentActivityName=".activity.MainMenuActivity">
+        </activity>
+
     </application>
 
 </manifest>

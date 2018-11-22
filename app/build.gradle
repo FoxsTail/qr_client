@@ -61,10 +61,10 @@ dependencies {
     compile files('libs/zbar.jar')
 
     //front
+
+    compile group: 'com.android.support', name: 'design', version: '27.0.2'
     compile 'com.android.support:cardview-v7:27.0.2'
     compile 'com.android.support:recyclerview-v7:27.0.2'
-    compile 'com.bignerdranch.android:expandablerecyclerview:1.0.3'
-
 
     //android
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -77,6 +77,8 @@ dependencies {
     //compile 'com.android.support:support-v4:28.0.0-alpha3'
     compile 'com.android.support:appcompat-v7:27.0.2'
     compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.bignerdranch.android:expandablerecyclerview:1.0.3'
     compile 'org.apache.commons:commons-collections4:4.1'
     compile 'com.google.zxing:core:3.3.0'
     compile 'com.journeyapps:zxing-android-embedded:3.5.0'
@@ -101,6 +103,8 @@ configurations {
 task wrapper(type: Wrapper) {
     gradleVersion = '4.1'
 }
+
+
 
 
 

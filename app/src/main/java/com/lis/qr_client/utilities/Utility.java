@@ -1,8 +1,12 @@
 package com.lis.qr_client.utilities;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.ActionBar;
+import android.widget.FrameLayout;
+import android.widget.Toolbar;
 import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -27,29 +31,55 @@ import java.util.Map;
 @Log
 public class Utility {
 
-
     /**
-     * Input - string with json after qr code scanning,
-     * output - parsed to HashMap<String, Object> json
+     * Toolbar setter dimOnMenu, back button, name
      */
+    public void toolbarSetter(ActionBar actionBar, final FrameLayout frameLayout, boolean isChildActivity) {
+        if (actionBar != null) {
+            if (isChildActivity) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setDisplayShowHomeEnabled(true);
+            }
+            actionBar.addOnMenuVisibilityListener(new ActionBar.OnMenuVisibilityListener() {
+                @Override
+                public void onMenuVisibilityChanged(boolean b) {
+                    if (b) {
+                        log.info("visible");
+                        frameLayout.getForeground().setAlpha(140);
+                    } else {
+                        log.info(" ne visible");
+                        frameLayout.getForeground().setAlpha(0);
 
-    public HashMap<String, Object> scannedJsonToMap(String scan_result) {
-        ObjectMapper mapper = new ObjectMapper();
-
-        HashMap<String, Object> jsonMap = new HashMap<>();
-        try {
-            jsonMap = mapper.readValue(scan_result, new TypeReference<Map<String, String>>() {
+                    }
+                }
             });
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        }}
+
+
+        /**
+         * Input - string with json after qr code scanning,
+         * output - parsed to HashMap<String, Object> json
+         */
+
+        public HashMap<String, Object> scannedJsonToMap (String scan_result){
+            ObjectMapper mapper = new ObjectMapper();
+
+            HashMap<String, Object> jsonMap = new HashMap<>();
+            try {
+                jsonMap = mapper.readValue(scan_result, new TypeReference<Map<String, String>>() {
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return jsonMap;
         }
-        return jsonMap;
-    }
 
 
-    /**
-     * parse cursor to List
-     */
+        /**
+         * parse cursor to List
+         */
+
     public List cursorToList(Cursor cursor) {
         List convertedList = new ArrayList();
 

@@ -8,24 +8,39 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.*;
 import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
-import com.lis.qr_client.pojo.Equipment;
 import com.lis.qr_client.pojo.Inventory;
+import com.lis.qr_client.pojo.UniversalSerializablePojo;
 import com.lis.qr_client.utilities.Utility;
-import com.lis.qr_client.utilities.adapter.ExpandableEquipmentAdapter;
 import com.lis.qr_client.utilities.adapter.InventoryAdapter;
+import com.lis.qr_client.utilities.adapter.SliderAdapter;
 import com.lis.qr_client.utilities.dialog_fragment.ExitDialogFragment;
 import com.lis.qr_client.utilities.dialog_fragment.ScanDialogFragment;
+import com.lis.qr_client.utilities.fragment.InventoryFragment;
 import lombok.extern.java.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+/**
+ * Loads all view necessary items, runs thread loading data from sqlite db,
+ * after puts data in the adapter and set viewPager
+ */
 
 @Log
 public class InventoryListActivity extends MainMenuActivity implements View.OnClickListener {
@@ -40,12 +55,28 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     private RecyclerView rvEquipments;
     private TextView tvlistLabel;
     private Button btnScanInventory;
+    String table_to_select;
+    private Toolbar toolbar;
+    private ViewPager viewPager;
+
+    private SliderAdapter sliderAdapter;
 
     private List<Map<String, Object>> equipments;
-    private ArrayList<Equipment> parent_equipments;
+    private List<Map<String, Object>> scannedEquipments;
+    private List<Map<String, Object>> toScanEquipments;
+
+    private InventoryFragment toScanFragment;
+    private InventoryFragment resultFragment;
+
+    String titleToScan = "To scan";
+    String titleResult = "Result";
+    private String inventoryNum = "inventory_num";
+
+    private Utility utility = new Utility();
+    private Context context = this;
+
 
     /*
-
     ------equipment------
 
     private RecyclerView rvEquipments;
@@ -56,47 +87,67 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     private ExpandableEquipmentAdapter adapter;
 */
 
-    private InventoryAdapter adapter;
-    private String inventoryNum = "inventory_num";
-    private Utility utility = new Utility();
-    private Context context = this;
-
-    String table_to_select;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inventory_list);
-        log.info("Here we are, i'm the list");
+        //----Full screen
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        //--room label setup
-        tvlistLabel = findViewById(R.id.tvListLabel);
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_inventory_list);
+
 
         final Intent intent = getIntent();
         String room_number = intent.getStringExtra("room");
 
-        tvlistLabel.setText("Room " + room_number);
+
+        //---get framing layout for dimming
+        final FrameLayout frameLayout = findViewById(R.id.frame_inventory_layout);
+        frameLayout.getForeground().setAlpha(0);
+
+        //----toolbar
+        toolbar = findViewById(R.id.toolbar);
+
+        if (toolbar != null) {
+            toolbar.setTitle("Room №" + room_number);
+            setSupportActionBar(toolbar);
+
+            utility.toolbarSetter(getSupportActionBar(), frameLayout, true);
+        }
 
 
         //--btn setup
         btnScanInventory = findViewById(R.id.btnScanInventory);
         btnScanInventory.setOnClickListener(this);
 
+
         //--get data from sqlite
         dbHelper = new DBHelper(this);
         db = dbHelper.getWritableDatabase();
 
-        //--rv setup
-        rvEquipments = findViewById(R.id.rvEquipments);
+
+        //----viewpager
+        viewPager = findViewById(R.id.inventory_viewpager);
+
+        //-----tab from viewPager
+        TabLayout tabLayout = findViewById(R.id.inventory_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        /*//--RecyclerView setup
+        rvEquipments = findViewById(R.id.rvScanlist);
 
         rvEquipments.setHasFixedSize(true);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        rvEquipments.setLayoutManager(layoutManager);
+        rvEquipments.setLayoutManager(layoutManager);*/
 
 
-        /***/
+        //TODO:handle dialog for tabvers and replace scanned to the other list
+
         dialogHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -107,76 +158,166 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                 Bundle bundle = new Bundle();
                 String dialog_tag = "qr_scan";
 
+                /*get scanned mesage and inventory number*/
                 inventoryNum = (String) scannedMap.get("inventory_num");
                 String scanned_msg = scannedMapToMsg(scannedMap);
 
 
-                //TODO:sometimes appears not found equipment. maybe with two list will be better. CREATE! FIX!
-                /*get view holder*/
-                View view = rvEquipments.findViewWithTag(inventoryNum);
-                if (view != null) {
-                    log.info("-----TAG-----"+view.getTag());
-                    RecyclerView.ViewHolder viewHolder = rvEquipments.findContainingViewHolder(view);
-                    int position = viewHolder.getAdapterPosition();
+                //-------------------------//
 
-/*                  //----------equipment---------
+                /*get list from adapter*/
+                Map<String, Object> searched_map = null;
+                int position = -1;
 
-                    *//*replace found equipment to the end of the list*//*
+                /*find map with inventory_num in toScanList*/
+                for (Map<String, Object> map : toScanEquipments) {
+                    if ((map.get("inventory_num")).equals(inventoryNum)) {
+                        searched_map = map;
+
+                        log.info("--------------------" + searched_map.keySet() + " " + searched_map.values());
+                        position = toScanEquipments.indexOf(map);
+
+                        dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, "qr_scan");
+
+                        break;
+                    }
+                }
+
+
+                /*already scanned*/
+
+                /*if nothing found, find map with inventory_num in scannedList*/
+                if(searched_map == null){
+                    for (Map<String, Object> map : scannedEquipments) {
+                        if ((map.get("inventory_num")).equals(inventoryNum)) {
+
+                            scanned_msg = "The equipment with inventory number "+ inventoryNum+" has already being scanned";
+
+                            dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, "qr_scan");
+                            log.info("The equipment with inventory number "+ inventoryNum+" has already being scanned");
+                            break;
+                        }
+                    }
+                }
+
+
+                /*replace scanned equipment*/
+
+                /*remove map from old list and add to scanned_list*/
+                if (position > -1 && searched_map != null) {
+
+                    toScanEquipments.remove(position);
+                    scannedEquipments.add(searched_map);
+
+                    if (scannedEquipments != null) {
+                        log.info("---Scanned---" + scannedEquipments.toString());
+                    }
+                    log.info("---Notify data changed---");
+
+                    toScanFragment.getAdapter().notifyDataSetChanged();
+                    resultFragment.getAdapter().notifyDataSetChanged();
+                } else {
+                    log.info("---Nothing---");
+
+                }
+
+            }
+
+
+               /* if (searched_map != null) {
+                    //check isScanned
+                    Object isSelected = searched_map.get("isSelected");
+
+                    if (isSelected != null) {
+                        log.info("--------------------"+ isSelected);
+                        if ((boolean) isSelected) {
+                            //selected already dialog
+
+                        } else {
+                            //never before
+                            //find viewHolder
+                            Object item_id = searched_map.get("item_id");
+                            if (item_id != null) {
+                                log.info("--------------------" + item_id);
+
+                                RecyclerView.ViewHolder viewHolder = rvEquipments.findViewHolderForAdapterPosition((Integer) item_id);
+                                log.info("--------------------" + viewHolder.getAdapterPosition());
+
+                                //set selected, replace, notify}
+
+                                searched_map.put("isSelected", true);
+
+                                temp_adapter_list.remove(viewHolder.getAdapterPosition());
+                                temp_adapter_list.add(searched_map);
+
+
+                                log.info("---Notify data changed---");
+                                rvEquipments.getAdapter().notifyDataSetChanged();
+                            }}
+                        }
+
+                    }*/
+
+            //-------------------------//
+/*
+                    if (view != null) {
+                        log.info("-----TAG-----" + view.getTag());
+                        RecyclerView.ViewHolder viewHolder = rvEquipments.findContainingViewHolder(view);
+                        int position = viewHolder.getAdapterPosition();
+
+*//*                  //----------equipment---------
+
+                    *//**//*replace found equipment to the end of the list*//**//*
 
                     List<Equipment> temp_parent_equipments = adapter.getmParentItemList();
                     Equipment equipment_to_move = temp_parent_equipments.get(position);
 
-*/
-                    //----------inventory---------
-                    List<Map<String, Object>> temp_parent_equipments = adapter.getInventories();
-                     Map<String, Object> equipment_to_move = temp_parent_equipments.get(position);
+*//*
+                        //----------inventory---------
+                        List<Map<String, Object>> temp_parent_equipments = adapter.getInventories();
+                        Map<String, Object> equipment_to_move = temp_parent_equipments.get(position);
 
 
-                    //----------equipment---------
-                   // if (equipment_to_move.isSelected()) {
-
-                    //----------inventory---------
-                    Object isSelected = equipment_to_move.get("isSelected");
-                    if(isSelected != null && (boolean) isSelected){
-
-                        scanned_msg = "The equipment has already been scanned!";
-
-                        dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, dialog_tag);
-
-                    } else {
                         //----------equipment---------
-                        // equipment_to_move.setSelected(true);
+                        // if (equipment_to_move.isSelected()) {
 
                         //----------inventory---------
-                        equipment_to_move.put("isSelected", true);
+                        Object isSelected = equipment_to_move.get("isSelected");
+                        if (isSelected != null && (boolean) isSelected) {
 
-                        temp_parent_equipments.remove(position);
-                        temp_parent_equipments.add(equipment_to_move);
+                            scanned_msg = "The equipment has already been scanned!";
 
+                            dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, dialog_tag);
+
+                        } else {
+                            //----------equipment---------
+                            // equipment_to_move.setSelected(true);
+
+                            //----------inventory---------
+                            equipment_to_move.put("isSelected", true);
+
+                            temp_parent_equipments.remove(position);
+                            temp_parent_equipments.add(equipment_to_move);
+
+                            dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, dialog_tag);
+
+                            log.info("---Notify data changed---");
+                            rvEquipments.getAdapter().notifyDataSetChanged();
+                        }
+
+                    } else {
+                        log.info("----Equipment with inventory number----");
+
+                        scanned_msg = "Equipment with inventory number " + inventoryNum + " is not found!";
                         dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, dialog_tag);
-
-                        log.info("---Notify data changed---");
-                        rvEquipments.getAdapter().notifyDataSetChanged();
-                    }
-
-                } else {
-                    log.info("----Equipment with inventory number----");
-
-                    scanned_msg = "Equipment with inventory number " + inventoryNum + " is not found!";
-                    dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, dialog_tag);
-                }
-            }
+                    }*/
         };
 
-        /***/
 
         Thread thread = new Thread(runLoadEquipments);
         thread.start();
     }
-
     //--------Runnable------
-
-
 
 
     /**
@@ -213,7 +354,6 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
 
 
-
     /**
      * Print equipment into the list
      */
@@ -228,20 +368,48 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
             adapter = new ExpandableEquipmentAdapter(parent_equipments);
 */
+/*
+
+
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+
 
             adapter = new InventoryAdapter(equipments);
 
             rvEquipments.setAdapter(adapter);
+
+*/
+
+            /*create adapter and add fragments with data*/
+            System.out.println("--------Create slider adapter--------");
+            sliderAdapter = new SliderAdapter(getSupportFragmentManager());
+
+
+            sliderAdapter.addFragment(InventoryFragment.newInstance
+                    (new UniversalSerializablePojo(equipments)), titleToScan);
+            sliderAdapter.addFragment(InventoryFragment.newInstance
+                    (new UniversalSerializablePojo
+                            (new ArrayList<Map<String, Object>>())), titleResult);
+
+
+            /*set adapter to viewPager*/
+            viewPager.setAdapter(sliderAdapter);
+
+            /*get list to scan and already scanned lists*/
+            toScanFragment = (InventoryFragment) sliderAdapter.getFragmentByTitle(titleToScan);
+            toScanEquipments = toScanFragment.getAdapter().getInventories();
+
+            resultFragment = (InventoryFragment) sliderAdapter.getFragmentByTitle(titleResult);
+            scannedEquipments = resultFragment.getAdapter().getInventories();
+
 
             Toast.makeText(context, "Done 2", Toast.LENGTH_SHORT).show();
 
         }
     };
 
-    /***/
 
     //-------------------Clicks--------------------//
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -268,6 +436,4 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
 }
-

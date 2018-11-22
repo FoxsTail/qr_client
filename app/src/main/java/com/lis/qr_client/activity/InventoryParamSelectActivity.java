@@ -5,14 +5,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.widget.Toolbar;
+import android.view.*;
 import android.widget.*;
 import com.lis.qr_client.R;
 import com.lis.qr_client.utilities.async_helpers.AsyncDbManager;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.utilities.Utility;
+import com.lis.qr_client.utilities.dialog_fragment.ExitDialogFragment;
 import lombok.extern.java.Log;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
@@ -20,6 +24,7 @@ import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 @Log
 public class InventoryParamSelectActivity extends AppCompatActivity implements View.OnClickListener {
@@ -30,7 +35,10 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
     private Spinner spinAddress, spinRoom;
     private ProgressBar pbLoadEquipment;
     private Button btnStart;
+    private Toolbar toolbar;
+
     private Context context = this;
+
 
     DBHelper dbHelper;
     SQLiteDatabase db;
@@ -54,11 +62,34 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
     String url;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //----Full screen
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         super.onCreate(savedInstanceState);
-        log.info("-----I'm here!!!!--------");
+
         setContentView(R.layout.activity_inventory_param_select);
+
+        //---get framing layout for dimming
+        final FrameLayout frameLayout = findViewById(R.id.frame_paramSelect_layout);
+        frameLayout.getForeground().setAlpha(0);
+
+        //---set toolbar
+         toolbar = findViewById(R.id.toolbar);
+
+        if (toolbar != null) {
+            toolbar.setTitle("Select Room");
+            setSupportActionBar(toolbar);
+
+            utility.toolbarSetter(getSupportActionBar(), frameLayout,true);
+
+        }
+
+        //---------
 
         url = "http://"+getString(R.string.emu_ip)+":"+getString(R.string.port);
 
@@ -86,7 +117,37 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
     }
 
-    /**/
+
+    //-----------Menu------------//
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.qr_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        switch (id) {
+            // arrow <- is pressed
+            case android.R.id.home:{
+                NavUtils.navigateUpFromSameTask(this);
+                // super.onBackPressed();
+                return true;
+            }
+            default:
+                return true;
+        }
+
+    }
+
+
+
+
+    //---------------------------//
+
 
     @Override
     public void onClick(View v) {

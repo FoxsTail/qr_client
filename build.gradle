@@ -8,6 +8,7 @@ buildscript {
             url 'https://repo.spring.io/libs-milestone'
         }
         maven { url 'http://www.idescout.com/maven/repo/' }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'

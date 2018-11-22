@@ -30,5 +30,6 @@
     <string name="port">8090</string>
     <string name="server_ip">172.36.2.47</string>
     <string name="emu_ip">10.0.3.2</string>
+    <string name="test">Test</string>
 
 </resources>
