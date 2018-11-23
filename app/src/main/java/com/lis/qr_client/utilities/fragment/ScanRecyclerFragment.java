@@ -49,7 +49,7 @@ public class ScanRecyclerFragment extends Fragment {
             log.info("Map....: "+ m.toString());
         }
 
-        InventoryAdapter adapter = new InventoryAdapter(scan_list);
+        InventoryAdapter adapter = new InventoryAdapter(getContext(), scan_list);
 
         rv.setAdapter(adapter);
         rv.setHasFixedSize(true);

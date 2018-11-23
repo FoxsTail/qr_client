@@ -63,7 +63,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
     private List<Map<String, Object>> equipments;
     private List<Map<String, Object>> scannedEquipments;
-    private List<Map<String, Object>> toScanEquipments;
+    private List<Map<String, Object>> toScanEquipments = new ArrayList<>();
 
     private InventoryFragment toScanFragment;
     private InventoryFragment resultFragment;
@@ -86,7 +86,6 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
     private ExpandableEquipmentAdapter adapter;
 */
-
 
 
     @Override
@@ -170,40 +169,59 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                 int position = -1;
 
                 /*find map with inventory_num in toScanList*/
-                for (Map<String, Object> map : toScanEquipments) {
-                    if ((map.get("inventory_num")).equals(inventoryNum)) {
-                        searched_map = map;
-
-                        log.info("--------------------" + searched_map.keySet() + " " + searched_map.values());
-                        position = toScanEquipments.indexOf(map);
-
-                        dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, "qr_scan");
-
-                        break;
-                    }
-                }
+                searched_map = utility.findMapByInventoryNum(toScanEquipments, inventoryNum);
 
 
-                /*already scanned*/
+                /*searched map in toScanList: show result in dialog*/
+                if (searched_map != null) {
 
-                /*if nothing found, find map with inventory_num in scannedList*/
-                if(searched_map == null){
-                    for (Map<String, Object> map : scannedEquipments) {
-                        if ((map.get("inventory_num")).equals(inventoryNum)) {
+                    log.info("--------------------" + searched_map.keySet() + " " + searched_map.values());
 
-                            scanned_msg = "The equipment with inventory number "+ inventoryNum+" has already being scanned";
+                    position = toScanEquipments.indexOf(searched_map);
 
-                            dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, "qr_scan");
-                            log.info("The equipment with inventory number "+ inventoryNum+" has already being scanned");
-                            break;
+                    dialogFragment.callDialog(context, bundle, scanned_msg, dialog_tag);
+
+
+                    /*if result in toScan list, remove, notify adapter*/
+                    if (position > -1) {
+
+                        toScanEquipments.remove(position);
+                        scannedEquipments.add(searched_map);
+
+                        if (scannedEquipments != null) {
+                            log.info("---Scanned---" + scannedEquipments.toString());
                         }
+                        log.info("---Notify data changed---");
+
+                        toScanFragment.getAdapter().notifyDataSetChanged();
+                        resultFragment.getAdapter().notifyDataSetChanged();
+
+                 /*try to find in scannedList*/
+                } else {
+
+                        //TODO:Secondary scan - error fragment already added. FIX!
+                    searched_map = utility.findMapByInventoryNum(scannedEquipments, inventoryNum);
+
+                    /*searched map in scannedList: show "already scanned" in dialog*/
+                    if (searched_map != null) {
+
+                        scanned_msg = "The equipment with inventory number " + inventoryNum + " has already being scanned";
+
+                        dialogFragment.callDialog(context, bundle, scanned_msg, dialog_tag);
+                        log.info("The equipment with inventory number " + inventoryNum + " has already being scanned");
+
+                    /*still couldn't find: show "No such item" in dialog*/
+                    }else{
+                        scanned_msg = "No such item in current inventory list";
+                        dialogFragment.callDialog(context, bundle, scanned_msg, dialog_tag);
+                    }
                     }
                 }
 
 
                 /*replace scanned equipment*/
-
-                /*remove map from old list and add to scanned_list*/
+/*
+                *//*remove map from old list and add to scanned_list*//*
                 if (position > -1 && searched_map != null) {
 
                     toScanEquipments.remove(position);
@@ -219,7 +237,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                 } else {
                     log.info("---Nothing---");
 
-                }
+                }*/
 
             }
 
@@ -352,8 +370,6 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     };
 
 
-
-
     /**
      * Print equipment into the list
      */
@@ -394,7 +410,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
             /*set adapter to viewPager*/
             viewPager.setAdapter(sliderAdapter);
-
+//TODO; handle if null
             /*get list to scan and already scanned lists*/
             toScanFragment = (InventoryFragment) sliderAdapter.getFragmentByTitle(titleToScan);
             toScanEquipments = toScanFragment.getAdapter().getInventories();
@@ -427,7 +443,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     public void onBackPressed() {
         log.info("InventoryListActivity on backPressed");
         ExitDialogFragment exitDialogFragment = new ExitDialogFragment();
-        exitDialogFragment.callDialog(context, exitDialogFragment, new Bundle(), "Quit the room?", "exit");
+        exitDialogFragment.callDialog(context, new Bundle(), "Quit the room?", "exit");
         //  super.onBackPressed(); вылетает
     }
 

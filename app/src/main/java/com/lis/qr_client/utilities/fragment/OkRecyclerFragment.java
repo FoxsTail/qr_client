@@ -50,7 +50,7 @@ public class OkRecyclerFragment extends Fragment {
             log.info("Map....: "+ m.toString());
         }
 
-        InventoryAdapter adapter = new InventoryAdapter(ok_list);
+        InventoryAdapter adapter = new InventoryAdapter(getContext(), ok_list);
 
         rv.setAdapter(adapter);
         rv.setHasFixedSize(true);

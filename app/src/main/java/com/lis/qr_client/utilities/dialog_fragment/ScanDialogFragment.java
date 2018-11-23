@@ -40,6 +40,18 @@ public class ScanDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        log.info("-----Attach-----");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        log.info("-----Detach-----");
+    }
+
     private DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -47,6 +59,7 @@ public class ScanDialogFragment extends DialogFragment {
             switch (which) {
                 case Dialog.BUTTON_POSITIVE: {
                     Toast.makeText(getActivity(), "Ok", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
                 }
                 break;
                 case Dialog.BUTTON_NEGATIVE: {
@@ -69,13 +82,13 @@ public class ScanDialogFragment extends DialogFragment {
         log.info("-----Cancel-----");
     }
 
-    public void callDialog(Context context, DialogFragment dialogFragment, Bundle bundle, String msg, String tag){
+    public void callDialog(Context context, Bundle bundle, String msg, String tag){
         bundle.putString(ScanDialogFragment.ARG_TITLE, context.getResources().getString(R.string.inventory_scan_result));
         bundle.putString(ScanDialogFragment.ARG_MESSAGE, msg);
 
-        dialogFragment.setArguments(bundle);
+        this.setArguments(bundle);
         /*even if Jesus asks u, don't put the Activity instead of the AppCompatActivity*/
-        dialogFragment.show( ((AppCompatActivity) context).getFragmentManager(), tag);
+        this.show( ((AppCompatActivity) context).getFragmentManager(), tag);
     }
 
 }

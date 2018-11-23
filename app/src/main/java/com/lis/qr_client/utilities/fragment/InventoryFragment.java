@@ -1,9 +1,14 @@
 package com.lis.qr_client.utilities.fragment;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +19,7 @@ import com.lis.qr_client.pojo.UniversalSerializablePojo;
 import com.lis.qr_client.utilities.adapter.InventoryAdapter;
 import lombok.extern.java.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +29,7 @@ public class InventoryFragment extends Fragment {
 
 
 
-    private List<Map<String, Object>> show_list;
+    private List<Map<String, Object>> show_list = new ArrayList<>();
     private InventoryAdapter adapter;
     private RecyclerView rv;
 
@@ -54,13 +60,18 @@ public class InventoryFragment extends Fragment {
 
         /*upload list from db*/
 
-        adapter = new InventoryAdapter(show_list);
+        adapter = new InventoryAdapter(getContext(), show_list);
 
         rv.setAdapter(adapter);
         rv.setHasFixedSize(true);
 
         /*Form of the output list*/
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //TODO:make custom decoration
+        DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        divider.setDrawable(getResources().getDrawable( R.drawable.divider));
+        rv.addItemDecoration(divider);
 
         return rv;
     }

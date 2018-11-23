@@ -13,10 +13,10 @@ public class ExitDialogFragment extends ScanDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
-log.info("Exit on createDialog");
+        log.info("Exit on createDialog");
         builder.setPositiveButton("Cancel", dialogListener);
         builder.setNegativeButton("Exit", dialogListener);
-    return builder.create();
+        return builder.create();
     }
 
     DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {

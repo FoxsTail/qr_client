@@ -88,7 +88,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             toolbar.setTitle("Main menu");
             setSupportActionBar(toolbar);
 
-            utility.toolbarSetter(getSupportActionBar(), frameLayout, true);
+            utility.toolbarSetter(getSupportActionBar(), frameLayout, false);
         }
         //--------
 
@@ -119,7 +119,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
                 String scanned_msg = scannedMapToMsg(scannedMap);
 
-                dialogFragment.callDialog(context, dialogFragment, bundle, scanned_msg, "qr_scan");
+                dialogFragment.callDialog(context, bundle, scanned_msg, "qr_scan");
             }
         };
 

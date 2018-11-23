@@ -31,6 +31,21 @@ import java.util.Map;
 @Log
 public class Utility {
 
+
+    /** Find map in the mapList by the given inventory_num */
+
+    public Map<String, Object> findMapByInventoryNum(List<Map<String, Object>> mapListToSearch, String inventory_num){
+        Map<String, Object> searched_map = new HashMap<>();
+
+        for (Map<String, Object> map : mapListToSearch) {
+            if ((map.get("inventory_num")).equals(inventory_num)) {
+                searched_map = map;
+                break;
+            }
+        }
+        return searched_map;
+    }
+
     /**
      * Toolbar setter dimOnMenu, back button, name
      */
