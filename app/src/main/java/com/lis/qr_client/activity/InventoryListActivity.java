@@ -295,7 +295,6 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                         List<Map<String, Object>> temp_parent_equipments = adapter.getInventories();
                         Map<String, Object> equipment_to_move = temp_parent_equipments.get(position);
 
-
                         //----------equipment---------
                         // if (equipment_to_move.isSelected()) {
 

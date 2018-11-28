@@ -28,7 +28,7 @@ import java.util.Map;
 
 @Log
 /**cover class for AsyncMapListLoader; provides parameters from the inside class**/
-public class AsyncDbManager {
+public class AsyncMultiDbManager {
 
     private boolean isNextActivityLauncher = false;
     private boolean isMapList;
@@ -51,9 +51,9 @@ public class AsyncDbManager {
 
     /*in case you need a button transformation and switch to the next activity*/
 
-    public AsyncDbManager(String table_name, String url, Context context,
-                          DBHelper dbHelper, SQLiteDatabase db, Button btn, ProgressBar pb, Class activityTostart,
-                          boolean isNextActivityLauncher, boolean isMapList, Object extra_data) {
+    public AsyncMultiDbManager(String table_name, String url, Context context,
+                               DBHelper dbHelper, SQLiteDatabase db, Button btn, ProgressBar pb, Class activityTostart,
+                               boolean isNextActivityLauncher, boolean isMapList, Object extra_data) {
         this.isNextActivityLauncher = isNextActivityLauncher;
         this.isMapList = isMapList;
         this.table_name = table_name;
@@ -69,8 +69,8 @@ public class AsyncDbManager {
 
     /*Simple db loader*/
 
-    public AsyncDbManager(String table_name, String column_name, String url,
-                          Context context, DBHelper dbHelper, SQLiteDatabase db, boolean isMapList, Runnable runnableToStart) {
+    public AsyncMultiDbManager(String table_name, String column_name, String url,
+                               Context context, DBHelper dbHelper, SQLiteDatabase db, boolean isMapList, Runnable runnableToStart) {
         this.isMapList = isMapList;
         this.table_name = table_name;
         this.url = url;
@@ -91,7 +91,7 @@ public class AsyncDbManager {
      * parses it, puts in the Context value and adds to the SQlite table (with the given table_name);
      * All params are in the cover class AsyncDbManager;
      */
-    public class AsyncMapListLoader extends AsyncTask<AsyncDbManager, Void, Class> {
+    public class AsyncMapListLoader extends AsyncTask<AsyncMultiDbManager, Void, Class> {
 
         DBHelper dbHelper;
         SQLiteDatabase db;
@@ -116,7 +116,7 @@ public class AsyncDbManager {
 
 
         @Override
-        protected Class doInBackground(AsyncDbManager... params) {
+        protected Class doInBackground(AsyncMultiDbManager... params) {
             log.info("----Do in background----");
 
             dbHelper = params[0].getDbHelper();

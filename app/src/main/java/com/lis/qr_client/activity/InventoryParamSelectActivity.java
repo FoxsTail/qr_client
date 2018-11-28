@@ -6,17 +6,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.*;
 import com.lis.qr_client.R;
-import com.lis.qr_client.utilities.async_helpers.AsyncDbManager;
+import com.lis.qr_client.utilities.async_helpers.AsyncMultiDbManager;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.utilities.Utility;
-import com.lis.qr_client.utilities.dialog_fragment.ExitDialogFragment;
 import lombok.extern.java.Log;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
@@ -167,10 +165,10 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
                 String table_name = "equipment";*/
                 String url_room = url + "/inventory/room/" + chosen_room;
                 String table_name = "inventory";
-                AsyncDbManager asyncDbManager = new AsyncDbManager(table_name, url_room, context, dbHelper, db, btnStart,
+                AsyncMultiDbManager asyncMultiDbManager = new AsyncMultiDbManager(table_name, url_room, context, dbHelper, db, btnStart,
                         pbLoadEquipment, InventoryListActivity.class,
                         true, true, chosen_room);
-                asyncDbManager.runAsyncMapListLoader();
+                asyncMultiDbManager.runAsyncMapListLoader();
             }else {
                 log.warning("---URL IS NULL---");
 
@@ -260,7 +258,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
                         String column_name = "room";
 
                     /*async get rooms and put into sqLite*/
-                        AsyncDbManager dbManager = new AsyncDbManager(table_name, column_name, url_address, context, dbHelper, db, false, runLoadRooms);
+                        AsyncMultiDbManager dbManager = new AsyncMultiDbManager(table_name, column_name, url_address, context, dbHelper, db, false, runLoadRooms);
                         log.info("--- call AsyncMapListLoader---");
                         dbManager.runAsyncMapListLoader();
                     }else {

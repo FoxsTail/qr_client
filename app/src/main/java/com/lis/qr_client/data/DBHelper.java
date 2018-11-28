@@ -52,7 +52,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "id_asDetailIn integer," +
                 "id_tp integer," +
                 "id_user integer," +
-                "user_info text);");
+                "user_info text," +
+                "address text);");
 
 
         //--------Inventory--------

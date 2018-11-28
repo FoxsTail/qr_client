@@ -3,12 +3,9 @@ package com.lis.qr_client.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +13,7 @@ import android.view.*;
 
 import android.widget.*;
 import com.lis.qr_client.R;
-import com.lis.qr_client.utilities.async_helpers.AsyncDbManager;
+import com.lis.qr_client.utilities.async_helpers.AsyncMultiDbManager;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.utilities.Utility;
 import com.lis.qr_client.utilities.dialog_fragment.ScanDialogFragment;
@@ -198,7 +195,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
                 /*load all available strings from ext db, starts new Db*/
                 if (url != null) {
-                    new AsyncDbManager(table_name, url, this, dbHelper, db, btnInventory, pbInventory,
+                    new AsyncMultiDbManager(table_name, url, this, dbHelper, db, btnInventory, pbInventory,
                             InventoryParamSelectActivity.class, true, true, null).runAsyncMapListLoader();
                 } else {
                     log.warning("---URL IS NULL!---");

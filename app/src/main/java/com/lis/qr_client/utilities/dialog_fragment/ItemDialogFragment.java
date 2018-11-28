@@ -6,19 +6,20 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 import com.lis.qr_client.R;
-import com.lis.qr_client.pojo.Inventory;
+import com.lis.qr_client.activity.EquipmentItemActivity;
+import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.utilities.Utility;
 import com.lis.qr_client.utilities.adapter.InventoryAdapter;
+import com.lis.qr_client.utilities.async_helpers.AsyncMultiDbManager;
+import com.lis.qr_client.utilities.async_helpers.AsyncOneDbManager;
 import lombok.extern.java.Log;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Log
 //TODO: make it abstract along with scan neightbor
@@ -28,6 +29,11 @@ public class ItemDialogFragment extends DialogFragment {
     private AlertDialog.Builder alertBuilder;
     private String inventory_num;
     private InventoryAdapter adapter;
+
+    private DBHelper dbHelper;
+    private SQLiteDatabase db;
+
+    private String url;
 
     private Context context;
     private Utility utility = new Utility();
@@ -39,6 +45,9 @@ public class ItemDialogFragment extends DialogFragment {
         Bundle args = getArguments();
 
         String title = args.getString(ARG_TITLE);
+
+        dbHelper = new DBHelper(context);
+        db = dbHelper.getWritableDatabase();
 
         alertBuilder = new AlertDialog.Builder(getActivity());
 
@@ -54,6 +63,8 @@ public class ItemDialogFragment extends DialogFragment {
     DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
+
+            /* get dialog array items resources */
             List<String> itemsOptionsArray = Arrays.asList(context.getResources().getStringArray(R.array.itemsArray));
             int item_info = itemsOptionsArray.indexOf(context.getResources().getString(R.string.item_info));
             int delete_from_list = itemsOptionsArray.indexOf(context.getResources().getString(R.string.delete_from_list));
@@ -63,35 +74,30 @@ public class ItemDialogFragment extends DialogFragment {
                 log.info("Get full inventory info");
                 /*knock-knock to server to get info*/
 
+                String full_url = url + "/equipments/inventory_num/full/" + inventory_num;
+                log.info("-----"+inventory_num);
+                String table_name = "equipment";
+
+                AsyncOneDbManager asyncOneDbManager = new AsyncOneDbManager(true, table_name, full_url,
+                        null, context, dbHelper, db, EquipmentItemActivity.class);
+
+                asyncOneDbManager.runAsyncOneDbManager();
+
+
             } else if (which == delete_from_list) {
 
                 //TODO: add one more dialog for deleting, like "r u sure, that u r sure u wanna delete it?"
 
-                log.info("Delete from list "+inventory_num);
+                log.info("Delete from list " + inventory_num);
 
-                /*get list from adapter*/
-                log.info("-----Adapter-----"+adapter.toString());
-                log.info("-----ListInv-----"+adapter.getInventories().toString());
+                utility.deleteInventoryFromList(adapter, inventory_num);
 
-                List<Map<String, Object>> inventoryList = adapter.getInventories();
-
-                /*delete from list*/
-                Map<String, Object> searched_map;
-                int position = -1;
-
-
-                searched_map = utility.findMapByInventoryNum(inventoryList, inventory_num);
-                position = inventoryList.indexOf(searched_map);
-
-                if (position > -1){
-                    inventoryList.remove(position);
-                }
-
-                /*notifyDataChanged*/
+                 /*notifyDataChanged*/
                 adapter.notifyDataSetChanged();
 
             } else {
                 log.info("Back to list");
+                dialog.dismiss();
 
             }
         }
@@ -115,6 +121,8 @@ public class ItemDialogFragment extends DialogFragment {
         this.context = context;
         this.inventory_num = inventory_num;
         this.adapter = adapter;
+
+        url = "http://" + context.getResources().getString(R.string.emu_ip) + ":" + context.getResources().getString(R.string.port);
 
         bundle.putString(ARG_TITLE, context.getResources().getString(R.string.choose_action));
         this.setArguments(bundle);

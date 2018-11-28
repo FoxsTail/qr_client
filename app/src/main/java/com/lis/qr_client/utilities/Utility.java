@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lis.qr_client.pojo.Equipment;
 import com.lis.qr_client.pojo.EquipmentExpanded;
+import com.lis.qr_client.utilities.adapter.InventoryAdapter;
 import lombok.extern.java.Log;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
@@ -31,10 +32,32 @@ import java.util.Map;
 @Log
 public class Utility {
 
+    /**
+     * Takes mapList of inventories from adapter. Search the map with the given inventory.
+     * On match deletes map from the list.
+     */
+    public void deleteInventoryFromList(InventoryAdapter adapter, String inventory_num) {
+         /*get list from adapter*/
+        List<Map<String, Object>> inventoryList = adapter.getInventories();
 
-    /** Find map in the mapList by the given inventory_num */
+                /*delete from list*/
+        Map<String, Object> searched_map;
+        int position = -1;
 
-    public Map<String, Object> findMapByInventoryNum(List<Map<String, Object>> mapListToSearch, String inventory_num){
+
+        searched_map = findMapByInventoryNum(inventoryList, inventory_num);
+        position = inventoryList.indexOf(searched_map);
+
+        if (position > -1) {
+            inventoryList.remove(position);
+        }
+    }
+
+    /**
+     * Find map in the mapList by the given inventory_num
+     */
+
+    public Map<String, Object> findMapByInventoryNum(List<Map<String, Object>> mapListToSearch, String inventory_num) {
         Map<String, Object> searched_map = new HashMap<>();
 
         for (Map<String, Object> map : mapListToSearch) {
@@ -69,31 +92,32 @@ public class Utility {
                 }
             });
 
-        }}
-
-
-        /**
-         * Input - string with json after qr code scanning,
-         * output - parsed to HashMap<String, Object> json
-         */
-
-        public HashMap<String, Object> scannedJsonToMap (String scan_result){
-            ObjectMapper mapper = new ObjectMapper();
-
-            HashMap<String, Object> jsonMap = new HashMap<>();
-            try {
-                jsonMap = mapper.readValue(scan_result, new TypeReference<Map<String, String>>() {
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return jsonMap;
         }
+    }
 
 
-        /**
-         * parse cursor to List
-         */
+    /**
+     * Input - string with json after qr code scanning,
+     * output - parsed to HashMap<String, Object> json
+     */
+
+    public HashMap<String, Object> scannedJsonToMap(String scan_result) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        HashMap<String, Object> jsonMap = new HashMap<>();
+        try {
+            jsonMap = mapper.readValue(scan_result, new TypeReference<Map<String, String>>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return jsonMap;
+    }
+
+
+    /**
+     * parse cursor to List
+     */
 
     public List cursorToList(Cursor cursor) {
         List convertedList = new ArrayList();
@@ -384,6 +408,42 @@ public class Utility {
         }
     }
 
+    /**
+     * Puts Map into the table (internal db)
+     */
+
+    public void putMapToTable(Map<String, Object> map, String table_name, SQLiteDatabase db) {
+        ContentValues cv = new ContentValues();
+
+        log.info("----Putting to sql----");
+
+        /*transaction for safe operation*/
+        db.beginTransaction();
+        try {
+            for (Map.Entry<String, Object> map_element : map.entrySet()) {
+
+                /*put data from map to the context value*/
+                Object value = map_element.getValue();
+                if(value != null) {
+                    cv.put(map_element.getKey(), String.valueOf(value));
+                }
+            }
+            log.info("----cv-------"+cv.toString());
+
+                /*insert to the internal db*/
+                long insert_res = db.insert(table_name, null, cv);
+//log track
+                log.info("----loaded----: " + insert_res);
+
+
+
+            db.setTransactionSuccessful();
+            log.info("----all is ok----");
+        } finally {
+            db.endTransaction();
+            log.info("----End----");
+        }
+    }
 
     /**
      * Puts list into the table (internal db)
