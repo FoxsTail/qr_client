@@ -71,7 +71,8 @@
                 android:name=".activity.InventoryTabsActivity"
                 android:parentActivityName=".activity.MainMenuActivity">
         </activity>
-        <activity android:name=".activity.EquipmentItemActivity">
+        <activity android:name=".activity.EquipmentItemActivity"
+        android:parentActivityName=".activity.InventoryListActivity">
         </activity>
     </application>
 

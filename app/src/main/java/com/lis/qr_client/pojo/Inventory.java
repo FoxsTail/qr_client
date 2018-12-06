@@ -8,5 +8,5 @@ public class Inventory implements InventoryPojo {
     private String name;
     private String inventory_num;
     private Integer room;
-    private Integer tp_id;
+    private Integer address_id;
 }

@@ -2,7 +2,9 @@
 <resources>
 <string-array name="itemsArray">
     <item>@string/item_info</item>
+<!--
     <item>@string/delete_from_list</item>
+-->
     <item>@string/back</item>
 </string-array>
 </resources>

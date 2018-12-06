@@ -24,6 +24,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginStart="62dp"
                 android:background="@drawable/ripple"/>
+
         <Button
                 android:text="@string/Inventory"
                 android:layout_width="121dp"

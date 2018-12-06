@@ -36,5 +36,11 @@
     <string name="delete_from_list">Delete from list</string>
     <string name="back">Back</string>
     <string name="choose_action">Choose the action</string>
+    <string name="Lorem_ipsum">Morbi rutrum nulla id orci feugiat viverra. Praesent maximus sed lorem sed porta. Nullam
+        porttitor ornare lacus vel auctor. Phasellus eu cursus ipsum, eu lacinia dolor. Aenean finibus dui vel nunc
+        tincidunt varius sit amet sed urna. Phasellus vulputate dui eu dui molestie, consequat eleifend nibh imperdiet.
+        Aliquam imperdiet, tellus ac congue commodo, tortor mi scelerisque lorem, non accumsan sapien ex et erat. Sed
+        cursus pretium mattis.
+    </string>
 
 </resources>

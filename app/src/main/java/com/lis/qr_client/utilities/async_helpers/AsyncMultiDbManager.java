@@ -126,39 +126,41 @@ public class AsyncMultiDbManager {
             String url = params[0].getUrl();
             String table_name = params[0].getTable_name();
 
-
+            if (dbHelper != null && db != null) {
             /*delete all data in table*/
-            db.beginTransaction();
-            log.info("----Delete all in table " + table_name + "----");
+                db.beginTransaction();
+                log.info("----Delete all in table " + table_name + "----");
 
-            try {
-                db.delete(table_name, null, null);
-                db.setTransactionSuccessful();
-            } finally {
-                db.endTransaction();
-            }
+                try {
+                    db.delete(table_name, null, null);
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
 
 
             /*connect to the url and put the result in sqlite table*/
-            try {
+                try {
                 /*choose method for list and mapList*/
-                if (isMapList) {
-                    saveMapListDataFromGetUrl(url, table_name);
-                } else {
-                    saveListDataFromGetUrl(url, table_name, column_name);
-                }
+                    if (isMapList) {
+                        saveMapListDataFromGetUrl(url, table_name);
+                    } else {
+                        saveListDataFromGetUrl(url, table_name, column_name);
+                    }
 
-            } catch (ResourceAccessException e) {
-                log.warning("Failed to connect to " + url);
-                log.warning("Failure cause: " + e.getMessage() + "\n" + e.getStackTrace().toString());
-            }
+                } catch (ResourceAccessException e) {
+                    log.warning("Failed to connect to " + url);
+                    log.warning("Failure cause: " + e.getMessage() + "\n" + e.getStackTrace().toString());
+                }
 
 //log track
             /*show me what u have*/
-            Cursor cursor = db.query(table_name, null, null, null, null, null, null, null);
-            dbHelper.getUtility().logCursor(cursor, table_name);
-            cursor.close();
+                Cursor cursor = db.query(table_name, null, null, null, null, null, null, null);
+                dbHelper.getUtility().logCursor(cursor, table_name);
+                cursor.close();
 //------
+
+            }
             if (isNextActivityLauncher) {
                 return params[0].getActivityTostart();
             } else return null;

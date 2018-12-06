@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.util.Pair;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.utilities.Utility;
 import lombok.extern.java.Log;
@@ -31,7 +32,7 @@ public class AsyncOneDbManager {
 
     private String table_name;
     private String url;
-    private Object extra_data;
+    private Pair<String, Object> extra_data;
 
     private Context context;
     private DBHelper dbHelper;
@@ -41,7 +42,7 @@ public class AsyncOneDbManager {
     private Utility utility = new Utility();
 
     public AsyncOneDbManager(boolean isNextActivityLauncher, String table_name, String url,
-                             Object extra_data, Context context, DBHelper dbHelper, SQLiteDatabase db,
+                             Pair<String, Object> extra_data, Context context, DBHelper dbHelper, SQLiteDatabase db,
                              Class activityToStart) {
         this.isNextActivityLauncher = isNextActivityLauncher;
         this.table_name = table_name;
@@ -117,6 +118,9 @@ public class AsyncOneDbManager {
 
             if (classToStart != null) {
                 Intent intent = new Intent(context, classToStart);
+                if (extra_data != null) {
+                    intent.putExtra(extra_data.first, extra_data.second.toString());
+                }
                 context.startActivity(intent);
             }
 

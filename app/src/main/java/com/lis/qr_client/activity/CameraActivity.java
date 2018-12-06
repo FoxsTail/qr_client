@@ -116,6 +116,7 @@ public class CameraActivity extends AppCompatActivity {
         cameraHandlerThread.openCamera(camera_id);
     }
 
+    //TODO:re
     private void safeCameraOpen(int id) {
         d(TAG, "---Safe camera Open-----");
         try {

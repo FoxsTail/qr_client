@@ -2,6 +2,7 @@ package com.lis.qr_client.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
@@ -35,6 +36,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     protected final int REQUEST_SCAN_QR = 1;
     protected static final int DIALOG_EXIT = -1;
     protected static final int DIALOG_SCANNED_CODE = 1;
+    public static final String PREFERENCE_FILE_NAME = "qr_preferences";
+
 
     protected HashMap<String, Object> scannedMap;
 
@@ -52,6 +55,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     String url;
 
     private Utility utility = new Utility();
+    SharedPreferences preferences;
 
 
     @Override
@@ -125,7 +129,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
 
     //-----------Menu------------//
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         /** alt3 */
@@ -135,7 +138,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             public boolean onMenuItemClick(MenuItem menuItem) {
                 log.info("---onMenuItemClick---");
                 return onOptionsItemSelected(menuItem);
-            }});
+            }
+        });
 
         return super.onCreateOptionsMenu(menu);
 
@@ -145,6 +149,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
+
 
     /*
           *Menu from anywhere i want*
@@ -181,7 +186,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     //---------------------------//
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -192,6 +196,13 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             }
             break;
             case R.id.btnInventory: {
+
+                log.info("---Remove old saved data---");
+
+                  /*clear old saved data*/
+                utility.removeOldPreferences(context,PREFERENCE_FILE_NAME,
+                        InventoryParamSelectActivity.ADDRESS_ID_PREFERENCES,
+                        InventoryParamSelectActivity.ROOM_ID_PREFERENCES);
 
                 /*load all available strings from ext db, starts new Db*/
                 if (url != null) {
@@ -229,6 +240,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     /*
     If scan was successful, returned alertDialog with parsed data
     */
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {
@@ -263,7 +275,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
      Parsing scannedMap, hidden value saves in the global var,
      other data build into a plain string
      */
-
     String scannedMapToMsg(HashMap<String, Object> scannedMap) {
         StringBuilder message = new StringBuilder();
 
@@ -286,5 +297,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         }
         return null;
     }
+
+
 }
 

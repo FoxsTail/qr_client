@@ -1,52 +1,73 @@
 package com.lis.qr_client.pojo;
 
-import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
-import com.lis.qr_client.interfaces.InventoryPojo;
-import lombok.Data;
+import lombok.*;
+import lombok.extern.java.Log;
+import org.chalup.microorm.annotations.Column;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+
+
 @Data
-public class Equipment implements ParentObject, InventoryPojo {
-    private List<Object> equipmentExpanded = new ArrayList<>();
-    private boolean isSelected = false;
-
-    private int id;
-    private String mType;
-    private String mVendor;
-    private String mModel;
-    private String mSeries;
-    private String mInventory_num;
-
-    public Equipment(int id, String type, String vendor, String model, String series, String inventory_num) {
-        this.id = id;
-        this.mType = type;
-        this.mVendor = vendor;
-        this.mModel = model;
-        this.mSeries = series;
-        this.mInventory_num = inventory_num;
-    }
-
-    @Override
-    public List<Object> getChildObjectList() {
-        return equipmentExpanded;
-    }
-
-    @Override
-    public void setChildObjectList(List<Object> list) {
-        equipmentExpanded = list;
-    }
+@Log
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class Equipment {
+    @Column(value = "id",treatNullAsDefault = true)
+    //Integer id;
+    Long id;
 
 
-    public String getEquipmentName(){
-        return mType+" "+mVendor+" "+mModel+" "+mSeries;
-    }
+    @Column(value = "type", treatNullAsDefault = true)
+    @NonNull
+    String type;
 
-    public boolean isSelected() {
-        return isSelected;
-    }
+    @NonNull
+    @Column(value = "vendor",treatNullAsDefault = true)
+    String vendor;
 
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
+    @NonNull
+    @Column(value="model",treatNullAsDefault = true)
+    String model;
+
+    @NonNull
+    @Column(value = "series",treatNullAsDefault = true)
+    String series;
+
+    @NonNull
+    @Column("inventory_num")
+    String inventory_num;
+
+    @Column("attributes")
+    //HashMap<String, Object> attributes;
+    String attributes;
+
+    @Column("serial_num")
+    String serial_num;
+
+    @Column("room")
+    //Integer room;
+    Long room;
+
+    @Column(value = "id_asDetailIn", treatNullAsDefault = true)
+    //Integer id_asDetailIn;
+    Long id_asDetailIn;
+
+    @Column(value = "id_tp", treatNullAsDefault = true)
+    //Integer id_tp;
+    Long id_tp;
+
+    @Column("id_user")
+    //Integer id_user;
+    Long id_user;
+
+    @Column("user_info")
+    String user_info;
+
+    @Column("address")
+    String address;
+
+
+
 }
+

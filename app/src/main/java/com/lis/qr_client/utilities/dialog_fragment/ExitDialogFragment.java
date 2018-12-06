@@ -1,5 +1,6 @@
 package com.lis.qr_client.utilities.dialog_fragment;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -13,6 +14,8 @@ public class ExitDialogFragment extends ScanDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
+
+
         log.info("Exit on createDialog");
         builder.setPositiveButton("Cancel", dialogListener);
         builder.setNegativeButton("Exit", dialogListener);

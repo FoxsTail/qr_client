@@ -2,27 +2,34 @@ package com.lis.qr_client.utilities;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBar;
+import android.util.Pair;
 import android.widget.FrameLayout;
-import android.widget.Toolbar;
-import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.lis.qr_client.activity.MainMenuActivity;
 import com.lis.qr_client.pojo.Equipment;
+import com.lis.qr_client.pojo.EquipmentParent;
 import com.lis.qr_client.pojo.EquipmentExpanded;
 import com.lis.qr_client.utilities.adapter.InventoryAdapter;
 import lombok.extern.java.Log;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
+import org.chalup.microorm.MicroOrm;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -31,6 +38,130 @@ import java.util.Map;
 
 @Log
 public class Utility {
+
+    //----------Preferences-----------//
+
+    /**
+     * Save muutiple objects (int, string, boolean, object) to preference
+     */
+
+   /* public void saveInventoryToPreferences(Context context, String preferenceFileName, List<Pair<String, Object>> params) {
+
+        for(Pair<String, Object> pair: params){
+            if(pair.second != null){
+                savePreference(context, preferenceFileName, pair.first, pair.second);
+            }
+        } */
+
+
+    /**
+     * Save object (int, string, boolean, object) to preference
+     */
+    public void savePreference(Context context, String preferenceFileName, String key, Object value) {
+        log.info("---Save object to preferences---");
+        log.info("---value---" + value);
+        SharedPreferences preferences = context.getSharedPreferences(preferenceFileName, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        if (value != null) {
+            if (value instanceof Integer) {
+
+                editor.putInt(key, (int) value);
+
+            } else if (value instanceof String) {
+
+                editor.putString(key, value.toString());
+
+            } else if (value instanceof Boolean) {
+
+                editor.putBoolean(key, (boolean) value);
+
+            } else {
+
+                Gson gson = new Gson();
+                String jsonString = gson.toJson(value);
+                editor.putString(key, jsonString);
+            }
+        }
+        editor.apply();
+    }
+
+
+    /**
+     * Load Boolean from preference
+     */
+    public Boolean loadBooleanPreference(Context context, String preferenceFileName, String key) {
+        log.info("---Load Boolean from preferences---");
+
+        SharedPreferences preferences = context.getSharedPreferences(preferenceFileName, MODE_PRIVATE);
+        boolean value = preferences.getBoolean(key, false);
+        log.info("---value---" + value);
+        return value;
+    }
+
+    /**
+     * Load String or Json from preference
+     */
+    public String loadStringOrJsonPreference(Context context, String preferenceFileName, String key) {
+        log.info("---Load String from preferences---");
+
+        SharedPreferences preferences = context.getSharedPreferences(preferenceFileName, MODE_PRIVATE);
+
+        String value = preferences.getString(key, "");
+
+        log.info("---value---" + value);
+        return value;
+    }
+
+    /**
+     * Load int from preference
+     */
+    public int loadIntPreference(Context context, String preferenceFileName, String key) {
+        log.info("---Load int from preferences---");
+
+        SharedPreferences preferences = context.getSharedPreferences(preferenceFileName, MODE_PRIVATE);
+        int value = preferences.getInt(key, 0);
+        log.info("---value---" + value);
+        return value;
+    }
+
+    /**
+     * Clear old preferences (apply - async)
+     */
+    public void clearOldReferences(Context context, String pref_name) {
+        SharedPreferences preferences = context.getSharedPreferences(pref_name, MODE_PRIVATE);
+        if (preferences != null) {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.apply();
+        }
+    }
+
+    /**
+     * Remove old session data from preferences (apply - async)
+     */
+
+    public void removeOldPreferences(Context context, String preferenceFileName, String... preferenceNames) {
+
+        for (String name : preferenceNames) {
+            removeOldReference(context, preferenceFileName, name);
+        }
+
+    }
+
+    /**
+     * Remove old preference (apply - async)
+     */
+    public void removeOldReference(Context context, String preferenceFileName, String remove_key) {
+        SharedPreferences preferences = context.getSharedPreferences(preferenceFileName, MODE_PRIVATE);
+        if (preferences != null) {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.remove(remove_key);
+            editor.apply();
+        }
+    }
+
+    //---------- -----------//
 
     /**
      * Takes mapList of inventories from adapter. Search the map with the given inventory.
@@ -78,20 +209,21 @@ public class Utility {
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setDisplayShowHomeEnabled(true);
             }
-            actionBar.addOnMenuVisibilityListener(new ActionBar.OnMenuVisibilityListener() {
-                @Override
-                public void onMenuVisibilityChanged(boolean b) {
-                    if (b) {
-                        log.info("visible");
-                        frameLayout.getForeground().setAlpha(140);
-                    } else {
-                        log.info(" ne visible");
-                        frameLayout.getForeground().setAlpha(0);
+            if (frameLayout != null) {
+                actionBar.addOnMenuVisibilityListener(new ActionBar.OnMenuVisibilityListener() {
+                    @Override
+                    public void onMenuVisibilityChanged(boolean b) {
+                        if (b) {
+                            log.info("visible");
+                            frameLayout.getForeground().setAlpha(140);
+                        } else {
+                            log.info(" ne visible");
+                            frameLayout.getForeground().setAlpha(0);
 
+                        }
                     }
-                }
-            });
-
+                });
+            }
         }
     }
 
@@ -150,16 +282,8 @@ public class Utility {
         if (cursor != null) {
             if (cursor.moveToNext()) {
                 do {
-                    temp_map = new HashMap<>();
-                    /*take id and address separately*/
-                    for (byte i = 0; i < cursor.getColumnCount(); i++) {
-                        if (i == id_index_column) {
-                            temp_map.put(cursor.getColumnName(i), cursor.getInt(i));
-                        } else {
-                            log.info(cursor.getColumnName(i) + " " + cursor.getString(i));
-                            temp_map.put(cursor.getColumnName(i), cursor.getString(i));
-                        }
-                    }
+                    temp_map = cursorToMap(cursor, id_index_column);
+
                     mapList.add(temp_map);
 
                 } while (cursor.moveToNext());
@@ -172,26 +296,77 @@ public class Utility {
     }
 
     /**
-     * creates Equipment and EquipmentExpanded from map, returns ParentObject
+     * parse cursor to Map<String, Object>
      */
-    public ArrayList<Equipment> mapListToEquipmentList(List<Map<String, Object>> equipmentList) {
 
-        ArrayList<Equipment> parentObjects = new ArrayList<>();
+    public Map<String, Object> cursorToMap(Cursor cursor, int id_index_column) {
 
-        Equipment equipment;
+        Map<String, Object> temp_map = new HashMap<>();
+
+                    /*take id and address separately*/
+        for (byte i = 0; i < cursor.getColumnCount(); i++) {
+            if (i == id_index_column) {
+                temp_map.put(cursor.getColumnName(i), cursor.getInt(i));
+            } else {
+                log.info(cursor.getColumnName(i) + " " + cursor.getString(i));
+                temp_map.put(cursor.getColumnName(i), cursor.getString(i));
+            }
+        }
+        return temp_map;
+    }
+
+
+    /**
+     * parse cursor to List<Map<String, Object>>
+     */
+
+    public static Equipment cursorToEquipment(Cursor cursor) {
+        /*Map<String, Object> map = cursorToMap(cursor, cursor.getColumnIndex("id"));
+
+        Object id = map.get("id");
+        Object type = map.get("type");
+        Object vendor = map.get("vendor");
+        Object model = map.get("model");
+        Object series = map.get("series");
+        Object inventory_num = map.get("inventory_num");
+        Object attributes = map.get("attributes");
+        Object serial_num = map.get("serial_num");
+        Object room = map.get("room");
+        Object id_asDetailIn = map.get("id_asDetailIn");
+        Object id_tp = map.get("id_tp");
+        Object id_user = map.get("id_user");
+        Object user_info = map.get("user_info");
+        Object address = map.get("address");*/
+
+        Equipment equipment = new Equipment();
+        if (cursor != null && (cursor.moveToFirst())) {
+            MicroOrm microOrm = new MicroOrm();
+            return microOrm.fromCursor(cursor, Equipment.class);
+        }
+        return null;
+    }
+
+    /**
+     * creates EquipmentParent and EquipmentExpanded from map, returns ParentObject
+     */
+    public ArrayList<EquipmentParent> mapListToEquipmentParentList(List<Map<String, Object>> equipmentList) {
+
+        ArrayList<EquipmentParent> parentObjects = new ArrayList<>();
+
+        EquipmentParent equipmentParent;
         EquipmentExpanded expanded;
 
         for (Map<String, Object> equipmentMap : equipmentList) {
 
             /*convert map to object*/
-            equipment = mapToEquipment(equipmentMap);
+            equipmentParent = mapToEquipmentParent(equipmentMap);
             expanded = mapToEquipmentExpanded(equipmentMap);
 
             /*add to child list*/
-            equipment.getChildObjectList().add(expanded);
+            equipmentParent.getChildObjectList().add(expanded);
 
             /*add to parent list*/
-            parentObjects.add(equipment);
+            parentObjects.add(equipmentParent);
         }
 
         return parentObjects;
@@ -280,9 +455,9 @@ public class Utility {
 
 
     /**
-     * hand parse map to Equipment
+     * hand parse map to EquipmentParent
      */
-    public Equipment mapToEquipment(Map<String, Object> equipmentMap) {
+    public EquipmentParent mapToEquipmentParent(Map<String, Object> equipmentMap) {
         int id;
         String type;
         String vendor;
@@ -337,7 +512,7 @@ public class Utility {
         }
 
 
-        return new Equipment(id, type, vendor, model, series, inventory_num);
+        return new EquipmentParent(id, type, vendor, model, series, inventory_num);
     }
 
 
@@ -413,28 +588,20 @@ public class Utility {
      */
 
     public void putMapToTable(Map<String, Object> map, String table_name, SQLiteDatabase db) {
-        ContentValues cv = new ContentValues();
+        ContentValues cv;
 
         log.info("----Putting to sql----");
 
         /*transaction for safe operation*/
         db.beginTransaction();
         try {
-            for (Map.Entry<String, Object> map_element : map.entrySet()) {
-
-                /*put data from map to the context value*/
-                Object value = map_element.getValue();
-                if(value != null) {
-                    cv.put(map_element.getKey(), String.valueOf(value));
-                }
-            }
-            log.info("----cv-------"+cv.toString());
+            cv = mapToContextValueParser(map);
+            log.info("----cv-------" + cv.toString());
 
                 /*insert to the internal db*/
-                long insert_res = db.insert(table_name, null, cv);
+            long insert_res = db.insert(table_name, null, cv);
 //log track
-                log.info("----loaded----: " + insert_res);
-
+            log.info("----loaded----: " + insert_res);
 
 
             db.setTransactionSuccessful();

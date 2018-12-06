@@ -11,16 +11,16 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.lis.qr_client.R;
-import com.lis.qr_client.pojo.Equipment;
+import com.lis.qr_client.pojo.EquipmentParent;
 import lombok.extern.java.Log;
 
 import java.util.List;
 
 @Log
 public class ExpandableEquipmentAdapter extends RecyclerView.Adapter<ExpandableEquipmentAdapter.EquipmentViewHolder> {
-    private List<Equipment> mParentItemList;
+    private List<EquipmentParent> mParentItemList;
 
-    public ExpandableEquipmentAdapter(List<Equipment> mParentItemList) {
+    public ExpandableEquipmentAdapter(List<EquipmentParent> mParentItemList) {
         this.mParentItemList = mParentItemList;
     }
 
@@ -32,20 +32,20 @@ public class ExpandableEquipmentAdapter extends RecyclerView.Adapter<ExpandableE
 
     @Override
     public void onBindViewHolder(EquipmentViewHolder equipmentViewHolder, int i) {
-        Equipment equipment = mParentItemList.get(i);
+        EquipmentParent equipmentParent = mParentItemList.get(i);
         LinearLayout ll_child_items = equipmentViewHolder.ll_child_items;
-        List<Object> equipment_childs = equipment.getChildObjectList();
+        List<Object> equipment_childs = equipmentParent.getChildObjectList();
 
-        if (equipment.isSelected()) {
+        if (equipmentParent.isSelected()) {
             equipmentViewHolder.itemView.setBackgroundColor(Color.parseColor("#b9f6ca"));
         }
 
         /*set tag and text in TextViews*/
-         equipmentViewHolder.itemView.setTag(equipment.getMInventory_num());
-        equipmentViewHolder.tvItemName.setText(equipment.getEquipmentName());
-        equipmentViewHolder.tvItemInventoryNum.setText(equipment.getMInventory_num());
+         equipmentViewHolder.itemView.setTag(equipmentParent.getMInventory_num());
+        equipmentViewHolder.tvItemName.setText(equipmentParent.getEquipmentName());
+        equipmentViewHolder.tvItemInventoryNum.setText(equipmentParent.getMInventory_num());
 
-        int child_items_size = equipment.getChildObjectList().size();
+        int child_items_size = equipmentParent.getChildObjectList().size();
         int max_child_items = ll_child_items.getChildCount();
 
         /*hide excess TextViews*/
@@ -87,7 +87,7 @@ public class ExpandableEquipmentAdapter extends RecyclerView.Adapter<ExpandableE
             tvItemName = itemView.findViewById(R.id.tvItemName);
             tvItemInventoryNum = itemView.findViewById(R.id.tvItemInventoryNum);
             context = itemView.getContext();
-            ll_child_items = itemView.findViewById(R.id.ll_child_items);
+            ll_child_items = itemView.findViewById(R.id.layout_card_equipment);
             ll_child_items.setVisibility(View.GONE);
 
             createMaxChildTextViewInLayout();
@@ -142,7 +142,7 @@ public class ExpandableEquipmentAdapter extends RecyclerView.Adapter<ExpandableE
         }
     }
 
-    public List<Equipment> getmParentItemList() {
+    public List<EquipmentParent> getmParentItemList() {
         return mParentItemList;
     }
 

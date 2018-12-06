@@ -1,9 +1,6 @@
 package com.lis.qr_client.utilities.dialog_fragment;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
+import android.app.*;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -39,6 +36,8 @@ public class ScanDialogFragment extends DialogFragment {
 
         return builder.create();
     }
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -85,6 +84,15 @@ public class ScanDialogFragment extends DialogFragment {
     public void callDialog(Context context, Bundle bundle, String msg, String tag){
         bundle.putString(ScanDialogFragment.ARG_TITLE, context.getResources().getString(R.string.inventory_scan_result));
         bundle.putString(ScanDialogFragment.ARG_MESSAGE, msg);
+
+        FragmentManager fragmentManager  =((AppCompatActivity) context).getFragmentManager();
+        Fragment old_fragment = fragmentManager.getFragment(bundle, tag);
+
+        /*avoid duplicate fragment error*/
+        if(old_fragment != null){
+            fragmentManager.beginTransaction().remove(old_fragment).commit();
+        }
+
 
         this.setArguments(bundle);
         /*even if Jesus asks u, don't put the Activity instead of the AppCompatActivity*/

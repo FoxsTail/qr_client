@@ -18,6 +18,10 @@ import java.util.List;
 @Log
 public class InventoryTabsActivity extends AppCompatActivity {
 
+    private TabLayout tabLayout;
+    private Toolbar toolbar;
+    private ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +35,7 @@ public class InventoryTabsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_inventory_tabs);
 
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+         toolbar = findViewById(R.id.toolbar);
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -39,10 +43,11 @@ public class InventoryTabsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        ViewPager viewPager = findViewById(R.id.viewpager);
+        viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        TabLayout tabLayout = findViewById(R.id.tabs);
+
+        tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
     }

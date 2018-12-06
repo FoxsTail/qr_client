@@ -62,7 +62,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "name text," +
                 "inventory_num text primary key," +
                 "room int," +
-                "tp_id);");
+                "address_id);");
 
 
         //--------Address--------
