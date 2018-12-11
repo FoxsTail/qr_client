@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <uses-feature android:name="android.hardware.camera"/>
-    <!-- <uses-feature android:name="android.hardware.camera2.full"/> -->
+     <uses-feature android:name="android.hardware.camera2.full"/>
     <uses-feature android:name="android.hardware.camera.autofocus"/>
 
     <application
@@ -71,8 +71,11 @@
                 android:name=".activity.InventoryTabsActivity"
                 android:parentActivityName=".activity.MainMenuActivity">
         </activity>
-        <activity android:name=".activity.EquipmentItemActivity"
-        android:parentActivityName=".activity.InventoryListActivity">
+        <activity
+                android:name=".activity.EquipmentItemActivity"
+                android:parentActivityName=".activity.InventoryListActivity">
+        </activity>
+        <activity android:name=".activity.Camera2Activity">
         </activity>
     </application>
 

@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lis.qr_client.activity.MainMenuActivity;
 import com.lis.qr_client.pojo.Equipment;
 import com.lis.qr_client.pojo.EquipmentParent;
@@ -86,6 +87,13 @@ public class Utility {
         editor.apply();
     }
 
+    public List<Map<String, Object>> preferencesJsonToMapList(Context context, String preferenceFileName, String preferenceKey){
+        String jsonToScan = loadStringOrJsonPreference
+                (context, preferenceFileName, preferenceKey);
+
+        Gson gson = new Gson();
+        return gson.fromJson(jsonToScan, new TypeToken<List<Map<String, Object>>>() {}.getType());
+    }
 
     /**
      * Load Boolean from preference
@@ -189,7 +197,7 @@ public class Utility {
      */
 
     public Map<String, Object> findMapByInventoryNum(List<Map<String, Object>> mapListToSearch, String inventory_num) {
-        Map<String, Object> searched_map = new HashMap<>();
+        Map<String, Object> searched_map = null;
 
         for (Map<String, Object> map : mapListToSearch) {
             if ((map.get("inventory_num")).equals(inventory_num)) {
@@ -197,6 +205,7 @@ public class Utility {
                 break;
             }
         }
+
         return searched_map;
     }
 

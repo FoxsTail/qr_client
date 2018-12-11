@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import com.lis.qr_client.R;
 import lombok.extern.java.Log;
@@ -36,7 +39,6 @@ public class ScanDialogFragment extends DialogFragment {
 
         return builder.create();
     }
-
 
 
     @Override
@@ -85,14 +87,16 @@ public class ScanDialogFragment extends DialogFragment {
         bundle.putString(ScanDialogFragment.ARG_TITLE, context.getResources().getString(R.string.inventory_scan_result));
         bundle.putString(ScanDialogFragment.ARG_MESSAGE, msg);
 
-        FragmentManager fragmentManager  =((AppCompatActivity) context).getFragmentManager();
+        log.info("-----Call dialog-----");
+
+
+        /*FragmentManager fragmentManager  =((AppCompatActivity) context).getFragmentManager();
         Fragment old_fragment = fragmentManager.getFragment(bundle, tag);
 
-        /*avoid duplicate fragment error*/
+        *//*avoid duplicate fragment error*//*
         if(old_fragment != null){
             fragmentManager.beginTransaction().remove(old_fragment).commit();
-        }
-
+        }*/
 
         this.setArguments(bundle);
         /*even if Jesus asks u, don't put the Activity instead of the AppCompatActivity*/

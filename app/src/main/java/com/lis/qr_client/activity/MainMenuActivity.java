@@ -216,19 +216,19 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             break;
             case R.id.btnProfile: {
                 ScanDialogFragment dialogFragment = new ScanDialogFragment();
-
+/*
                 Bundle bundle = new Bundle();
                 bundle.putString(ScanDialogFragment.ARG_TITLE, "Scan");
                 bundle.putString(ScanDialogFragment.ARG_MESSAGE, "Bla bla balala");
                 dialogFragment.setArguments(bundle);
 
-                dialogFragment.show(getFragmentManager(), "Profile");
+                dialogFragment.show(getFragmentManager(), "Profile");*/
             }
             break;
 
             /*call CameraActivity for scanning*/
             case R.id.btnScanQR: {
-                Intent intent = new Intent(this, CameraActivity.class);
+                Intent intent = new Intent(this, Camera2Activity.class);
                 startActivityForResult(intent, REQUEST_SCAN_QR);
             }
             break;
