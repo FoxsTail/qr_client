@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">QR_client</string>
+    <string name="app_name">QR_client_extra</string>
     <string name="add_user">Add User</string>
     <string name="all">All</string>
     <string name="sync">Synchronize</string>
