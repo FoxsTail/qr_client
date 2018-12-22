@@ -1,0 +1,37 @@
+
+------Camera------
+try to run in the completely different loop (handlerThread)
+
+
+------Camera 2------
+Allocation - You can easily catch the buffer type Allocation in ViewfinderProcessor.java to get a byte array as in the old Camera API.
+
+Get the original buffer and take data from there
+
+Reformate the yuv manually, only for imageReader
+
+
+glReadPixel
+
+RrenderScript
+
+try black&white
+
+
+Error!!! ------------
+
+ [ 12-18 09:14:57.989   564: 7063 E/         ]
+                                                        GraphicBufferAlloc::createGraphicBuffer(w=640, h=480) failed (I/O error), handle=0x0
+12-18 09:14:57.990 7282-10223/com.lis.qr_client E/BufferQueueProducer: [unnamed-7282-1] dequeueBuffer: createGraphicBuffer failed
+12-18 09:14:57.990 7282-10223/com.lis.qr_client E/Legacy-CameraDevice-JNI: LegacyCameraDevice_nativeProduceFrame: Error while producing frame I/O error (-5).
+12-18 09:14:57.990 7282-10223/com.lis.qr_client E/CameraDeviceGLThread-0: Received exception on GL render thread: 
+                                                                          java.lang.UnsupportedOperationException: Unknown error -5
+
+-------------
+
+-> reuse already allocated buffer
+
+использовать репроцессинг для сессии (взяли отдали взяли)
+использовать рендер скрипт для рисунка
+
+------

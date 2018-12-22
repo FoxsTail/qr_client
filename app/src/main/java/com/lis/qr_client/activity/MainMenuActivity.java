@@ -3,6 +3,7 @@ package com.lis.qr_client.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +22,7 @@ import com.lis.qr_client.utilities.dialog_fragment.ScanDialogFragment;
 import lombok.extern.java.Log;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Log
@@ -30,19 +32,15 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private TextView tvDialogChange;
     private ProgressBar pbInventory;
     private Toolbar toolbar;
-    private ConstraintLayout constraintLayout;
-
 
     protected final int REQUEST_SCAN_QR = 1;
-    protected static final int DIALOG_EXIT = -1;
-    protected static final int DIALOG_SCANNED_CODE = 1;
     public static final String PREFERENCE_FILE_NAME = "qr_preferences";
 
 
     protected HashMap<String, Object> scannedMap;
 
-    DBHelper dbHelper;
-    SQLiteDatabase db;
+    private DBHelper dbHelper;
+    private SQLiteDatabase db;
 
     private String qr_hidden_key = "hidden";
     private Object qr_hidden_value;
@@ -51,11 +49,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private Context context = this;
 
 
-    String table_name = "address";
-    String url;
+    private String table_name = "address";
+    private String url;
 
     private Utility utility = new Utility();
-    SharedPreferences preferences;
 
 
     @Override
@@ -72,8 +69,20 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         setContentView(R.layout.activity_main_menu);
 
+        String language = Locale.getDefault().getLanguage();
+        String country = Locale.getDefault().getDisplayCountry();
+
+        log.info("Current language and the country: "+ language+" "+country);
+
+        Locale locale = new Locale("ru");
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config,
+                getBaseContext().getResources().getDisplayMetrics());
+
         /*
-        todo: set dim only for the main window, exclude toolbar
+        TODO: set dim only for the main window, exclude toolbar
         idea: get toolbar heidht, get window, set window dim\foreground-toolbar-height
          */
 
@@ -86,7 +95,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
-            toolbar.setTitle("Main menu");
+            toolbar.setTitle(R.string.main_menu);
             setSupportActionBar(toolbar);
 
             utility.toolbarSetter(getSupportActionBar(), frameLayout, false);
@@ -150,40 +159,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         return super.onOptionsItemSelected(item);
     }
 
-
-    /*
-          *Menu from anywhere i want*
-
-        View menu_view = findViewById(R.id.toolbar);
-        PopupMenu popupMenu = new PopupMenu(this, menu_view);
-        getMenuInflater().inflate(R.menu.qr_menu, popupMenu.getMenu());
-        popupMenu.show();
-
-        */
-
-        /*
-
-            *Like search icon expand*
-
-        MenuItem.OnActionExpandListener expandListener = new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                log.info("---nMenuItemActionExpand---");
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                log.info("---nMenuItemActionCollapse---");
-                return true;
-            }
-        };
-
-        MenuItem menuItem = menu.findItem(R.id.qr_menu_item1);
-        menuItem.setOnActionExpandListener(expandListener);
-        */
-
-
     //---------------------------//
 
     @Override
@@ -228,7 +203,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
             /*call CameraActivity for scanning*/
             case R.id.btnScanQR: {
-                Intent intent = new Intent(this, Camera2Activity.class);
+                Intent intent = new Intent(this, CameraActivity.class);
                 startActivityForResult(intent, REQUEST_SCAN_QR);
             }
             break;
@@ -265,7 +240,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
             }
         } else if (resultCode == RESULT_CANCELED) {
-            Toast.makeText(this, "Great mission was canceled", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.mission_was_canceled), Toast.LENGTH_LONG).show();
         }
     }
 

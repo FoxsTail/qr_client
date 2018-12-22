@@ -64,8 +64,8 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     private InventoryFragment toScanFragment;
     private InventoryFragment resultFragment;
 
-    String titleToScan = "To scan";
-    String titleResult = "Result";
+    String titleToScan = getString(R.string.to_scan);
+    String titleResult = getString(R.string.result);
     private String inventoryNum = "inventory_num";
 
     private Utility utility = new Utility();
@@ -426,7 +426,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     private Runnable postEquipmentInList = new Runnable() {
         @Override
         public void run() {
-            Toast.makeText(context, "Done loading", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.done_loading), Toast.LENGTH_SHORT).show();
 
 /*
             //--------equipment---------
@@ -474,7 +474,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
             scannedEquipments = resultFragment.getAdapter().getInventories();
 
 
-            Toast.makeText(context, "Done 2", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.done_all), Toast.LENGTH_SHORT).show();
 
         }
     };
@@ -516,7 +516,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     public void onBackPressed() {
         log.info("InventoryListActivity on backPressed");
         ExitDialogFragment exitDialogFragment = new ExitDialogFragment();
-        exitDialogFragment.callDialog(context, new Bundle(), "Quit the room?", "exit");
+        exitDialogFragment.callDialog(context, new Bundle(), getString(R.string.quit_room_msg), "exit");
         //  super.onBackPressed(); вылетает
     }
 

@@ -1,5 +1,6 @@
 package com.lis.qr_client.activity;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
@@ -38,6 +39,7 @@ public class EquipmentItemActivity extends AppCompatActivity {
     private DBHelper dbHelper;
     private SQLiteDatabase db;
     private Cursor cursor;
+    private Context context = this;
 
     private String inventory_num;
     Equipment equipment;
@@ -50,6 +52,7 @@ public class EquipmentItemActivity extends AppCompatActivity {
     private ImageView imageElement;
 
     //TODO: while loading make it circle
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +96,6 @@ public class EquipmentItemActivity extends AppCompatActivity {
         thread.start();
 
     }
-
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -107,12 +109,12 @@ public class EquipmentItemActivity extends AppCompatActivity {
             //TODO: make it bold in th easy way
             SpannableStringBuilder span;
             StyleSpan bold = new StyleSpan(Typeface.BOLD);
-            String label_name = "Name: ";
-            String label_inventory = "Inventory number: ";
-            String label_serial = "Serial number: ";
-            String label_additional = "Additional params: ";
-            String label_user = "Current user: ";
-            String label_tp = "Technical platform: ";
+            String label_name = context.getResources().getString(R.string.name)+" ";
+            String label_inventory = R.string.inventory_number+": ";
+            String label_serial = getString(R.string.serial_number)+" ";
+            String label_additional = getString(R.string.additional_params)+" ";
+            String label_user = getString(R.string.current_user)+" ";
+            String label_tp = getString(R.string.tech_platform)+" ";
 
             /*String[] labels = new String[]{label_name, label_additional, label_inventory, label_serial, label_serial,
                     label_tp, label_user};

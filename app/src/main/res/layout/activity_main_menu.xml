@@ -15,7 +15,7 @@
         <include android:id="@+id/toolbar" layout="@layout/toolbar"/>
 
         <Button
-                android:text="@string/Furmulyar"
+                android:text="@string/Formulyar"
                 android:layout_width="121dp"
                 android:layout_height="105dp"
                 android:id="@+id/btnFormulyar"

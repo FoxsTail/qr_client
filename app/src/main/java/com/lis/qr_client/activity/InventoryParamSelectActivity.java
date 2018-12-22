@@ -88,7 +88,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         toolbar = findViewById(R.id.toolbar);
 
         if (toolbar != null) {
-            toolbar.setTitle("Select Room");
+            toolbar.setTitle(R.string.select_room);
             setSupportActionBar(toolbar);
 
             utility.toolbarSetter(getSupportActionBar(), frameLayout, true);
@@ -158,12 +158,13 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         /*if the value is empty*/
         if (chosen_address == null || chosen_room == null) {
             log.info("---Address or Room is null. Err.--");
+            Toast.makeText(this, getString(R.string.choose_address_n_room), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (chosen_address.equals(" ") || chosen_room.equals(" ")) {
             log.info("---Nothing is selected--");
-            Toast.makeText(this, "Choose the address and the room!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.choose_address_n_room), Toast.LENGTH_SHORT).show();
         } else {
 
             if (url != null) {
@@ -215,12 +216,12 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
             switch (msg.what) {
                 case LOAD_ADDRESS: {
                     log.info("---Prepare address spinner---");
-                    spinnerPrepare(spinAddress, (List<Object>) msg.obj, "Address", saved_address_preference);
+                    spinnerPrepare(spinAddress, (List<Object>) msg.obj, getString(R.string.address), saved_address_preference);
                     break;
                 }
                 case LOAD_ROOMS: {
                     log.info("---Prepare room spinner---");
-                    spinnerPrepare(spinRoom, (List<Object>) msg.obj, "Room", 0);
+                    spinnerPrepare(spinRoom, (List<Object>) msg.obj, getString(R.string.room), 0);
                     break;
                 }
             }
