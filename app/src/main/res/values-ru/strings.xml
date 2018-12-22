@@ -15,7 +15,7 @@
     <string name="Formulyar">Формуляр</string>
     <string name="Inventory">Инвентаризация</string>
     <string name="Profile">Профиль</string>
-    <string name="ScanQR">Scan QR-code</string>
+    <string name="ScanQR">Сканировать QR-code</string>
     <string name="select_address">Выбрать адрес</string>
     <string name="select_room">Выбрать комнату</string>
     <string name="start">Начать</string>

@@ -69,19 +69,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         setContentView(R.layout.activity_main_menu);
 
-        String language = Locale.getDefault().getLanguage();
-        String country = Locale.getDefault().getDisplayCountry();
-
-        log.info("Current language and the country: "+ language+" "+country);
-
-        Locale locale = new Locale("ru");
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config,
-                getBaseContext().getResources().getDisplayMetrics());
-
-        /*
+      /*
         TODO: set dim only for the main window, exclude toolbar
         idea: get toolbar heidht, get window, set window dim\foreground-toolbar-height
          */

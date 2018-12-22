@@ -56,7 +56,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/btnInventory"
                 app:layout_constraintRight_toRightOf="@+id/btnInventory" android:layout_marginRight="-9dp"
                 android:background="@drawable/ripple"
-        />
+                android:elevation="0dp" android:textAlignment="center"/>
         <TextView
                 android:text=""
                 android:layout_width="wrap_content"
