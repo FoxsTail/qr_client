@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="port">8090</string>
+    <string name="server_ip">172.36.2.47</string>
+    <string name="emu_ip">10.0.3.2</string>
+    <string name="test">Т</string>
+    <string name="api_addresses_load">/addresses/only_address</string>
+    <string name="api_inventory_by_address_load">/inventory/address/</string>
+    <string name="api_room_by_address_load">/addresses/rooms/</string>
+    <string name="api_full_inventory_from_equipments">/equipments/inventory_num/full/</string>
+
+
     <string name="app_name" translatable="false">PFU Inventory</string>
     <string name="add_user">Додати коритсувача</string>
     <string name="all">Все</string>
@@ -17,7 +27,7 @@
     <string name="Inventory">Інвентарізация</string>
     <string name="Profile">Профіль</string>
     <string name="ScanQR">Сканувати QR-code</string>
-    <string name="select_address">Вибрати адресу </string>
+    <string name="select_address">Вибрати адресу</string>
     <string name="select_room">Вибрати кімнату</string>
     <string name="start">Почати</string>
     <string name="listLabel">Кімната</string>
@@ -28,10 +38,6 @@
     <string name="ok">Ок</string>
     <string name="cancel">Відмінити</string>
     <string name="inventory_scan_result">Результат сканування</string>
-    <string name="port">8090</string>
-    <string name="server_ip">172.36.2.47</string>
-    <string name="emu_ip">10.0.3.2</string>
-    <string name="test">Test</string>
 
     <string name="item_info">Повна інформація</string>
     <string name="delete_from_list">Видалити зі списку</string>
@@ -57,4 +63,10 @@
     <string name="additional_params">Додаткові параметры:</string>
     <string name="current_user">Поточний коричтувач:</string>
     <string name="tech_platform">Технічна платформа:</string>
+
+
+    <string name="room_number">Кімната №</string>
+    <string name="equipment_already_scanned">Обладнання с номером %1$s вжу сканувалося</string>
+    <string name="equipment_in_the_other_room">Обладнання знайдено в інший кімнаті</string>
+    <string name="equipment_not_found">Обладнання не знайдено!</string>
 </resources>

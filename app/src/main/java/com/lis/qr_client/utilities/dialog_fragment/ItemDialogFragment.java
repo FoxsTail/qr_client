@@ -104,7 +104,8 @@ public class ItemDialogFragment extends DialogFragment {
 
     private void fullItemInfo() {
         /*knock-knock to server to get info*/
-        String full_url = url + "/equipments/inventory_num/full/" + inventory_num;
+        String full_url = url + context.getResources().getString(R.string.api_full_inventory_from_equipments)
+                + inventory_num;
 
         String table_name = "equipment";
 

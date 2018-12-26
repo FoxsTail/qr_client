@@ -62,15 +62,9 @@
                 android:name=".activity.InventoryParamSelectActivity"
                 android:parentActivityName=".activity.MainMenuActivity">
         </activity>
-        <activity android:name=".tries.TestActivity">
-        </activity>
         <activity
                 android:name=".activity.InventoryListActivity"
                 android:parentActivityName=".activity.InventoryParamSelectActivity">
-        </activity>
-        <activity
-                android:name=".activity.InventoryTabsActivity"
-                android:parentActivityName=".activity.MainMenuActivity">
         </activity>
         <activity
                 android:name=".activity.EquipmentItemActivity"

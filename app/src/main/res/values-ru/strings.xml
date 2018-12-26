@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="port">8090</string>
+    <string name="server_ip">172.36.2.47</string>
+    <string name="emu_ip">10.0.3.2</string>
+    <string name="test">T</string>
+    <string name="api_addresses_load">/addresses/only_address</string>
+    <string name="api_inventory_by_address_load">/inventory/address/</string>
+    <string name="api_room_by_address_load">/addresses/rooms/</string>
+    <string name="api_full_inventory_from_equipments">/equipments/inventory_num/full/</string>
+
+
     <string name="add_user">Добавить пользователя</string>
     <string name="all">Все</string>
     <string name="sync">Синхронизировать</string>
@@ -27,10 +37,6 @@
     <string name="ok">Ок</string>
     <string name="cancel">Отмена</string>
     <string name="inventory_scan_result">Результат сканирования</string>
-    <string name="port">8090</string>
-    <string name="server_ip">172.36.2.47</string>
-    <string name="emu_ip">10.0.3.2</string>
-    <string name="test">Test</string>
 
     <string name="item_info">Полная информация</string>
     <string name="delete_from_list">Удалить из списка</string>
@@ -56,4 +62,9 @@
     <string name="additional_params">Дополнительные параметры:</string>
     <string name="current_user">Текущий пользователь:</string>
     <string name="tech_platform">Техническая платформа:</string>
+
+    <string name="room_number">Комната №</string>
+    <string name="equipment_already_scanned">Оборудование с номером %1$s уже сканировалось</string>
+    <string name="equipment_in_the_other_room">Оборудование найдено в другой комнате</string>
+    <string name="equipment_not_found">Оборудование не найдено!</string>
 </resources>

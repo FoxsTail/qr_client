@@ -99,6 +99,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
         url = "http://" + getString(R.string.emu_ip) + ":" + getString(R.string.port);
 
+
         spinAddress = findViewById(R.id.spinAddress);
         spinRoom = findViewById(R.id.spinRoom);
 //        spinRoom.setEnabled(false);
@@ -168,30 +169,16 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         } else {
 
             if (url != null) {
-                /*
-
-                String url_room = url + "/equipments/room/" + chosen_room;
-                String table_name = "equipment";
-
-                //or
-
-                String url_room = url + "/inventory/room/" + chosen_room;
-                String table_name = "inventory";
-                AsyncMultiDbManager asyncMultiDbManager = new AsyncMultiDbManager(table_name, url_room, context, dbHelper, db, btnStart,
-                        pbLoadEquipment, InventoryListActivity.class,
-                        true, true, chosen_room);
-                asyncMultiDbManager.runAsyncMapListLoader();
-
-                */
 
                 /*remove previous session data*/
                 utility.removeOldPreferences(context,
                         MainMenuActivity.PREFERENCE_FILE_NAME,
                         InventoryListActivity.INVENTORY_STATE_BOOLEAN,
                         InventoryListActivity.TO_SCAN_LIST,
-                        InventoryListActivity.SCANNED_LIST );
+                        InventoryListActivity.SCANNED_LIST);
 
-                AsyncMultiDbManager asyncMultiDbManager = new AsyncMultiDbManager(null, null, context, null, null, btnStart,
+                AsyncMultiDbManager asyncMultiDbManager = new AsyncMultiDbManager
+                        (null, null, context, null, null, btnStart,
                         pbLoadEquipment, InventoryListActivity.class,
                         true, false, chosen_room);
                 asyncMultiDbManager.runAsyncMapListLoader();
@@ -296,8 +283,6 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
                     /*if loaded address equals to already loaded one - take data from sqlite*/
 
                     if (saved_address > 0 && saved_address == id_address) {
-                        log.info("---INSIDE---");
-
                        /*load rooms from sqlite from sqlite*/
 
                         Thread thread = new Thread(runLoadRooms);
@@ -305,27 +290,29 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
 
                     } else {
-                        log.info("---OUTSIDE---");
                         /*load from db data and rooms for the address*/
 
                          /*params for request*/
                         if (url != null) {
 
                         /*get data from server*/
-                            String url_room = url + "/inventory/address/" + id_address;
+                            String url_inventory = url + getString(R.string.api_inventory_by_address_load) + id_address;
                             String table_name = "inventory";
+
+
                             AsyncMultiDbManager asyncMultiDbManager = new AsyncMultiDbManager
-                                    (table_name, url_room, context, dbHelper, db, btnStart, pbLoadEquipment,
+                                    (table_name, url_inventory, context, dbHelper, db, btnStart, pbLoadEquipment,
                                             null, false, true, chosen_room);
                             asyncMultiDbManager.runAsyncMapListLoader();
 
-                        /*async get rooms rooms from server*/
-                            String url_address = url + "/addresses/rooms/" + id_address;
+                        /*async get rooms from server*/
+                            String url_room = url + getString(R.string.api_room_by_address_load) + id_address;
                             table_name = "room";
                             String column_name = "room";
 
+
                             AsyncMultiDbManager dbManager = new AsyncMultiDbManager(table_name, column_name,
-                                    url_address, context, dbHelper, db, false, runLoadRooms);
+                                    url_room, context, dbHelper, db, false, runLoadRooms);
                             log.info("--- call AsyncMapListLoader---");
                             dbManager.runAsyncMapListLoader();
                         } else {
@@ -423,8 +410,6 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
             }
 //------
                /*set first elem null*/
-            //String[] address_strings = addresses.values().toArray(new String[0]);
-
             List<String> address_strings = new ArrayList<>();
             address_strings.add(" ");
             address_strings.addAll(addresses.values());

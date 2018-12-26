@@ -33,7 +33,6 @@ import java.util.List;
 @Log
 public class EquipmentItemActivity extends AppCompatActivity {
     private CollapsingToolbarLayout collapsingbar;
-    private TextView tvElement;
 
 
     private DBHelper dbHelper;
@@ -44,7 +43,6 @@ public class EquipmentItemActivity extends AppCompatActivity {
     private String inventory_num;
     Equipment equipment;
 
-    private Utility utility = new Utility();
     private TextView info;
     private TextView tvAdditional;
     private TextView tvUser;
@@ -115,19 +113,6 @@ public class EquipmentItemActivity extends AppCompatActivity {
             String label_additional = getString(R.string.additional_params)+" ";
             String label_user = getString(R.string.current_user)+" ";
             String label_tp = getString(R.string.tech_platform)+" ";
-
-            /*String[] labels = new String[]{label_name, label_additional, label_inventory, label_serial, label_serial,
-                    label_tp, label_user};
-
-
-            for (int i = 0; i < labels.length-1; i++) {
-                span = new SpannableStringBuilder(labels[i]);
-                span.setSpan(bold, 0, labels[i].length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                labels[i] = span.toString();
-            }
-            span = new SpannableStringBuilder(label_name);
-            span.setSpan(bold, 0, label_name.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-            label_name = span.toString();*/
 
 
             //--------

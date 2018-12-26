@@ -45,22 +45,6 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
     }
 
 
-
-/*
-    *//*TESTING*//*
-    @Override
-    public void onBindViewHolder(InventoryViewHolder inventoryViewHolder, int item_id) {
-        log.info("----onBindViewHolder---");
-        log.info("----I is " + item_id + "--");
-
-        Map<String, Object> inventory = inventories.get(item_id);
-
-        for(Map.Entry<String, Object> map: inventory.entrySet()){
-            inventoryViewHolder.tvItemName.setText(map.getKey());
-            inventoryViewHolder.tvItemInventoryNum.setText(map.getValue().toString());
-        }
-    }*/
-
     @Override
     public void onBindViewHolder(InventoryViewHolder inventoryViewHolder, int item_id) {
         log.info("----onBindViewHolder---");
@@ -90,7 +74,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
             log.info("-----TAG SET-----"+inventory_num);
             inventoryViewHolder.tvItemInventoryNum.setText(inventory_num.toString());
 
-            //set onClickListener for each initialized item. use inventory_num as search marker
+            //----set onClickListener for each initialized item. use inventory_num as search marker
             inventoryViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -103,20 +87,6 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
                            Bundle bundle = new Bundle();
 
                            dialogFragment.callDialog(context, bundle, getThisAdapter(), inventory_num.toString(), "item_actions");
-
-                           /*
-                           //---with handler
-
-                           Message msg = Message.obtain(handler, 0, inventory_num);
-                      handler.sendMessage(msg);
-
-
-                           ItemDialogFragment dialogFragment = new ItemDialogFragment();
-                           Bundle bundle = new Bundle();
-
-                           log.info("--Before call dialog-- current thread is "+Thread.currentThread());
-
-                           dialogFragment.callDialog(context, bundle, getThisAdapter(), (String) msg.obj, "item_actions");*/
                        }
                    }).start();
 

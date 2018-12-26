@@ -2,27 +2,22 @@ package com.lis.qr_client.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
-
 import android.widget.*;
 import com.lis.qr_client.R;
-import com.lis.qr_client.utilities.async_helpers.AsyncMultiDbManager;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.utilities.Utility;
+import com.lis.qr_client.utilities.async_helpers.AsyncMultiDbManager;
 import com.lis.qr_client.utilities.dialog_fragment.ScanDialogFragment;
 import lombok.extern.java.Log;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 @Log
@@ -91,7 +86,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         //--------
 
 
-        url = "http://" + getString(R.string.emu_ip) + ":" + getString(R.string.port) + "/addresses/only_address";
+        url ="http://" + getString(R.string.emu_ip) + ":"
+                + getString(R.string.port) + getString(R.string.api_addresses_load);
 
         tvDialogChange = findViewById(R.id.tvDialogChange);
 
@@ -112,10 +108,13 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         dialogHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
+
                 ScanDialogFragment dialogFragment = new ScanDialogFragment();
                 Bundle bundle = new Bundle();
 
                 String scanned_msg = scannedMapToMsg(scannedMap);
+
+                log.info("Scanned msg: "+ scanned_msg);
 
                 dialogFragment.callDialog(context, bundle, scanned_msg, "qr_scan");
             }
@@ -128,7 +127,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     //-----------Menu------------//
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        /** alt3 */
         toolbar.inflateMenu(R.menu.qr_menu);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -154,7 +152,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.btnFormulyar: {
 
-                Intent intent = new Intent(this, InventoryTabsActivity.class);
+                Intent intent = new Intent(this, null);
                 startActivity(intent);
             }
             break;
@@ -170,7 +168,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 /*load all available strings from ext db, starts new Db*/
                 if (url != null) {
                     new AsyncMultiDbManager(table_name, url, this, dbHelper, db, btnInventory, pbInventory,
-                            InventoryParamSelectActivity.class, true, true, null).runAsyncMapListLoader();
+                            InventoryParamSelectActivity.class, true, true, null)
+                            .runAsyncMapListLoader();
                 } else {
                     log.warning("---URL IS NULL!---");
 
@@ -179,13 +178,13 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             break;
             case R.id.btnProfile: {
                 ScanDialogFragment dialogFragment = new ScanDialogFragment();
-/*
+
                 Bundle bundle = new Bundle();
                 bundle.putString(ScanDialogFragment.ARG_TITLE, "Scan");
                 bundle.putString(ScanDialogFragment.ARG_MESSAGE, "Bla bla balala");
                 dialogFragment.setArguments(bundle);
 
-                dialogFragment.show(getFragmentManager(), "Profile");*/
+                dialogFragment.show(getFragmentManager(), "Profile");
             }
             break;
 

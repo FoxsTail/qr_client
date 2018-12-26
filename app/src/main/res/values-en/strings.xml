@@ -1,41 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-        <string name="add_user">Add User</string>
-        <string name="all">All</string>
-        <string name="sync">Synchronize</string>
-        <string name="next">Next</string>
-        <string name="password">Password:</string>
-        <string name="email">Email:</string>
-        <string name="name">Name:</string>
-        <string name="del">Delete</string>
-        <string name="equipments">Test</string>
-        <string name="message">some message</string>
-        <string name="scan">Scan QR-code</string>
-        <string name="create_qr">Create qr-code from data</string>
-    <string name="Inventory">Inventory</string>
-        <string name="Profile">Profile</string>
-        <string name="ScanQR">Scan QR-code</string>
-        <string name="select_address">Select address</string>
-        <string name="select_room">Select room</string>
-        <string name="start">Start</string>
-        <string name="listLabel">Room</string>
-        <string name="equipment_name">Equipment name</string>
-        <string name="inventory_number">Inventory Number</string>
-        <string name="id">Id</string>
-        <string name="type">Type</string>
-        <string name="ok">OK</string>
-        <string name="cancel">Cancel</string>
-        <string name="inventory_scan_result">Inventory Scan Result</string>
-        <string name="port">8090</string>
-        <string name="server_ip">172.36.2.47</string>
-        <string name="emu_ip">10.0.3.2</string>
-        <string name="test">Test</string>
+    <string name="port">8090</string>
+    <string name="server_ip">172.36.2.47</string>
+    <string name="emu_ip">10.0.3.2</string>
+    <string name="test">T</string>
+    <string name="api_addresses_load">/addresses/only_address</string>
+    <string name="api_inventory_by_address_load">/inventory/address/</string>
+    <string name="api_room_by_address_load">/addresses/rooms/</string>
+    <string name="api_full_inventory_from_equipments">/equipments/inventory_num/full/</string>
 
-        <string name="item_info">Full item info</string>
-        <string name="delete_from_list">Delete from list</string>
-        <string name="back">Back</string>
-        <string name="choose_action">Choose the action</string>
-        <string name="Lorem_ipsum">Morbi rutrum nulla id orci feugiat viverra. Praesent maximus sed lorem sed porta. Nullam
+
+    <string name="add_user">Add User</string>
+    <string name="all">All</string>
+    <string name="sync">Synchronize</string>
+    <string name="next">Next</string>
+    <string name="password">Password:</string>
+    <string name="email">Email:</string>
+    <string name="name">Name:</string>
+    <string name="del">Delete</string>
+    <string name="equipments">Test</string>
+    <string name="message">some message</string>
+    <string name="scan">Scan QR-code</string>
+    <string name="create_qr">Create qr-code from data</string>
+    <string name="Inventory">Inventory</string>
+    <string name="Profile">Profile</string>
+    <string name="ScanQR">Scan QR-code</string>
+    <string name="select_address">Select address</string>
+    <string name="select_room">Select room</string>
+    <string name="start">Start</string>
+    <string name="listLabel">Room</string>
+    <string name="equipment_name">Equipment name</string>
+    <string name="inventory_number">Inventory Number</string>
+    <string name="id">Id</string>
+    <string name="type">Type</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="inventory_scan_result">Inventory Scan Result</string>
+
+
+    <string name="item_info">Full item info</string>
+    <string name="delete_from_list">Delete from list</string>
+    <string name="back">Back</string>
+    <string name="choose_action">Choose the action</string>
+    <string name="Lorem_ipsum">Morbi rutrum nulla id orci feugiat viverra. Praesent maximus sed lorem sed porta. Nullam
             porttitor ornare lacus vel auctor. Phasellus eu cursus ipsum, eu lacinia dolor. Aenean finibus dui vel nunc
             tincidunt varius sit amet sed urna. Phasellus vulputate dui eu dui molestie, consequat eleifend nibh imperdiet.
             Aliquam imperdiet, tellus ac congue commodo, tortor mi scelerisque lorem, non accumsan sapien ex et erat. Sed
@@ -57,4 +64,11 @@
     <string name="choose_address_n_room">Choose the address and the room!</string>
     <string name="Formulyar">Formulyar</string>
     <string name="mission_was_canceled">Great mission was canceled!</string>
+
+
+    <string name="room_number">Room №</string>
+    <string name="equipment_already_scanned">The equipment with inventory number %1$s has already being scanned</string>
+    <string name="equipment_in_the_other_room">Item found in the other room</string>
+    <string name="equipment_not_found">The item was not found!</string>
+
 </resources>
