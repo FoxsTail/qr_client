@@ -8,9 +8,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <uses-feature android:name="android.hardware.camera"/>
-     <uses-feature android:name="android.hardware.camera2.full"/>
+    <uses-feature android:name="android.hardware.camera2.full"/>
     <uses-feature android:name="android.hardware.camera.autofocus"/>
-
 
     <application
             android:allowBackup="true"
@@ -19,42 +18,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-
-        <!--
-                 TEST
-
-                <activity android:name=".activity.TestActivity">
-                    <intent-filter>
-                        <action android:name="android.intent.action.MAIN"/>
-
-                        <category android:name="android.intent.category.LAUNCHER"/>
-                    </intent-filter>
-                </activity>
-
-                      TEST
-        -->
-
         <activity android:name=".activity.MainMenuActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <!--
-         <activity android:name=".activity.SyncActivity">
-         </activity>
-        -->
-        <!--
-            <activity android:name=".activity.JoinActivity">
-        </activity>
-        -->
-        <!--
-        <activity android:name=".activity.ScannerActivity">
-        </activity>
-        -->
-        <!-- TODO:launchMode = singleTop -->
-        <activity android:name=".activity.ScannerActivity$QrCreationActivity">
         </activity>
         <activity android:name=".activity.CameraActivity">
         </activity>
@@ -71,6 +35,20 @@
                 android:parentActivityName=".activity.InventoryListActivity">
         </activity>
         <activity android:name=".activity.Camera2Activity">
+        </activity>
+        <activity android:name=".activity.WelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.LogInActivity"
+                  android:parentActivityName=".activity.WelcomeActivity">
+
+        </activity>
+        <activity android:name=".activity.SignUpActivity"
+                  android:parentActivityName=".activity.WelcomeActivity">
         </activity>
     </application>
 

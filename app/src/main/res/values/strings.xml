@@ -69,4 +69,11 @@
     <string name="equipment_already_scanned">Обладнання с номером %1$s вжу сканувалося</string>
     <string name="equipment_in_the_other_room">Обладнання знайдено в інший кімнаті</string>
     <string name="equipment_not_found">Обладнання не знайдено!</string>
+    <string name="log_in">Вхід</string>
+    <string name="sign_up">Реєстрація</string>
+    <string name="login">Логін:</string>
+    <string name="email_example">example@gmail.com</string>
+    <string name="password_example"><![CDATA[Aa-Zz 0-9 $#/&]]></string>
+    <string name="toast_enter_email">Введіть email!</string>
+    <string name="toast_enter_password">Введіть пароль!</string>
 </resources>

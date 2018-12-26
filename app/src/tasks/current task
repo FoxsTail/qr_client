@@ -1,2 +1,62 @@
+1. Login page
+    +activity,
+    +xml,
+    +onClick handler,
 
-4. Ссылки тоже в строки добавить
+OnClick - go by api, check if user in db,
+            -yes -> login, save user data in preferences
+            -no -> Alert "Wrong user data", suggest to sing up
+
+login api steps:
+    - go to server
+    - find user with email
+    - check if password correct
+    - return success or throw an exception
+
+on success:
+    - put data in sqlite
+    - save email and password to the preferences (check on app start and auto login)
+
+User's auth in android
+
+
+------Global-------
+1. Log in
+    + Activity + xml
+    - Validation at client (email)
+    - Background checking api
+    - Error, ok msgs
+    - On success put data in profile and sharedPreferences, go to main menu
+
+2. Sing up
+    -Activity + xml
+    -Validation at client (correctness)
+    -Sing up api
+    -on success login page
+
+
+3. Profile
+    - List of user's data
+
+    //---?---
+
+    - Change button (same page   vs   page with edit text instead of textView)
+    - validate
+    - change api
+    - load to local db
+    - reload page, show result
+
+4. Log out
+    - Button in menu
+    - Delete from db and shared preferences
+    - Send to Welcome page
+
+5. Welcome page
+    + Name, logo
+    + log in, sing up buttons
+
+
+* Saving data through the pages
+* Saving old user log's in to avoid server connection.
+
+* user's current devices and working place (immutable)   vs    all immutable
