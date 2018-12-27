@@ -3,7 +3,7 @@
              xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:id="@+id/frame_main_layout"
-             >
+android:foreground="@color/colorBlack">
 
     <android.support.constraint.ConstraintLayout android:id="@+id/main_menu_layout"
                                                  xmlns:android="http://schemas.android.com/apk/res/android"

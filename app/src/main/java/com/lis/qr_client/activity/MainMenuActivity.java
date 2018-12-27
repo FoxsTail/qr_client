@@ -72,8 +72,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         //---get framing layout for dimming
 
         final FrameLayout frameLayout = findViewById(R.id.frame_main_layout);
-        frameLayout.getForeground().setAlpha(0);
-
+        if(frameLayout != null) {
+            frameLayout.getForeground().setAlpha(0);
+        }
         //---set toolbar
 
         toolbar = findViewById(R.id.toolbar);
@@ -142,8 +143,22 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.item_log_out:{
+
+                /*clean user's shared preferences (or all preferences?)*/
+                utility.removeLoginPrefernces(this, LogInActivity.PREFERENCE_SAVE_USER,
+                        LogInActivity.PREFERENCE_IS_USER_SAVED);
+
+                /*launch welcome page*/
+                Intent intent = new Intent(this, WelcomeActivity.class);
+                startActivity(intent);
+                }
+            }
         return super.onOptionsItemSelected(item);
+
     }
+
 
     //---------------------------//
 

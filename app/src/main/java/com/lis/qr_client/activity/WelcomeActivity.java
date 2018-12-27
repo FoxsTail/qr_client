@@ -9,12 +9,17 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import com.lis.qr_client.R;
+import com.lis.qr_client.utilities.Utility;
 import lombok.extern.java.Log;
+
+import java.util.Set;
 
 @Log
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
     private Button btn_log_in, btn_sign_up;
     private ProgressBar pb_welcome;
+
+    Utility utility = new Utility();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +32,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
 
         btn_log_in = findViewById(R.id.btn_log_in);
         btn_log_in.setOnClickListener(this);
@@ -44,7 +50,11 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     protected void onResume() {
         log.info("---Welcome OnResume---");
         super.onResume();
+
         hideLoading();
+
+        checkSavedUser();
+
     }
 
     @Override
@@ -76,6 +86,22 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     /**
+     * If there any saved user's email and password -> go straight to the MainMenu
+     **/
+
+    public void checkSavedUser() {
+        log.info("checkSavedUser");
+
+        Boolean saved_user = utility.getBooleanDataFromPreferences(this, LogInActivity.PREFERENCE_IS_USER_SAVED);
+        if (saved_user != null && saved_user) {
+            Intent intent = new Intent(this, MainMenuActivity.class);
+            startActivity(intent);
+        }else {
+            log.info("Nothing was saved");
+        }
+    }
+
+    /**
      * hide buttons, show progress bar
      */
 
@@ -88,7 +114,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * show buttons, hide progress bar
      */
-    public void hideLoading(){
+    public void hideLoading() {
         btn_log_in.setVisibility(View.VISIBLE);
         btn_sign_up.setVisibility(View.VISIBLE);
         pb_welcome.setVisibility(View.INVISIBLE);

@@ -1,19 +1,30 @@
 package com.lis.qr_client.pojo;
 
 import lombok.*;
+import org.chalup.microorm.annotations.Column;
 
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor
-
+@AllArgsConstructor
 public class User {
-    private int id;
-    @NonNull
+    @Column("id")
+    private Integer id;
+
+    @Column("username")
     private String username;
-    @NonNull
-    private String password;
+
+    @Column("email")
     @NonNull
     private String email;
 
-    private PersonalData personalData;
+    @Column("password")
+    @NonNull
+    private String password;
+
+    @Column(value = "id_tp", treatNullAsDefault = true)
+    private Integer id_tp;
+
+    @Column(value = "id_wp", treatNullAsDefault = true)
+    private Integer id_wp;
 }

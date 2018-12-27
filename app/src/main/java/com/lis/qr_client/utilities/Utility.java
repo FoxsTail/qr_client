@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBar;
-import android.util.Pair;
 import android.widget.FrameLayout;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -17,18 +16,15 @@ import com.lis.qr_client.activity.MainMenuActivity;
 import com.lis.qr_client.pojo.Equipment;
 import com.lis.qr_client.pojo.EquipmentParent;
 import com.lis.qr_client.pojo.EquipmentExpanded;
+import com.lis.qr_client.pojo.User;
 import com.lis.qr_client.utilities.adapter.InventoryAdapter;
 import lombok.extern.java.Log;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.chalup.microorm.MicroOrm;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -41,6 +37,105 @@ import static android.content.Context.MODE_PRIVATE;
 public class Utility {
 
     //----------Preferences-----------//
+
+    /**
+     * remove data from preferences
+     */
+
+    public void removeLoginPrefernces(Context context, String key_user_data, String key_is_logged_in){
+        SharedPreferences sharedPreferences = context.getSharedPreferences
+                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(key_user_data);
+        editor.putBoolean(key_is_logged_in, false);
+        editor.apply();
+    }
+
+
+    /**
+     * remove data from preferences
+     */
+
+    public void removePrefernces(Context context, String preference_key){
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences
+                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.remove(preference_key);
+        editor.apply();
+    }
+
+    /**
+     * save user's email and password to Set<String> and then to the preferences
+     */
+
+    public void saveUsersDataToPreference(User user, Context context, String key_user_data, String key_is_logged_in){
+        Set<String> users_email_passwd = new HashSet<>();
+        users_email_passwd.add(user.getEmail());
+        users_email_passwd.add(user.getPassword());
+
+
+        saveStringToPreferences(context, key_user_data, users_email_passwd);
+        saveBooleanToPreferences(context, key_is_logged_in);
+    }
+
+    /**
+     * save boolean to preferences
+     */
+
+    public void saveBooleanToPreferences(Context context, String preference_key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences
+                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(preference_key, true);
+        editor.apply();
+
+    }
+
+    /**
+     * save data Set<String> to preferences
+     */
+
+    public void saveStringToPreferences(Context context, String preference_key, Set<String> strings_to_save) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences
+                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putStringSet(preference_key, strings_to_save);
+        editor.apply();
+        log.info("Preferences with key "+preference_key+ " were saved");
+    }
+
+
+    /**
+     * get Set<String> data from preferences
+     */
+
+    public Boolean getBooleanDataFromPreferences(Context context, String preference_key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences
+                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+        if (preference_key != null) {
+            return sharedPreferences.getBoolean(preference_key, false);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * get Set<String> data from preferences
+     */
+
+    public Set<String> getDataFromPreferences(Context context, String preference_key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences
+                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+        if (preference_key != null) {
+            return sharedPreferences.getStringSet(preference_key, null);
+        } else {
+            return null;
+        }
+    }
+
 
     /**
      * Save muutiple objects (int, string, boolean, object) to preference
@@ -87,12 +182,13 @@ public class Utility {
         editor.apply();
     }
 
-    public List<Map<String, Object>> preferencesJsonToMapList(Context context, String preferenceFileName, String preferenceKey){
+    public List<Map<String, Object>> preferencesJsonToMapList(Context context, String preferenceFileName, String preferenceKey) {
         String jsonToScan = loadStringOrJsonPreference
                 (context, preferenceFileName, preferenceKey);
 
         Gson gson = new Gson();
-        return gson.fromJson(jsonToScan, new TypeToken<List<Map<String, Object>>>() {}.getType());
+        return gson.fromJson(jsonToScan, new TypeToken<List<Map<String, Object>>>() {
+        }.getType());
     }
 
     /**
@@ -326,31 +422,27 @@ public class Utility {
 
 
     /**
-     * parse cursor to List<Map<String, Object>>
+     * parse cursor to Equipment
      */
 
     public static Equipment cursorToEquipment(Cursor cursor) {
-        /*Map<String, Object> map = cursorToMap(cursor, cursor.getColumnIndex("id"));
 
-        Object id = map.get("id");
-        Object type = map.get("type");
-        Object vendor = map.get("vendor");
-        Object model = map.get("model");
-        Object series = map.get("series");
-        Object inventory_num = map.get("inventory_num");
-        Object attributes = map.get("attributes");
-        Object serial_num = map.get("serial_num");
-        Object room = map.get("room");
-        Object id_asDetailIn = map.get("id_asDetailIn");
-        Object id_tp = map.get("id_tp");
-        Object id_user = map.get("id_user");
-        Object user_info = map.get("user_info");
-        Object address = map.get("address");*/
-
-        Equipment equipment = new Equipment();
         if (cursor != null && (cursor.moveToFirst())) {
             MicroOrm microOrm = new MicroOrm();
             return microOrm.fromCursor(cursor, Equipment.class);
+        }
+        return null;
+    }
+
+    /**
+     * parse cursor to User
+     */
+
+    public static User cursorToUser(Cursor cursor) {
+
+        if (cursor != null && (cursor.moveToFirst())) {
+            MicroOrm microOrm = new MicroOrm();
+            return microOrm.fromCursor(cursor, User.class);
         }
         return null;
     }
@@ -589,6 +681,34 @@ public class Utility {
             }
         } else {
             log.warning("Cursor is null");
+        }
+    }
+
+    /**
+     * Puts User into the table (internal db)
+     */
+
+    public void putUserToTable(User user, String table_name, SQLiteDatabase db) {
+        /*Create content values from user*/
+
+        MicroOrm microOrm = new MicroOrm();
+        ContentValues cv = microOrm.toContentValues(user);
+
+        log.info("----Putting user to sql----");
+
+
+        db.beginTransaction();
+        try {
+         /*insert to the internal db*/
+            long insert_res = db.insert(table_name, null, cv);
+
+            //log track
+            log.info("----loaded----: " + insert_res);
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+            log.info("----End transaction----");
         }
     }
 

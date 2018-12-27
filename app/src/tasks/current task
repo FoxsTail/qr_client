@@ -8,25 +8,48 @@ OnClick - go by api, check if user in db,
             -no -> Alert "Wrong user data", suggest to sing up
 
 login api steps:
-    - go to server
-    - find user with email
-    - check if password correct
-    - return success or throw an exception
+    + go to server
+    + find user with email
+    + check if password correct
+    + return success or throw an exception
+
+Error handling
+    + no connection;
+    + 500 error;
+    + 400 error;
 
 on success:
-    - put data in sqlite
-    - save email and password to the preferences (check on app start and auto login)
+    + put data in sqlite
+    + save email and password to the preferences (check on app start and auto login)
+    + check preferences on app start
+    + login the system to the main page
+    - add spinning progress bar
 
-User's auth in android
++ add log out item in menu
++ delete preferences when log_out
+
 
 
 ------Global-------
+
+*While launching - check preferences
+*Redirect from main menu if no user found
+
+0. Welcome page
+    + Name, logo
+    + log in, sing up buttons
+
+
 1. Log in
+    + clean preferences
     + Activity + xml
     - Validation at client (email)
-    - Background checking api
-    - Error, ok msgs
-    - On success put data in profile and sharedPreferences, go to main menu
+    + Check in local db
+    + Background checking api db
+    + Error, ok msgs
+    + On success save to sqlite
+    + put and sharedPreferences, go to main menu
+    - data in profile
 
 2. Sing up
     -Activity + xml
@@ -47,16 +70,13 @@ User's auth in android
     - reload page, show result
 
 4. Log out
-    - Button in menu
-    - Delete from db and shared preferences
-    - Send to Welcome page
+    + Add button in menu
+    + shared preferences
+    + Send to Welcome page
 
-5. Welcome page
-    + Name, logo
-    + log in, sing up buttons
 
 
 * Saving data through the pages
-* Saving old user log's in to avoid server connection.
+* Saving old user log's in to avoid server connection. +
 
 * user's current devices and working place (immutable)   vs    all immutable

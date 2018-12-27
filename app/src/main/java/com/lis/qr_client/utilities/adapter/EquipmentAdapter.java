@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
-import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
 import com.lis.qr_client.R;
 import lombok.extern.java.Log;
 
@@ -27,7 +25,7 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.Equi
     @Override
     public EquipmentViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         log.info("----onCreateViewHolder---");
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_expanded_equipment, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.equipment_card, viewGroup, false);
         return new EquipmentViewHolder(view);
     }
 

@@ -32,6 +32,18 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         log.info("--Create Database----");
 
+
+        //--------User--------
+
+        sqLiteDatabase.execSQL("create table user(" +
+                "id integer primary key," +
+                        "  username text," +
+                        "  email text," +
+                        "  password text," +
+                        "  id_tp integer," +
+                        "  id_wp integer);");
+
+
         //--------Room--------
 
         sqLiteDatabase.execSQL("create table room (" +

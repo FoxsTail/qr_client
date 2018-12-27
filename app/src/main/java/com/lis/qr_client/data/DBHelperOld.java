@@ -152,12 +152,12 @@ public class DBHelperOld extends SQLiteOpenHelper implements IUserDatabaseHandle
         try (Cursor cursor = db.query("user", null, "username=?", new String[]{username}, null, null, null);) {
 
             if (cursor.moveToFirst()) {
-                return new User(cursor.getString(0), cursor.getString(1), cursor.getString(2));
+               // return new User(cursor.getString(0), cursor.getString(1), cursor.getString(2));
+            return null;
             }
         }
         return null;
     }
-
     @Override
     public List<User> getAllUsers() {
         return null;

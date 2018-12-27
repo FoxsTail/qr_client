@@ -1,20 +1,14 @@
 package com.lis.qr_client.utilities.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.lis.qr_client.R;
-import com.lis.qr_client.activity.InventoryListActivity;
-import com.lis.qr_client.utilities.Utility;
 import com.lis.qr_client.utilities.dialog_fragment.ItemDialogFragment;
 import lombok.extern.java.Log;
 
@@ -39,7 +33,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
     public InventoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         log.info("----onCreateViewHolder---");
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.card_expanded_equipment, viewGroup, false);
+                .inflate(R.layout.equipment_card, viewGroup, false);
 
         return new InventoryViewHolder(view);
     }

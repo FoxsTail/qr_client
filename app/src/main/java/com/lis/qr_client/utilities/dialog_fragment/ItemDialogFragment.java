@@ -20,6 +20,7 @@ import com.lis.qr_client.utilities.adapter.InventoryAdapter;
 import com.lis.qr_client.utilities.async_helpers.AsyncMultiDbManager;
 import com.lis.qr_client.utilities.async_helpers.AsyncOneDbManager;
 import lombok.extern.java.Log;
+import org.springframework.http.HttpMethod;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +36,6 @@ public class ItemDialogFragment extends DialogFragment {
     private InventoryAdapter adapter;
 
     private DBHelper dbHelper;
-    private SQLiteDatabase db;
 
     private String url;
 
@@ -51,7 +51,6 @@ public class ItemDialogFragment extends DialogFragment {
         String title = args.getString(ARG_TITLE);
 
         dbHelper = new DBHelper(context);
-        db = dbHelper.getWritableDatabase();
 
         alertBuilder = new AlertDialog.Builder(getActivity());
 
@@ -120,7 +119,8 @@ public class ItemDialogFragment extends DialogFragment {
 
         /*load full equipment data from server*/
         AsyncOneDbManager asyncOneDbManager = new AsyncOneDbManager(true, table_name, full_url,
-                new Pair<String, Object>("inventory_num", inventory_num), context, dbHelper, db, EquipmentItemActivity.class);
+                new Pair<String, Object>("inventory_num", inventory_num),
+                context, dbHelper, EquipmentItemActivity.class, HttpMethod.GET, null);
 
         asyncOneDbManager.runAsyncOneDbManager();
 
