@@ -16,8 +16,8 @@
     <string name="all">Все</string>
     <string name="sync">Синхронізувати</string>
     <string name="next">Далі</string>
-    <string name="password">Пароль:</string>
-    <string name="email">Email:</string>
+    <string name="password">Пароль</string>
+    <string name="email">Email</string>
     <string name="name">Ім\'я:</string>
     <string name="del">Видалити</string>
     <string name="equipments">Тест</string>
@@ -74,7 +74,7 @@
     <string name="sign_up">Реєстрація</string>
     <string name="login">Логін:</string>
     <string name="email_example">example@gmail.com</string>
-    <string name="password_example"><![CDATA[Aa-Zz 0-9 $#/&]]></string>
+    <string name="password_example">8-16 max</string>
     <string name="toast_enter_email">Введіть email!</string>
     <string name="toast_enter_password">Введіть пароль!</string>
     <string name="ok_loading">Завантажую профіль...</string>
@@ -84,4 +84,8 @@
     <string name="connection_error">Помилка підключення!</string>
     <string name="try_again">Спробуйте ще раз.</string>
     <string name="log_out">Вихід</string>
+    <string name="to_log_in">Увійти</string>
+    <string name="error_validation_email">Email введено з помилкою</string>
+    <string name="error_validation_password">Занадто короткий пароль</string>
+
 </resources>

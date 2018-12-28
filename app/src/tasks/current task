@@ -23,11 +23,23 @@ on success:
     + save email and password to the preferences (check on app start and auto login)
     + check preferences on app start
     + login the system to the main page
-    - add spinning progress bar
+    -? add spinning progress bar
 
 + add log out item in menu
 + delete preferences when log_out
 
+
+api login extended
+    back
+        -load user by email
+        -mapper load user
+
+validation
+    +check email by regex
+    +password long enough
+    +if not valid -> alert field with red color
+    +show alert
+    +text input layout
 
 
 ------Global-------
@@ -35,15 +47,15 @@ on success:
 *While launching - check preferences
 *Redirect from main menu if no user found
 
-0. Welcome page
+0. Welcome page +
     + Name, logo
     + log in, sing up buttons
-
+    + saved data check
 
 1. Log in
     + clean preferences
     + Activity + xml
-    - Validation at client (email)
+    + Validation at client (email)
     + Check in local db
     + Background checking api db
     + Error, ok msgs
@@ -69,7 +81,7 @@ on success:
     - load to local db
     - reload page, show result
 
-4. Log out
+4. Log out +
     + Add button in menu
     + shared preferences
     + Send to Welcome page

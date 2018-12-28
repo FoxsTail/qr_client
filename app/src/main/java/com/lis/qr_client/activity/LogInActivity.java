@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -28,11 +29,18 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Log
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String PREFERENCE_SAVE_USER = "save_user";
-    public static final String PREFERENCE_IS_USER_SAVED= "is_user_saved";
+    public static final String PREFERENCE_IS_USER_SAVED = "is_user_saved";
+
+
+    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
+    private Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+    private Matcher matcher;
 
     private Toolbar toolbar;
     private EditText et_email, et_password;
@@ -42,6 +50,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     SQLiteDatabase sqLiteDatabase;
 
     Utility utility = new Utility();
+    private TextInputLayout email_wrapper;
+    private TextInputLayout password_wrapper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +64,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_log_in);
+        setContentView(R.layout.activity_log_in_test);
 
         //----set db
         dbHelper = new DBHelper(this);
@@ -71,8 +81,9 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         }
 
         //----set views
-        et_email = findViewById(R.id.et_email);
-        et_password = findViewById(R.id.et_password);
+        email_wrapper = findViewById(R.id.email_wrapper);
+        password_wrapper = findViewById(R.id.password_wrapper);
+
 
         btn_log_in_the_app = findViewById(R.id.btn_log_in_the_app);
         btn_log_in_the_app.setOnClickListener(this);
@@ -84,28 +95,34 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_log_in_the_app: {
+
                 log.info("---Trying to log in the system---");
 
-                String email = et_email.getText().toString();
-                String password = et_password.getText().toString();
 
-                /*check if fields are not null*/
-                if (email.equals("")) {
-                    Toast.makeText(this, getString(R.string.toast_enter_email), Toast.LENGTH_SHORT).show();
-                } else if (password.equals("")) {
-                    Toast.makeText(this, getString(R.string.toast_enter_password), Toast.LENGTH_SHORT).show();
 
+                /*email password validation*/
+
+                String email = email_wrapper.getEditText().getText().toString();
+                String password = password_wrapper.getEditText().getText().toString();
+
+                if (!validateEmail(email)) {
+                    password_wrapper.setErrorEnabled(false);
+                    email_wrapper.setError(getString(R.string.error_validation_email));
+                } else if (!validatePassword(password)) {
+                    email_wrapper.setErrorEnabled(false);
+                    password_wrapper.setError(getString(R.string.error_validation_password));
                 } else {
+                    email_wrapper.setErrorEnabled(false);
+                    password_wrapper.setErrorEnabled(false);
 
-                /*email and password validation*/
-
+                    /*ok, check user data*/
                     String table_name = "user";
 
-                //TODO: add is first logging
-                /*check in sqlite*/
+                     /*check in sqlite*/
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
-                    Cursor cursor = db.query(table_name, null, "email=?", new String[]{email},
-                            null, null, null, null);
+
+                    Cursor cursor = db.rawQuery("select * from user where email=? and password=?",
+                            new String[]{email, password});
 
                     if (!cursor.moveToFirst() || cursor.getCount() == 0) {
 
@@ -114,28 +131,19 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                         checkLoginAtServer(table_name, email, password);
 
                     } else {
-
                         log.info("Cursor is ok");
-                        User user = Utility.cursorToUser(cursor);
-                            if (user != null && user.getEmail().equals(email) && user.getPassword().equals(password)) {
-                                log.info("User is ok");
-                                log.info("From SQLite");
+                        utility.logCursor(cursor, "test");
                                 /*ok, load new page*/
-                                Intent intent = new Intent(this, MainMenuActivity.class);
-                                startActivity(intent);
+                        Intent intent = new Intent(this, MainMenuActivity.class);
+                        startActivity(intent);
 
-                            } else {
-                                log.info("User is null or data is incorrect, checking at the server");
-                                 /*if nothing found look at server*/
-                                checkLoginAtServer(table_name, email, password);
-                            }
-                        }
                     }
-
                 }
-                break;
+
             }
+            break;
         }
+    }
 
 
     //----Methods----
@@ -150,5 +158,15 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 null, this, dbHelper, MainMenuActivity.class, HttpMethod.POST,
                 new User(email, password));
         oneDbManager.runAsyncOneDbManager();
+    }
+
+
+    public boolean validateEmail(String email) {
+        matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    public boolean validatePassword(String password) {
+        return password.length() >= 5;
     }
 }
