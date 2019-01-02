@@ -11,9 +11,6 @@ public class User {
     @Column("id")
     private Integer id;
 
-    @Column("username")
-    private String username;
-
     @Column("email")
     @NonNull
     private String email;
@@ -22,9 +19,9 @@ public class User {
     @NonNull
     private String password;
 
-    @Column(value = "id_tp", treatNullAsDefault = true)
-    private Integer id_tp;
+    @Column("id_pd")
+    private Integer id_pd;
 
-    @Column(value = "id_wp", treatNullAsDefault = true)
-    private Integer id_wp;
+    private PersonalData personalData;
+
 }

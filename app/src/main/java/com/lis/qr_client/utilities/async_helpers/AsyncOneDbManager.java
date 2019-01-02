@@ -104,16 +104,8 @@ public class AsyncOneDbManager {
             String table_name = params[0].getTable_name();
             String url = params[0].getUrl();
 
-
-            /*delete old info from db table*/
-            db.beginTransaction();
-            try {
-                db.delete(table_name, null, null);
-                db.setTransactionSuccessful();
-
-            } finally {
-                db.endTransaction();
-            }
+            /*remove old data from db*/
+           utility.deleteTransaction(table_name, db);
 
 
             /*connect to the url and put the result in sqlite table*/
@@ -132,16 +124,22 @@ public class AsyncOneDbManager {
                     case POST: {
                         User user = postDataFromServer(url, post_request);
 
+
                         if (user == null) {
+                            log.info("user is null");
+
                             return null;
                         }
+
+                        log.info("USER___ "+user.toString());
+
                         /*save data to SQLite*/
-                        utility.putUserToTable(user, table_name, db);
+                        utility.saveUserToDb(user, db);
 
                         /*save data to cache*/
-                        utility.saveUsersDataToPreference(user, context, LogInActivity.PREFERENCE_SAVE_USER,
+                        /*utility.saveUsersDataToPreference(user, context, LogInActivity.PREFERENCE_SAVE_USER,
                                 LogInActivity.PREFERENCE_IS_USER_SAVED);
-                    }
+                    */}
                 }
 
 

@@ -36,18 +36,56 @@ public class DBHelper extends SQLiteOpenHelper {
         //--------User--------
 
         sqLiteDatabase.execSQL("create table user(" +
+                "  id integer primary key," +
+                "  email text," +
+                "  password text," +
+                "  id_pd integer);");
+
+        //--------Personal Data--------
+
+        sqLiteDatabase.execSQL("create table personal_data(" +
                 "id integer primary key," +
-                        "  username text," +
-                        "  email text," +
-                        "  password text," +
-                        "  id_tp integer," +
-                        "  id_wp integer);");
+                "name text, " +
+                "surname text, " +
+                "patronymic text, " +
+                "passport text, " +
+                "inn text, " +
+                "id_tp integer, " +
+                "id_wp integer);");
+
+
+        //--------Address--------
+
+        sqLiteDatabase.execSQL("create table address(" +
+                "tp_id integer primary key," +
+                "city text, " +
+                "street text, " +
+                "number text," +
+                "floor text," +
+                "room integer);");
+
+        //--------Workplace--------
+
+        sqLiteDatabase.execSQL("create table workplace(" +
+                "wp_id integer primary key," +
+                "position text, " +
+                "department text, " +
+                "direction text," +
+                "remote_workstation boolean);");
 
 
         //--------Room--------
 
         sqLiteDatabase.execSQL("create table room (" +
                 "room integer primary key);");
+
+        //--------Phone Number--------
+
+        sqLiteDatabase.execSQL("create table phone_number (" +
+                "id integer primary key," +
+                "phone_number string," +
+                "id_pd integer);");
+
 
         //--------Equipment--------
 
@@ -76,14 +114,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 "room int," +
                 "address_id);");
 
-
-        //--------Address--------
-
-        sqLiteDatabase.execSQL("create table address(" +
-                "id integer primary key," +
-                "city text, " +
-                "street text, " +
-                "number text);");
 
     }
 

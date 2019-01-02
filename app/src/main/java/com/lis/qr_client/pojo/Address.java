@@ -1,23 +1,30 @@
 package com.lis.qr_client.pojo;
 
 import lombok.*;
+import org.chalup.microorm.annotations.Column;
 
 
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class Address {
-    private Integer tp_id;
- @NonNull
-    private String city;
-    @NonNull
-    private String street;
-    @NonNull
-    private Integer number;
-    @NonNull
-    private Integer floor;
-    @NonNull
-    private Integer room;
+
+   @Column("tp_id")
+   private Integer tp_id;
+
+   @Column("city")
+   private String city;
+
+   @Column("street")
+   private String street;
+
+   @Column("number")
+   private Integer number;
+
+   @Column("floor")
+   private Integer floor;
+
+   @Column("room")
+   private Integer room;
 
 }

@@ -13,10 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lis.qr_client.activity.MainMenuActivity;
-import com.lis.qr_client.pojo.Equipment;
-import com.lis.qr_client.pojo.EquipmentParent;
-import com.lis.qr_client.pojo.EquipmentExpanded;
-import com.lis.qr_client.pojo.User;
+import com.lis.qr_client.pojo.*;
 import com.lis.qr_client.utilities.adapter.InventoryAdapter;
 import lombok.extern.java.Log;
 import org.apache.commons.collections4.BidiMap;
@@ -42,7 +39,7 @@ public class Utility {
      * remove data from preferences
      */
 
-    public void removeLoginPrefernces(Context context, String key_user_data, String key_is_logged_in){
+    public void removeLoginPrefernces(Context context, String key_user_data, String key_is_logged_in) {
         SharedPreferences sharedPreferences = context.getSharedPreferences
                 (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -56,7 +53,7 @@ public class Utility {
      * remove data from preferences
      */
 
-    public void removePrefernces(Context context, String preference_key){
+    public void removePrefernces(Context context, String preference_key) {
 
         SharedPreferences sharedPreferences = context.getSharedPreferences
                 (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
@@ -71,7 +68,7 @@ public class Utility {
      * save user's email and password to Set<String> and then to the preferences
      */
 
-    public void saveUsersDataToPreference(User user, Context context, String key_user_data, String key_is_logged_in){
+    public void saveUsersDataToPreference(User user, Context context, String key_user_data, String key_is_logged_in) {
         Set<String> users_email_passwd = new HashSet<>();
         users_email_passwd.add(user.getEmail());
         users_email_passwd.add(user.getPassword());
@@ -104,7 +101,7 @@ public class Utility {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putStringSet(preference_key, strings_to_save);
         editor.apply();
-        log.info("Preferences with key "+preference_key+ " were saved");
+        log.info("Preferences with key " + preference_key + " were saved");
     }
 
 
@@ -684,19 +681,91 @@ public class Utility {
         }
     }
 
+
+    /**
+     * Parse and put user into the internal db
+     */
+
+    public void saveUserToDb(User user, SQLiteDatabase db) {
+        String table_user = "user";
+        String table_personal_data = "personal_data";
+        String table_address = "address";
+        String table_workplace = "workplace";
+        String table_phone_number = "phone_number";
+
+        putObjectToTable(user, table_user, db);
+
+        PersonalData personalData = user.getPersonalData();
+
+        if (personalData != null) {
+            deleteTransaction(table_personal_data, db);
+            putObjectToTable(personalData, table_personal_data, db);
+
+            Address address = personalData.getAddress();
+            if (address != null) {
+                deleteTransaction(table_address, db);
+                putObjectToTable(address, table_address, db);
+
+            }
+
+            Workplace workplace = personalData.getWorkplace();
+            if (workplace != null) {
+                deleteTransaction(table_workplace, db);
+                putObjectToTable(workplace, table_workplace, db);
+
+            }
+
+            List<PhoneNumber> phoneNumbers = personalData.getPhoneNumbers();
+            if (phoneNumbers != null) {
+                deleteTransaction(table_workplace, db);
+                for (PhoneNumber phoneNumber : phoneNumbers) {
+                    putObjectToTable(phoneNumber, table_phone_number, db);
+                }
+            }
+        }
+
+
+    }
+
     /**
      * Puts User into the table (internal db)
      */
 
-    public void putUserToTable(User user, String table_name, SQLiteDatabase db) {
+    public void putObjectToTable(Object object, String table_name, SQLiteDatabase db) {
         /*Create content values from user*/
 
         MicroOrm microOrm = new MicroOrm();
-        ContentValues cv = microOrm.toContentValues(user);
+        ContentValues cv = microOrm.toContentValues(object);
 
-        log.info("----Putting user to sql----");
+        log.info("----Putting " + table_name + " to sql----");
+
+        insertTransaction(table_name, cv, db);
+    }
 
 
+    /**
+     * Safety delete from the SQLite(transactions)
+     */
+
+
+    public void deleteTransaction(String table_name, SQLiteDatabase db) {
+        /*delete old info from db table*/
+        db.beginTransaction();
+        try {
+            db.delete(table_name, null, null);
+            db.setTransactionSuccessful();
+
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    /**
+     * Safety insert to the SQLite(transactions)
+     */
+
+
+    public void insertTransaction(String table_name, ContentValues cv, SQLiteDatabase db) {
         db.beginTransaction();
         try {
          /*insert to the internal db*/
@@ -787,8 +856,8 @@ public class Utility {
         /*transaction for safe operation*/
         db.beginTransaction();
         try {
-            for (Map<String, Object> map : mapList) {
 
+            for (Map<String, Object> map : mapList) {
                 /*converts map to the context value*/
                 cv = mapToContextValueParser(map);
 

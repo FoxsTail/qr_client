@@ -1,4 +1,13 @@
-1. Login page
+Full User PersonalData
+
++ get full user from api
++ parse it to pojo and then to sqlite
+- profile page
+
+
+
+
+Login page
     +activity,
     +xml,
     +onClick handler,
@@ -29,17 +38,21 @@ on success:
 + delete preferences when log_out
 
 
-api login extended
-    back
-        -load user by email
-        -mapper load user
-
 validation
     +check email by regex
     +password long enough
     +if not valid -> alert field with red color
     +show alert
     +text input layout
+
+
+Profile (immutable)
+    - Load data to SQLite if login is correct
+    - Take data from db
+    - load to page
+        -FIO
+        -Address
+        -Worker Position
 
 
 ------Global-------
@@ -62,6 +75,7 @@ validation
     + On success save to sqlite
     + put and sharedPreferences, go to main menu
     - data in profile
+    - password field cancel the enter in password
 
 2. Sing up
     -Activity + xml

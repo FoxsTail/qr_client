@@ -1,7 +1,9 @@
 package com.lis.qr_client.pojo;
 
 import lombok.*;
+import org.chalup.microorm.annotations.Column;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -9,21 +11,42 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class PersonalData {
-    private int id;
+
+    @Column("id")
+    private Integer id;
+
+    @Column("name")
     @NonNull
     private String name;
+
+    @Column("surname")
     @NonNull
     private String surname;
+
+    @Column("patronymic")
     @NonNull
     private String patronymic;
+
+    @Column("passport")
     @NonNull
     private String passport;
+
+    @Column("inn")
     @NonNull
     private String inn;
 
-    List<PhoneNumber> phoneNumbers;
+    @Column(value = "id_tp")
+    private Integer id_tp;
 
-//  private int room_id;
+    @Column(value = "id_wp")
+    private Integer id_wp;
+
+    private Address address;
+
+    private Workplace workplace;
+
+    List<PhoneNumber> phoneNumbers = new ArrayList<>();
+
 
 
 }
