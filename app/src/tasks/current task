@@ -1,117 +1,24 @@
-Full User PersonalData
+-Errors on server error
 
-+ get full user from api
-+ parse it to pojo and then to sqlite
-+ profile page
+-handle possible errors
 
+---
 
+-remove nulls from spinners
 
-Login page
-    +activity,
-    +xml,
-    +onClick handler,
+-clean up utilities
 
-OnClick - go by api, check if user in db,
-            -yes -> login, save user data in preferences
-            -no -> Alert "Wrong user data", suggest to sing up
+-enum for strings and constants
 
-login api steps:
-    + go to server
-    + find user with email
-    + check if password correct
-    + return success or throw an exception
+---
 
-Error handling
-    + no connection;
-    + 500 error;
-    + 400 error;
+-make a report in inventory
+-all in background
 
-on success:
-    + put data in sqlite
-    + save email and password to the preferences (check on app start and auto login)
-    + check preferences on app start
-    + login the system to the main page
-    -? add spinning progress bar
-
-+ add log out item in menu
-+ delete preferences when log_out
-
-
-validation
-    +check email by regex
-    +password long enough
-    +if not valid -> alert field with red color
-    +show alert
-    +text input layout
-
-
-Profile (immutable)
-    - Load data to SQLite if login is correct
-    - Take data from db
-    - load to page
-        -FIO
-        -Address
-        -Worker Position
-
-
-------Global-------
-
-*While launching - check preferences
-*Redirect from main menu if no user found
-
-0. Welcome page +
-    + Name, logo
-    + log in, sing up buttons
-    + saved data check
-
-1. Log in
-    + clean preferences
-    + Activity + xml
-    + Validation at client (email)
-    + Check in local db
-    + Background checking api db
-    + Error, ok msgs
-    + On success save to sqlite
-    + put and sharedPreferences, go to main menu (* put user's id to the preferences)
-    - data in profile
-    - password field cancel the enter in password
-
-2. Sing up
-    -Activity + xml
-    -Validation at client (correctness)
-    -Sing up api
-    -on success login page
-
-
-3. Profile
-    - simple xml
-    -basic activity
-
-    -For profile data changer
-
-    - List of user's data
-        - FIO
-        - Workplace
-        - Passport inn
-        - Phone numbers
-        - Address
-
-    //---?---
-
-    - Change button (same page   vs   page with edit text instead of textView)
-    - validate
-    - change api
-    - load to local db
-    - reload page, show result
-
-4. Log out +
-    + Add button in menu
-    + shared preferences
-    + Send to Welcome page
+---
+-paint design (flat)
+-define main colors
 
 
 
-* Saving data through the pages
-* Saving old user log's in to avoid server connection. +
 
-* user's current devices and working place (immutable)   vs    all immutable

@@ -11,8 +11,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -72,16 +70,14 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //----Full screen
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        utility.fullScreen(this);
 
         super.onCreate(savedInstanceState);
-
         log.info("---OnCreate InventoryListActivity---");
 
         setContentView(R.layout.activity_inventory_list);
 
+        //---get room number for toolbar title
         room_number = utility.loadStringOrJsonPreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
                 InventoryParamSelectActivity.ROOM_ID_PREFERENCES);
 
@@ -90,7 +86,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
         final FrameLayout frameLayout = findViewById(R.id.frame_inventory_layout);
         frameLayout.getForeground().setAlpha(0);
 
-        //----toolbar
+        //----set toolbar
         toolbar = findViewById(R.id.toolbar);
 
         if (toolbar != null) {

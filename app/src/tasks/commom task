@@ -1,0 +1,126 @@
+*While launching - check preferences
+*Redirect from main menu if no user found
+
+* Saving data through the pages +
+* Saving old user log's in to avoid server connection. +
+
+* user's current devices and working place (immutable)   vs    all immutable
+
+
+0. Welcome page +
+    + Name, logo
+    + log in, sing up buttons
+    + saved data check
+
+1. Log in
+    + clean preferences
+    + Activity + xml
+    + Validation at client (email)
+    + Check in local db
+    + Background checking api db
+    + Error, ok msgs
+    + On success save to sqlite
+    + put and sharedPreferences, go to main menu (* put user's id to the preferences)
+    + data in profile
+    - password field cancel the enter in password
+
+2. Sing up
+    -Activity + xml
+    -Validation at client (correctness)
+    -Sing up api
+    -on success login page
+
+
+3. Profile
+    + simple xml
+    + basic activity
+
+    + List of user's data
+        + FIO
+        + Workplace
+        + Passport inn
+        - Phone numbers
+        + Address
+
+                //---Changer---
+
+                -For profile data changer
+
+                - Change button (same page   vs   page with edit text instead of textView)
+                - validate
+                - change api
+                - load to local db
+                - reload page, show result
+
+        -google design
+            -pic
+            -small pic
+            -data
+            -data to change
+
+4. Log out +
+    + Add button in menu
+    + shared preferences
+    + Send to Welcome page
+
+
+5. Main menu
+    - Formulyar
+    + Inventory
+    + Scan QR-code
+    + Profile
+6. Scan qr+code
+    +scanning with camera
+    +on found result gives back dialog with scanned data
+
+    ? think about searching by smth (inventory?) ?
+
+7. Inventory
+    7.1
+        +Load from server available addresses with all equipments
+        +Load available rooms for selected address
+        +On start button click load next page, show progress bar while loading
+
+    7.2
+        +Load view elements
+        +Start load equipments for the given room in the new Thread
+            +if saved session + load from preferences for two lists
+            + new session + load from db
+
+        +create fragment with loaded data and add it to the adapter
+        +get back data from adapter (to be able to check and change)
+
+
+        +Scan button
+            +scan camera surface for qr+code
+            +analyze result (search by the inventory number)
+
+                +not found + show dialog
+                +found in the other room + show dialog with room number
+
+                +found in the list
+                    +remove from the "to scan" list
+                    +add to the "scanned" list
+                    +notify adapter data changed
+
+            + show dialog with analyze result
+
+
+        + Long press
+            +shows context menu with item "full info"
+                +on full item check if there any equipment with the following inventory_number
+                -on not found show notification
+                +on success show page with vector pic
+                    -load pics to resources folder
+                    -select pic by type
+                +show detail about the equipment
+
+
+        - make a report
+            -menu item "make the report"
+            -save all scanned and not scanned data to the separate file
+                - ? user's device or server ?
+                - ? txt or csv ?
+
+    ? think about session saving button (save and continue later) ?
+
