@@ -5,8 +5,8 @@ import org.chalup.microorm.annotations.Column;
 
 @Data
 public class Workplace {
-    @Column("wp_id")
-    private Integer wp_id;
+    @Column("id")
+    private Integer id;
 
     @Column("position")
     private String position;
@@ -18,5 +18,9 @@ public class Workplace {
     private String direction;
 
     @Column("remote_workstation")
-    private boolean remote_workstation;
+    private Boolean remote_workstation;
+
+    public String getWorkplace() {
+        return position + " \n" + department + " \n" + direction;
+    }
 }

@@ -9,8 +9,8 @@ import org.chalup.microorm.annotations.Column;
 @AllArgsConstructor
 public class Address {
 
-   @Column("tp_id")
-   private Integer tp_id;
+   @Column("id")
+   private Integer id;
 
    @Column("city")
    private String city;
@@ -27,4 +27,7 @@ public class Address {
    @Column("room")
    private Integer room;
 
+    public String getFullAddress() {
+        return city+" "+street+" "+number+"/ "+room;
+    }
 }

@@ -122,24 +122,12 @@ public class AsyncOneDbManager {
                         break;
                     }
                     case POST: {
-                        User user = postDataFromServer(url, post_request);
 
+                       if(!postLoginCheck(url)){
+                           return null;
+                       }
 
-                        if (user == null) {
-                            log.info("user is null");
-
-                            return null;
-                        }
-
-                        log.info("USER___ "+user.toString());
-
-                        /*save data to SQLite*/
-                        utility.saveUserToDb(user, db);
-
-                        /*save data to cache*/
-                        /*utility.saveUsersDataToPreference(user, context, LogInActivity.PREFERENCE_SAVE_USER,
-                                LogInActivity.PREFERENCE_IS_USER_SAVED);
-                    */}
+                    }
                 }
 
 
@@ -177,6 +165,29 @@ public class AsyncOneDbManager {
     }
 
     //-----Methods----
+    /**
+     * Post request for logging in user
+     */
+
+    public boolean postLoginCheck(String url){
+        User user = postDataFromServer(url, post_request);
+
+
+        if (user == null) {
+            log.info("user is null");
+            return false;
+        }
+
+                        /*save data to SQLite*/
+        utility.saveUserToDb(user, db);
+
+                        /*save data to cache*/
+        utility.saveUsersDataToPreference(user, context, LogInActivity.PREFERENCE_SAVE_USER,
+                LogInActivity.PREFERENCE_ID_USER,
+                LogInActivity.PREFERENCE_IS_USER_SAVED);
+
+        return true;
+    }
 
     /**
      * Get Map<String, Object> from server by url, method post

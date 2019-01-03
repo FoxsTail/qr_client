@@ -2,8 +2,7 @@ Full User PersonalData
 
 + get full user from api
 + parse it to pojo and then to sqlite
-- profile page
-
++ profile page
 
 
 
@@ -73,7 +72,7 @@ Profile (immutable)
     + Background checking api db
     + Error, ok msgs
     + On success save to sqlite
-    + put and sharedPreferences, go to main menu
+    + put and sharedPreferences, go to main menu (* put user's id to the preferences)
     - data in profile
     - password field cancel the enter in password
 
@@ -85,7 +84,17 @@ Profile (immutable)
 
 
 3. Profile
+    - simple xml
+    -basic activity
+
+    -For profile data changer
+
     - List of user's data
+        - FIO
+        - Workplace
+        - Passport inn
+        - Phone numbers
+        - Address
 
     //---?---
 

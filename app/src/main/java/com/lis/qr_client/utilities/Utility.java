@@ -1,11 +1,14 @@
 package com.lis.qr_client.utilities;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBar;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -33,6 +36,14 @@ import static android.content.Context.MODE_PRIVATE;
 @Log
 public class Utility {
 
+    public void fullScreen(Activity activity) {
+        Window window = activity.getWindow();
+        activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+    }
+
     //----------Preferences-----------//
 
     /**
@@ -46,6 +57,8 @@ public class Utility {
         editor.remove(key_user_data);
         editor.putBoolean(key_is_logged_in, false);
         editor.apply();
+
+        /**/
     }
 
 
@@ -68,13 +81,14 @@ public class Utility {
      * save user's email and password to Set<String> and then to the preferences
      */
 
-    public void saveUsersDataToPreference(User user, Context context, String key_user_data, String key_is_logged_in) {
+    public void saveUsersDataToPreference(User user, Context context, String key_user_data, String key_id_user, String key_is_logged_in) {
         Set<String> users_email_passwd = new HashSet<>();
         users_email_passwd.add(user.getEmail());
         users_email_passwd.add(user.getPassword());
 
 
         saveStringToPreferences(context, key_user_data, users_email_passwd);
+        saveIntToPreferences(context, key_id_user, user.getId());
         saveBooleanToPreferences(context, key_is_logged_in);
     }
 
@@ -87,6 +101,19 @@ public class Utility {
                 (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(preference_key, true);
+        editor.apply();
+
+    }
+
+    /**
+     * save boolean to preferences
+     */
+
+    public void saveIntToPreferences(Context context, String preference_key, int value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences
+                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(preference_key, value);
         editor.apply();
 
     }
@@ -116,6 +143,20 @@ public class Utility {
             return sharedPreferences.getBoolean(preference_key, false);
         } else {
             return null;
+        }
+    }
+
+    /**
+     * get Set<String> data from preferences
+     */
+
+    public int getIntegerDataFromPreferences(Context context, String preference_key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences
+                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+        if (preference_key != null) {
+            return sharedPreferences.getInt(preference_key, 0);
+        } else {
+            return 0;
         }
     }
 
@@ -431,16 +472,28 @@ public class Utility {
         return null;
     }
 
+
+
     /**
-     * parse cursor to User
+     * parse cursor to passed classname (example: User.class.getName())
      */
 
-    public static User cursorToUser(Cursor cursor) {
-
+    public static Object cursorToClass(Cursor cursor, String classname) {
         if (cursor != null && (cursor.moveToFirst())) {
-            MicroOrm microOrm = new MicroOrm();
-            return microOrm.fromCursor(cursor, User.class);
+            try {
+            /*identify the class*/
+                Class clazz = Class.forName(classname);
+
+            /*transform cursor to object*/
+
+                MicroOrm microOrm = new MicroOrm();
+                return microOrm.fromCursor(cursor, clazz);
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+        log.info("Cursor is null");
         return null;
     }
 
@@ -473,6 +526,7 @@ public class Utility {
     /**
      * hand parse map to EquipmentExpanded
      */
+
     public EquipmentExpanded mapToEquipmentExpanded(Map<String, Object> equipmentMap) {
         String attributes;
         String serial_num;
@@ -712,12 +766,11 @@ public class Utility {
             if (workplace != null) {
                 deleteTransaction(table_workplace, db);
                 putObjectToTable(workplace, table_workplace, db);
-
             }
 
             List<PhoneNumber> phoneNumbers = personalData.getPhoneNumbers();
             if (phoneNumbers != null) {
-                deleteTransaction(table_workplace, db);
+                deleteTransaction(table_phone_number, db);
                 for (PhoneNumber phoneNumber : phoneNumbers) {
                     putObjectToTable(phoneNumber, table_phone_number, db);
                 }

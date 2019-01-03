@@ -1,5 +1,6 @@
 package com.lis.qr_client.pojo;
 
+import android.widget.TextView;
 import lombok.*;
 import org.chalup.microorm.annotations.Column;
 
@@ -48,5 +49,11 @@ public class PersonalData {
     List<PhoneNumber> phoneNumbers = new ArrayList<>();
 
 
+    public String getFio() {
+        return name+" "+surname+" "+patronymic;
+    }
 
+    public String getPrivateData() {
+        return passport+" "+inn;
+    }
 }

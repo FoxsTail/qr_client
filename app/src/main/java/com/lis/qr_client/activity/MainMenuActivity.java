@@ -1,5 +1,6 @@
 package com.lis.qr_client.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -53,12 +54,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //----Full screen
-        Window window = getWindow();
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
+       utility.fullScreen(this);
 
         super.onCreate(savedInstanceState);
 
@@ -192,14 +188,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             }
             break;
             case R.id.btnProfile: {
-                ScanDialogFragment dialogFragment = new ScanDialogFragment();
-
-                Bundle bundle = new Bundle();
-                bundle.putString(ScanDialogFragment.ARG_TITLE, "Scan");
-                bundle.putString(ScanDialogFragment.ARG_MESSAGE, "Bla bla balala");
-                dialogFragment.setArguments(bundle);
-
-                dialogFragment.show(getFragmentManager(), "Profile");
+                Intent intent = new Intent(this, ProfileActivity.class);
+                startActivity(intent);
             }
             break;
 

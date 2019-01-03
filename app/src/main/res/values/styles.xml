@@ -1,18 +1,20 @@
 <resources>
 
     <!-- Base application theme. -->
-     <style name="AppTheme" parent="Base.Theme.AppCompat.Light">
-     <!--<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
+    <style name="AppTheme" parent="Base.Theme.AppCompat.Light">
+        <!--<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
         <!-- Customize your theme here. -->
-         <item name="windowActionBar">false</item>
-         <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:actionMenuTextColor">@color/colorBlack</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-         <!--<item name="android:backgroundTint">@color/colorLightGrey</item>-->
-         <item name="android:itemBackground">@color/colorWhite</item>
-         <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+        <!--<item name="android:backgroundTint">@color/colorLightGrey</item>-->
+        <item name="android:itemBackground">@color/colorWhite</item>
+        <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+
+        <item name="android:textColor">@color/colorDark</item>
     </style>
 
     <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
@@ -28,4 +30,5 @@
     <style name="MyAppTheme.TextInputLayout" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/red</item>
     </style>
+
 </resources>

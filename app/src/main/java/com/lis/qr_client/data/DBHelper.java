@@ -57,7 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
         //--------Address--------
 
         sqLiteDatabase.execSQL("create table address(" +
-                "tp_id integer primary key," +
+                "id integer primary key," +
                 "city text, " +
                 "street text, " +
                 "number text," +
@@ -67,11 +67,11 @@ public class DBHelper extends SQLiteOpenHelper {
         //--------Workplace--------
 
         sqLiteDatabase.execSQL("create table workplace(" +
-                "wp_id integer primary key," +
+                "id integer primary key," +
                 "position text, " +
                 "department text, " +
                 "direction text," +
-                "remote_workstation boolean);");
+                "remote_workstation integer);");
 
 
         //--------Room--------

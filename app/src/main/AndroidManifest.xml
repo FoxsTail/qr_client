@@ -43,12 +43,17 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LogInActivity"
-                  android:parentActivityName=".activity.WelcomeActivity">
-
+        <activity
+                android:name=".activity.LogInActivity"
+                android:parentActivityName=".activity.WelcomeActivity">
         </activity>
-        <activity android:name=".activity.SignUpActivity"
-                  android:parentActivityName=".activity.WelcomeActivity">
+        <activity
+                android:name=".activity.SignUpActivity"
+                android:parentActivityName=".activity.WelcomeActivity">
+        </activity>
+        <activity android:name=".activity.ProfileActivity"
+        android:parentActivityName=".activity.MainMenuActivity">
+
         </activity>
     </application>
 

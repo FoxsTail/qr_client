@@ -1,7 +1,5 @@
 package com.lis.qr_client.activity;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -15,7 +13,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.pojo.User;
@@ -23,18 +20,14 @@ import com.lis.qr_client.utilities.Utility;
 import com.lis.qr_client.utilities.async_helpers.AsyncOneDbManager;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Log
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String PREFERENCE_SAVE_USER = "save_user";
+    public static final String PREFERENCE_ID_USER = "id_user";
     public static final String PREFERENCE_IS_USER_SAVED = "is_user_saved";
 
 
@@ -64,7 +57,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_log_in_test);
+        setContentView(R.layout.activity_log_in);
 
         //----set db
         dbHelper = new DBHelper(this);
