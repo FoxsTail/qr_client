@@ -1,8 +1,7 @@
-package com.lis.qr_client.utilities.async_helpers;
+package com.lis.qr_client.extra.async_helpers;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -10,11 +9,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Pair;
 import android.widget.Toast;
-import com.lis.qr_client.R;
 import com.lis.qr_client.activity.LogInActivity;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.extra.utility.DbUtility;
+import com.lis.qr_client.extra.utility.PreferenceUtility;
 import com.lis.qr_client.pojo.User;
-import com.lis.qr_client.utilities.Utility;
+import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -23,7 +23,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -45,7 +44,6 @@ public class AsyncOneDbManager {
     private SQLiteDatabase db;
 
     private Class activityToStart;
-    private Utility utility = new Utility();
 
 
     Handler handler = new Handler() {
@@ -55,15 +53,6 @@ public class AsyncOneDbManager {
             if (msg != null) {
                 Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT).show();
             }
-          /*  switch (msg.what) {
-                case 1: {
-                    Toast.makeText(context, context.getString(R.string.try_again), Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                default: {
-                    break;
-                }
-            }*/
         }
     };
 
@@ -105,7 +94,7 @@ public class AsyncOneDbManager {
             String url = params[0].getUrl();
 
             /*remove old data from db*/
-           utility.deleteTransaction(table_name, db);
+            DbUtility.deleteTransaction(table_name, db);
 
 
             /*connect to the url and put the result in sqlite table*/
@@ -118,14 +107,19 @@ public class AsyncOneDbManager {
                 switch (httpMethod) {
                     case GET: {
                         Map<String, Object> response_map = getDataFromServer(url);
-                        utility.putMapToTable(response_map, table_name, db);
+                        if (response_map != null) {
+                            DbUtility.putMapToTable(response_map, table_name, db);
+                        }else{
+                            return null;
+                        }
+
                         break;
                     }
                     case POST: {
 
-                       if(!postLoginCheck(url)){
-                           return null;
-                       }
+                        if (!postLoginCheck(url)) {
+                            return null;
+                        }
 
                     }
                 }
@@ -141,7 +135,7 @@ public class AsyncOneDbManager {
             /*show me what u have*/
             Cursor cursor = db.query(table_name, null, null, null,
                     null, null, null, null);
-            dbHelper.getUtility().logCursor(cursor, table_name);
+            DbUtility.logCursor(cursor, table_name);
             cursor.close();
             //------
 
@@ -165,11 +159,12 @@ public class AsyncOneDbManager {
     }
 
     //-----Methods----
+
     /**
      * Post request for logging in user
      */
 
-    public boolean postLoginCheck(String url){
+    public boolean postLoginCheck(String url) {
         User user = postDataFromServer(url, post_request);
 
 
@@ -179,10 +174,10 @@ public class AsyncOneDbManager {
         }
 
                         /*save data to SQLite*/
-        utility.saveUserToDb(user, db);
+        DbUtility.saveUserToDb(user, db);
 
                         /*save data to cache*/
-        utility.saveUsersDataToPreference(user, context, LogInActivity.PREFERENCE_SAVE_USER,
+        PreferenceUtility.saveUsersDataToPreference(user, context, LogInActivity.PREFERENCE_SAVE_USER,
                 LogInActivity.PREFERENCE_ID_USER,
                 LogInActivity.PREFERENCE_IS_USER_SAVED);
 
@@ -199,12 +194,17 @@ public class AsyncOneDbManager {
 
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
+        ResponseEntity<HashMap<String, Object>> responseEntity;
+        try {
+            responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+                    null, new ParameterizedTypeReference<HashMap<String, Object>>() {
+                    });
+        } catch (Exception e) {
+            Utility.handleServerError(context, e, handler);
+            return null;
+        }
 
-        ResponseEntity<HashMap<String, Object>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
-                null, new ParameterizedTypeReference<HashMap<String, Object>>() {
-                });
-
-        return responseEntity == null ? null : responseEntity.getBody();
+        return responseEntity.getBody();
     }
 
     /**
@@ -221,33 +221,13 @@ public class AsyncOneDbManager {
         try {
             responseEntity = restTemplate.postForEntity(url, post_request, User.class);
         } catch (Exception e) {
-
-            String error_msg = e.getMessage();
-            log.info("Some error occurred: " + error_msg);
-
-            Message msg = new Message();
-            msg.what = 3;
-            switch (error_msg.trim()) {
-                case "400": {
-                    msg.obj = context.getString(R.string.bad_request);
-                    break;
-                }
-                case "500": {
-                    msg.obj = context.getString(R.string.server_error);
-                    break;
-                }
-                default: {
-                    msg.obj = context.getString(R.string.connection_error);
-                    break;
-                }
-            }
-
-            handler.sendMessage(msg);
+            Utility.handleServerError(context, e, handler);
             return null;
         }
 
         return responseEntity.getBody();
     }
+
 
 
     //-----Getters-----
@@ -282,10 +262,6 @@ public class AsyncOneDbManager {
 
     public Class getActivityToStart() {
         return activityToStart;
-    }
-
-    public Utility getUtility() {
-        return utility;
     }
 
     public static Logger getLog() {

@@ -10,10 +10,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,14 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.extra.utility.DbUtility;
 import com.lis.qr_client.pojo.Equipment;
-import com.lis.qr_client.utilities.Utility;
+import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Log
 public class EquipmentItemActivity extends AppCompatActivity {
@@ -144,7 +137,7 @@ public class EquipmentItemActivity extends AppCompatActivity {
                     null, null,
                     null);
 
-            equipment = Utility.cursorToEquipment(cursor);
+            equipment = DbUtility.cursorToEquipment(cursor);
 
 //--logs---
             if (equipment != null) {

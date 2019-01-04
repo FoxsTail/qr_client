@@ -30,4 +30,9 @@ public class Address {
     public String getFullAddress() {
         return city+" "+street+" "+number+"/ "+room;
     }
+
+    public String getAddress(){
+        return city+" "+street+" "+number;
+    }
+
 }

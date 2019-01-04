@@ -15,9 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.extra.utility.DbUtility;
 import com.lis.qr_client.pojo.User;
-import com.lis.qr_client.utilities.Utility;
-import com.lis.qr_client.utilities.async_helpers.AsyncOneDbManager;
+import com.lis.qr_client.extra.utility.Utility;
+import com.lis.qr_client.extra.async_helpers.AsyncOneDbManager;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpMethod;
 
@@ -42,7 +43,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     DBHelper dbHelper;
     SQLiteDatabase sqLiteDatabase;
 
-    Utility utility = new Utility();
     private TextInputLayout email_wrapper;
     private TextInputLayout password_wrapper;
 
@@ -70,7 +70,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             toolbar.setTitle(R.string.log_in);
             setSupportActionBar(toolbar);
 
-            utility.toolbarSetter(getSupportActionBar(), null, true);
+            Utility.toolbarSetter(getSupportActionBar(), null, true);
         }
 
         //----set views
@@ -125,7 +125,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
                     } else {
                         log.info("Cursor is ok");
-                        utility.logCursor(cursor, "test");
+                        DbUtility.logCursor(cursor, "test");
                                 /*ok, load new page*/
                         Intent intent = new Intent(this, MainMenuActivity.class);
                         startActivity(intent);

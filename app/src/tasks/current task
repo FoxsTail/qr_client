@@ -1,14 +1,21 @@
--Errors on server error
++Errors on server error
 
--handle possible errors
++/- handle possible errors
 
 ---
 
--remove nulls from spinners
++remove nulls from spinners
 
--clean up utilities
++clean up utilities
+
+-abstract method for asynctask
 
 -enum for strings and constants
+
+-set dialog and navigation on back buttons
+
+---
+- design for profile
 
 ---
 
@@ -17,8 +24,11 @@
 
 ---
 -paint design (flat)
+
 -define main colors
 
 
+//------------------
 
+fabric class for inventory adapter - things i can inventory
 

@@ -2,15 +2,10 @@ package com.lis.qr_client.data;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.lis.qr_client.interfaces.IUserDatabaseHandler;
-import com.lis.qr_client.pojo.User;
-import com.lis.qr_client.utilities.Utility;
+import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
-
-import java.util.List;
 
 @Log
 public class DBHelper extends SQLiteOpenHelper {

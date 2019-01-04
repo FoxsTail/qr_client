@@ -1,4 +1,4 @@
-package com.lis.qr_client.utilities.async_helpers;
+package com.lis.qr_client.extra.async_helpers;
 
 import org.junit.Test;
 

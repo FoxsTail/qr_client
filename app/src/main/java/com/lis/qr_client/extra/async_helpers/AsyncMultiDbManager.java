@@ -1,15 +1,19 @@
-package com.lis.qr_client.utilities.async_helpers;
+package com.lis.qr_client.extra.async_helpers;
 
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import com.lis.qr_client.data.DBHelper;
-import com.lis.qr_client.utilities.Utility;
+import com.lis.qr_client.extra.utility.DbUtility;
+import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -47,7 +51,16 @@ public class AsyncMultiDbManager {
     private Class activityTostart;
     private Runnable runnableToStart;
 
-    private Utility utility = new Utility();
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg != null) {
+                Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     /*in case you need a button transformation and switch to the next activity*/
 
@@ -155,8 +168,9 @@ public class AsyncMultiDbManager {
 
 //log track
             /*show me what u have*/
-                Cursor cursor = db.query(table_name, null, null, null, null, null, null, null);
-                dbHelper.getUtility().logCursor(cursor, table_name);
+                Cursor cursor = db.query(table_name, null, null,
+                        null, null, null, null, null);
+                DbUtility.logCursor(cursor, table_name);
                 cursor.close();
 //------
 
@@ -214,15 +228,20 @@ public class AsyncMultiDbManager {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        ResponseEntity<List<Object>> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<Object>>() {
-                });
-
+        try {
+            ResponseEntity<List<Object>> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null,
+                    new ParameterizedTypeReference<List<Object>>() {
+                    });
             /*parsing*/
-        List<Object> list = responseEntity.getBody();
+            List<Object> list = responseEntity.getBody();
 
             /*put into the given table (internal db)*/
-        utility.putListToTableColumn(list, table_name, column_name, db);
+            DbUtility.putListToTableColumn(list, table_name, column_name, db);
+
+        } catch (Exception e) {
+            Utility.handleServerError(context, e, handler);
+        }
+
     }
 
 
@@ -237,24 +256,25 @@ public class AsyncMultiDbManager {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        ResponseEntity<List<Map<String, Object>>> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<Map<String, Object>>>() {
-                });
+        try {
+            ResponseEntity<List<Map<String, Object>>> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null,
+                    new ParameterizedTypeReference<List<Map<String, Object>>>() {
+                    });
 
             /*parsing*/
-        List<Map<String, Object>> mapList = responseEntity.getBody();
+            List<Map<String, Object>> mapList = responseEntity.getBody();
 
             /*put into the given table (internal db)*/
-        utility.putMapListIntoTheTable(mapList, table_name, db);
+            DbUtility.putMapListIntoTheTable(mapList, table_name, db);
+
+        } catch (Exception e) {
+            Utility.handleServerError(context, e, handler);
+        }
     }
+
 
 
     //----Getters-----
-
-
-    public Utility getUtility() {
-        return utility;
-    }
 
     public Button getBtn() {
         return btn;

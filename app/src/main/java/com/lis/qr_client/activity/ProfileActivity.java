@@ -15,8 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.extra.utility.DbUtility;
+import com.lis.qr_client.extra.utility.PreferenceUtility;
 import com.lis.qr_client.pojo.*;
-import com.lis.qr_client.utilities.Utility;
+import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
 
 @Log
@@ -31,7 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
     private SQLiteDatabase db;
 
 
-    Utility utility = new Utility();
+ //   PreferenceUtility preferenceUtility = new PreferenceUtility();
 
 
     private User user;
@@ -46,7 +48,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /*full screen*/
-        utility.fullScreen(this);
+        Utility.fullScreen(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
@@ -56,7 +58,7 @@ public class ProfileActivity extends AppCompatActivity {
             toolbar.setTitle(R.string.profile);
             setSupportActionBar(toolbar);
 
-            utility.toolbarSetter(getSupportActionBar(), null, true);
+            Utility.toolbarSetter(getSupportActionBar(), null, true);
         }
 
 
@@ -71,7 +73,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         /*get user id from preferences*/
 
-        id_user = utility.getIntegerDataFromPreferences(this, LogInActivity.PREFERENCE_ID_USER);
+        id_user = PreferenceUtility.getIntegerDataFromPreferences(this, LogInActivity.PREFERENCE_ID_USER);
 
         if (id_user != 0) {
             log.info("User id is " + id_user);
@@ -111,7 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
             case R.id.item_log_out:{
 
                 /*clean user's shared preferences (or all preferences?)*/
-                utility.removeLoginPrefernces(this, LogInActivity.PREFERENCE_SAVE_USER,
+                PreferenceUtility.removeLoginPrefernces(this, LogInActivity.PREFERENCE_SAVE_USER,
                         LogInActivity.PREFERENCE_IS_USER_SAVED);
 
                 /*launch welcome page*/
@@ -135,7 +137,7 @@ public class ProfileActivity extends AppCompatActivity {
             /*find user in db by id*/
             Cursor cursor = getFromTableById("user", "id=?", id_user);
 
-            user = (User) Utility.cursorToClass(cursor, User.class.getName());
+            user = (User) DbUtility.cursorToClass(cursor, User.class.getName());
 
             if (user == null) {
                 log.info("User is null. Can't load the user");
@@ -154,7 +156,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                     log.info("Cursor is " + cursor.getCount());
 
-                    personalData = (PersonalData) Utility.cursorToClass(cursor, PersonalData.class.getName());
+                    personalData = (PersonalData) DbUtility.cursorToClass(cursor, PersonalData.class.getName());
                     if (personalData == null) {
                         log.info("User's personal data is null. Can't load the data");
 
@@ -168,7 +170,7 @@ public class ProfileActivity extends AppCompatActivity {
                         /*find address*/
                             cursor = getFromTableById("address", "id=?", id_tp);
 
-                            address = (Address) Utility.cursorToClass(cursor, Address.class.getName());
+                            address = (Address) DbUtility.cursorToClass(cursor, Address.class.getName());
                         }
 
 
@@ -179,7 +181,7 @@ public class ProfileActivity extends AppCompatActivity {
                             log.info("Workplace is null");
                         } else {
                             cursor = getFromTableById("workplace", "id=?", id_wp);
-                           workplace = (Workplace) Utility.cursorToClass(cursor, Workplace.class.getName());
+                           workplace = (Workplace) DbUtility.cursorToClass(cursor, Workplace.class.getName());
                         }
 
 

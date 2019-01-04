@@ -9,26 +9,20 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import com.lis.qr_client.R;
-import com.lis.qr_client.utilities.Utility;
+import com.lis.qr_client.extra.utility.PreferenceUtility;
+import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
-
-import java.util.Set;
 
 @Log
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
     private Button btn_log_in, btn_sign_up;
     private ProgressBar pb_welcome;
 
-    Utility utility = new Utility();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //----Full screen
-        Window window = getWindow();
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        Utility.fullScreen(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
@@ -92,7 +86,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     public void checkSavedUser() {
         log.info("checkSavedUser");
 
-        Boolean saved_user = utility.getBooleanDataFromPreferences(this, LogInActivity.PREFERENCE_IS_USER_SAVED);
+        Boolean saved_user = PreferenceUtility.getBooleanDataFromPreferences(this, LogInActivity.PREFERENCE_IS_USER_SAVED);
         if (saved_user != null && saved_user) {
             Intent intent = new Intent(this, MainMenuActivity.class);
             startActivity(intent);

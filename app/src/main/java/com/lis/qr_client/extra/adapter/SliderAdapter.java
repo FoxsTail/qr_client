@@ -1,4 +1,4 @@
-package com.lis.qr_client.utilities.adapter;
+package com.lis.qr_client.extra.adapter;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;

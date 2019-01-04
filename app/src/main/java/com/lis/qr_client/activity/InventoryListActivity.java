@@ -16,12 +16,15 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.extra.utility.DbUtility;
+import com.lis.qr_client.extra.utility.ObjectUtility;
+import com.lis.qr_client.extra.utility.PreferenceUtility;
 import com.lis.qr_client.pojo.UniversalSerializablePojo;
-import com.lis.qr_client.utilities.Utility;
-import com.lis.qr_client.utilities.adapter.SliderAdapter;
-import com.lis.qr_client.utilities.dialog_fragment.ExitDialogFragment;
-import com.lis.qr_client.utilities.dialog_fragment.ScanDialogFragment;
-import com.lis.qr_client.utilities.fragment.InventoryFragment;
+import com.lis.qr_client.extra.utility.Utility;
+import com.lis.qr_client.extra.adapter.SliderAdapter;
+import com.lis.qr_client.extra.dialog_fragment.ExitDialogFragment;
+import com.lis.qr_client.extra.dialog_fragment.ScanDialogFragment;
+import com.lis.qr_client.extra.fragment.InventoryFragment;
 import lombok.extern.java.Log;
 
 import java.util.ArrayList;
@@ -63,14 +66,13 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     private String titleResult;
     private String inventoryNum = "inventory_num";
 
-    private Utility utility = new Utility();
     private Context context = this;
     private String room_number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //----Full screen
-        utility.fullScreen(this);
+        Utility.fullScreen(this);
 
         super.onCreate(savedInstanceState);
         log.info("---OnCreate InventoryListActivity---");
@@ -78,7 +80,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
         setContentView(R.layout.activity_inventory_list);
 
         //---get room number for toolbar title
-        room_number = utility.loadStringOrJsonPreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
+        room_number = PreferenceUtility.loadStringOrJsonPreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
                 InventoryParamSelectActivity.ROOM_ID_PREFERENCES);
 
 
@@ -93,7 +95,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
             toolbar.setTitle(getString(R.string.room_number) + room_number);
             setSupportActionBar(toolbar);
 
-            utility.toolbarSetter(getSupportActionBar(), frameLayout, true);
+            Utility.toolbarSetter(getSupportActionBar(), frameLayout, true);
         }
 
 
@@ -133,7 +135,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                 int position = -1;
 
                 /*find map with inventory_num in toScanList*/
-                Map<String, Object> searched_map = utility.findMapByInventoryNum(toScanEquipments, inventoryNum);
+                Map<String, Object> searched_map = ObjectUtility.findMapByInventoryNum(toScanEquipments, inventoryNum);
 
 
                 /*searched map in toScanList: show result in dialog*/
@@ -169,7 +171,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                 /*try to find in scannedList*/
                 } else {
                     /*reset searche_map*/
-                    searched_map = utility.findMapByInventoryNum(scannedEquipments, inventoryNum);
+                    searched_map = ObjectUtility.findMapByInventoryNum(scannedEquipments, inventoryNum);
 
                     /*searched map in scannedList: show "already scanned" in dialog*/
                     if (searched_map != null) {
@@ -183,7 +185,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                         log.info(scanned_msg);
 
                     /*still couldn't find: show "No such item" in dialog*/
-                    } else if ((searched_map = utility.findMapByInventoryNum(allEquipments, inventoryNum)) != null) {
+                    } else if ((searched_map = ObjectUtility.findMapByInventoryNum(allEquipments, inventoryNum)) != null) {
 
                         log.info("--Equipment was found in the other room list" + searched_map.toString());
                         scanned_msg = getString(R.string.equipment_in_the_other_room)+" ";
@@ -223,7 +225,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
             /*check if there any saved inventory data*/
 
-            boolean is_saved_inventory = utility.loadBooleanPreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
+            boolean is_saved_inventory = PreferenceUtility.loadBooleanPreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
                     INVENTORY_STATE_BOOLEAN);
 
             table_to_select = "inventory";
@@ -231,7 +233,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
             cursor = db.query(table_to_select, null, null, null, null, null,
                     null);
 
-            allEquipments = utility.cursorToMapList(cursor);
+            allEquipments = DbUtility.cursorToMapList(cursor);
 
             /*if so load equpments*/
 
@@ -242,10 +244,10 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                 log.info("--load saved equipments---");
 
 
-                toScanEquipments = utility.preferencesJsonToMapList
+                toScanEquipments = PreferenceUtility.preferencesJsonToMapList
                         (context, MainMenuActivity.PREFERENCE_FILE_NAME, TO_SCAN_LIST);
 
-                scannedEquipments = utility.preferencesJsonToMapList
+                scannedEquipments = PreferenceUtility.preferencesJsonToMapList
                         (context, MainMenuActivity.PREFERENCE_FILE_NAME, SCANNED_LIST);
 
             }
@@ -259,7 +261,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
                 cursor = db.query(table_to_select, null, "room=?", new String[]{room_number}, null, null,
                         null);
 
-                toScanEquipments = utility.cursorToMapList(cursor);
+                toScanEquipments = DbUtility.cursorToMapList(cursor);
 
 //--logs---
                 System.out.println("--------What have we taken from Sqlite--------");
@@ -370,13 +372,13 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
             public void run() {
                 log.info("--saveInventoryToPreferences--- current thread is " + Thread.currentThread());
 
-                utility.savePreference(context, preferenceFileName, INVENTORY_STATE_BOOLEAN, true);
+                PreferenceUtility.savePreference(context, preferenceFileName, INVENTORY_STATE_BOOLEAN, true);
 
                 if (toScanEquipments != null) {
-                    utility.savePreference(context, preferenceFileName, TO_SCAN_LIST, toScanEquipments);
+                    PreferenceUtility.savePreference(context, preferenceFileName, TO_SCAN_LIST, toScanEquipments);
                 }
                 if (scannedEquipments != null) {
-                    utility.savePreference(context, preferenceFileName, SCANNED_LIST, scannedEquipments);
+                    PreferenceUtility.savePreference(context, preferenceFileName, SCANNED_LIST, scannedEquipments);
                 }
             }
         }).start();

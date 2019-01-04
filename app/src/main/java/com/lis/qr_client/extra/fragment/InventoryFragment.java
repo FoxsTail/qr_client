@@ -1,13 +1,9 @@
-package com.lis.qr_client.utilities.fragment;
+package com.lis.qr_client.extra.fragment;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.lis.qr_client.R;
 import com.lis.qr_client.pojo.UniversalSerializablePojo;
-import com.lis.qr_client.utilities.adapter.InventoryAdapter;
+import com.lis.qr_client.extra.adapter.InventoryAdapter;
 import lombok.extern.java.Log;
 
 import java.util.ArrayList;

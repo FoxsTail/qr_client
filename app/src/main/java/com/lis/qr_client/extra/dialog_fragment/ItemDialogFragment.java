@@ -1,4 +1,4 @@
-package com.lis.qr_client.utilities.dialog_fragment;
+package com.lis.qr_client.extra.dialog_fragment;
 
 
 import android.app.AlertDialog;
@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
@@ -15,14 +14,12 @@ import com.lis.qr_client.activity.EquipmentItemActivity;
 import com.lis.qr_client.activity.InventoryListActivity;
 import com.lis.qr_client.activity.MainMenuActivity;
 import com.lis.qr_client.data.DBHelper;
-import com.lis.qr_client.utilities.Utility;
-import com.lis.qr_client.utilities.adapter.InventoryAdapter;
-import com.lis.qr_client.utilities.async_helpers.AsyncMultiDbManager;
-import com.lis.qr_client.utilities.async_helpers.AsyncOneDbManager;
+import com.lis.qr_client.extra.utility.Utility;
+import com.lis.qr_client.extra.adapter.InventoryAdapter;
+import com.lis.qr_client.extra.async_helpers.AsyncOneDbManager;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpMethod;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -70,17 +67,13 @@ public class ItemDialogFragment extends DialogFragment {
             /* get dialog array items resources */
             List<String> itemsOptionsArray = Arrays.asList(context.getResources().getStringArray(R.array.itemsArray));
             int item_info = itemsOptionsArray.indexOf(context.getResources().getString(R.string.item_info));
-            int delete_from_list = itemsOptionsArray.indexOf(context.getResources().getString(R.string.delete_from_list));
-
 
             if (which == item_info) {
                 log.info("Get full inventory info");
 
                 fullItemInfo();
 
-            }/* else if (which == delete_from_list) {
-                deleteItemFromList();
-            }*/ else {
+            }else {
                 log.info("Back to list");
                 dialog.dismiss();
 
@@ -123,19 +116,6 @@ public class ItemDialogFragment extends DialogFragment {
                 context, dbHelper, EquipmentItemActivity.class, HttpMethod.GET, null);
 
         asyncOneDbManager.runAsyncOneDbManager();
-
-    }
-
-    private void deleteItemFromList() {
-
-        //TODO: add one more dialog for deleting, like "r u sure, that u r sure u wanna delete it?"
-
-        log.info("Delete from list " + inventory_num);
-
-        utility.deleteInventoryFromList(adapter, inventory_num);
-
-                 /*notifyDataChanged*/
-        adapter.notifyDataSetChanged();
 
     }
 

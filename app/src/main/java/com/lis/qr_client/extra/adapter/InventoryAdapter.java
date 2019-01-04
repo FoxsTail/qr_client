@@ -1,4 +1,4 @@
-package com.lis.qr_client.utilities.adapter;
+package com.lis.qr_client.extra.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lis.qr_client.R;
-import com.lis.qr_client.utilities.dialog_fragment.ItemDialogFragment;
+import com.lis.qr_client.extra.dialog_fragment.ItemDialogFragment;
 import lombok.extern.java.Log;
 
 import java.util.ArrayList;

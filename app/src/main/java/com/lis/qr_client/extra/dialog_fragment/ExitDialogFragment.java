@@ -1,11 +1,8 @@
-package com.lis.qr_client.utilities.dialog_fragment;
+package com.lis.qr_client.extra.dialog_fragment;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 import lombok.extern.java.Log;
 

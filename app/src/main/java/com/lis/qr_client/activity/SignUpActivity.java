@@ -6,22 +6,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Window;
 import android.view.WindowManager;
 import com.lis.qr_client.R;
-import com.lis.qr_client.utilities.Utility;
+import com.lis.qr_client.extra.utility.Utility;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
 
-    Utility utility = new Utility();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //----Full screen
-        Window window = getWindow();
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        Utility.fullScreen(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
@@ -33,7 +27,7 @@ public class SignUpActivity extends AppCompatActivity {
             toolbar.setTitle(R.string.sign_up);
             setSupportActionBar(toolbar);
 
-            utility.toolbarSetter(getSupportActionBar(), null, true);
+            Utility.toolbarSetter(getSupportActionBar(), null, true);
         }
         //--------
     }

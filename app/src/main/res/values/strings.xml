@@ -78,7 +78,7 @@
     <string name="toast_enter_email">Введіть email!</string>
     <string name="toast_enter_password">Введіть пароль!</string>
     <string name="ok_loading">Завантажую профіль...</string>
-    <string name="bad_request">Неправильний логін або пароль!</string>
+    <string name="bad_request">Неправильний запит, помилка синтаксису!</string>
     <string name="server_error">Помилка на сервері!</string>
     <string name="request_timeout">Немає з\'єднання з сервером!</string>
     <string name="connection_error">Помилка підключення!</string>
@@ -90,5 +90,6 @@
     <string name="profile">Профіль</string>
     <string name="no_data_about_user">Даних по користувачеві не знайдено!</string>
     <string name="remote_desktop">Віддалене \n робоче \n місце</string>
+    <string name="not_found">Не знайдено!</string>
 
 </resources>

@@ -109,7 +109,7 @@
         + Long press
             +shows context menu with item "full info"
                 +on full item check if there any equipment with the following inventory_number
-                -on not found show notification
+                +on not found show notification
                 +on success show page with vector pic
                     -load pics to resources folder
                     -select pic by type

@@ -3,18 +3,20 @@ package com.lis.qr_client.activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.*;
 import com.lis.qr_client.R;
-import com.lis.qr_client.utilities.async_helpers.AsyncMultiDbManager;
 import com.lis.qr_client.data.DBHelper;
-import com.lis.qr_client.utilities.Utility;
+import com.lis.qr_client.extra.utility.DbUtility;
+import com.lis.qr_client.extra.utility.PreferenceUtility;
+import com.lis.qr_client.extra.utility.Utility;
+import com.lis.qr_client.extra.async_helpers.AsyncMultiDbManager;
 import lombok.extern.java.Log;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
@@ -56,12 +58,11 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
     Thread thread;
     static Handler handler;
 
-    Utility utility = new Utility();
-
     int saved_address_preference;
 
 
     String url;
+
 
 
     @Override
@@ -76,7 +77,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         setContentView(R.layout.activity_inventory_param_select);
 
         /*run load from preferences*/
-        saved_address_preference = utility.loadIntPreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
+        saved_address_preference = PreferenceUtility.loadIntPreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
                 ADDRESS_ID_PREFERENCES);
 
 
@@ -91,7 +92,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
             toolbar.setTitle(R.string.select_room);
             setSupportActionBar(toolbar);
 
-            utility.toolbarSetter(getSupportActionBar(), frameLayout, true);
+            Utility.toolbarSetter(getSupportActionBar(), frameLayout, true);
 
         }
 
@@ -124,8 +125,8 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
     }
 
-
     //-----------Menu------------//
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -150,8 +151,8 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
     }
 
-
     //---------------------------//
+
 
 
     @Override
@@ -171,7 +172,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
             if (url != null) {
 
                 /*remove previous session data*/
-                utility.removeOldPreferences(context,
+                PreferenceUtility.removeOldPreferences(context,
                         MainMenuActivity.PREFERENCE_FILE_NAME,
                         InventoryListActivity.INVENTORY_STATE_BOOLEAN,
                         InventoryListActivity.TO_SCAN_LIST,
@@ -190,7 +191,6 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         }
 
     }
-
     //--------Spinners stuff----------//
 
 
@@ -218,6 +218,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
     };
 
 
+
     /**
      * Prepares spinner: sets adapter with passed data, prompt, itemSelected listener
      */
@@ -243,7 +244,6 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         log.info("---Set spinner listener---");
         spinner.setOnItemSelectedListener(itemSelectedListener);
     }
-
 
     /**
      * OnItemSelected;
@@ -275,7 +275,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
                     log.info("---address id is " + id_address + "---");
 
 
-                    int saved_address = utility.loadIntPreference
+                    int saved_address = PreferenceUtility.loadIntPreference
                             (context, MainMenuActivity.PREFERENCE_FILE_NAME, ADDRESS_ID_PREFERENCES);
                     log.info("---pref is " + saved_address + "---");
 
@@ -321,7 +321,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
                         }
 
                         /*put to already loaded list*/
-                        utility.savePreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
+                        PreferenceUtility.savePreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
                                 ADDRESS_ID_PREFERENCES, id_address);
                     }
 
@@ -336,7 +336,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
 
                     if (chosen_room != null) {
-                        utility.savePreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
+                        PreferenceUtility.savePreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
                                 ROOM_ID_PREFERENCES, chosen_room);
                     }
 
@@ -365,7 +365,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
             cursor = db.query("room", null, null, null, null,
                     null, null);
 
-            rooms = utility.cursorToList(cursor);
+            rooms = DbUtility.cursorToList(cursor);
 
             System.out.println("-----Romz-----");
 
@@ -395,11 +395,11 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
             log.info("---Run Load addresses from sqLite---");
 
                     /*calling new thread to create an array from sqlite table */
-            cursor = db.query(table_to_select, null, null, null, null,
+            cursor = db.query(table_to_select, new String[]{"id", "city", "street", "number"}, null, null, null,
                     null, null);
 
         /*parse cursor to BidiMap*/
-            addresses = utility.cursorToBidiMap(cursor);
+            addresses = DbUtility.cursorToBidiMap(cursor);
 
         /*creates adapter, transfer data from array to the listView*/
 //--log

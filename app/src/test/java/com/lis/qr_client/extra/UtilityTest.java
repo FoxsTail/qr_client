@@ -1,10 +1,9 @@
-package com.lis.qr_client.utilities;
+package com.lis.qr_client.extra;
 
 import android.database.Cursor;
+import com.lis.qr_client.extra.utility.Utility;
 import com.lis.qr_client.pojo.User;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class UtilityTest {
 

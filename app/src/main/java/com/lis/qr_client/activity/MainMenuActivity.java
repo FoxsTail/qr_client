@@ -14,9 +14,11 @@ import android.view.View;
 import android.widget.*;
 import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
-import com.lis.qr_client.utilities.Utility;
-import com.lis.qr_client.utilities.async_helpers.AsyncMultiDbManager;
-import com.lis.qr_client.utilities.dialog_fragment.ScanDialogFragment;
+import com.lis.qr_client.extra.utility.ObjectUtility;
+import com.lis.qr_client.extra.utility.PreferenceUtility;
+import com.lis.qr_client.extra.async_helpers.AsyncMultiDbManager;
+import com.lis.qr_client.extra.dialog_fragment.ScanDialogFragment;
+import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
 
 import java.util.HashMap;
@@ -49,13 +51,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private String table_name = "address";
     private String url;
 
-    private Utility utility = new Utility();
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //----Full screen
-       utility.fullScreen(this);
+       Utility.fullScreen(this);
 
         super.onCreate(savedInstanceState);
 
@@ -79,7 +78,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             toolbar.setTitle(R.string.main_menu);
             setSupportActionBar(toolbar);
 
-            utility.toolbarSetter(getSupportActionBar(), frameLayout, false);
+            Utility.toolbarSetter(getSupportActionBar(), frameLayout, false);
         }
         //--------
 
@@ -144,7 +143,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             case R.id.item_log_out:{
 
                 /*clean user's shared preferences (or all preferences?)*/
-                utility.removeLoginPrefernces(this, LogInActivity.PREFERENCE_SAVE_USER,
+                PreferenceUtility.removeLoginPrefernces(this, LogInActivity.PREFERENCE_SAVE_USER,
                         LogInActivity.PREFERENCE_IS_USER_SAVED);
 
                 /*launch welcome page*/
@@ -173,7 +172,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 log.info("---Remove old saved data---");
 
                   /*clear old saved data*/
-                utility.removeOldPreferences(context,PREFERENCE_FILE_NAME,
+                PreferenceUtility.removeOldPreferences(context,PREFERENCE_FILE_NAME,
                         InventoryParamSelectActivity.ADDRESS_ID_PREFERENCES,
                         InventoryParamSelectActivity.ROOM_ID_PREFERENCES);
 
@@ -225,7 +224,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void run() {
                        /* converts gotten data from json to map*/
-                        scannedMap = utility.scannedJsonToMap(scan_result);
+                        scannedMap = ObjectUtility.scannedJsonToMap(scan_result);
                         dialogHandler.sendEmptyMessage(1);
                     }
 
