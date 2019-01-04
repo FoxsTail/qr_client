@@ -14,9 +14,9 @@ import com.lis.qr_client.activity.EquipmentItemActivity;
 import com.lis.qr_client.activity.InventoryListActivity;
 import com.lis.qr_client.activity.MainMenuActivity;
 import com.lis.qr_client.data.DBHelper;
-import com.lis.qr_client.extra.utility.Utility;
 import com.lis.qr_client.extra.adapter.InventoryAdapter;
 import com.lis.qr_client.extra.async_helpers.AsyncOneDbManager;
+import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpMethod;
 
@@ -73,7 +73,7 @@ public class ItemDialogFragment extends DialogFragment {
 
                 fullItemInfo();
 
-            }else {
+            } else {
                 log.info("Back to list");
                 dialog.dismiss();
 
@@ -106,16 +106,17 @@ public class ItemDialogFragment extends DialogFragment {
         /*save scannedList and listToScan to the preferences*/
         InventoryListActivity inventoryActivity = (InventoryListActivity) context;
 
-        if(inventoryActivity != null) {
+        if (inventoryActivity != null) {
             inventoryActivity.saveInventoryToPreferences(context, MainMenuActivity.PREFERENCE_FILE_NAME);
         }
 
         /*load full equipment data from server*/
-        AsyncOneDbManager asyncOneDbManager = new AsyncOneDbManager(true, table_name, full_url,
-                new Pair<String, Object>("inventory_num", inventory_num),
-                context, dbHelper, EquipmentItemActivity.class, HttpMethod.GET, null);
+        AsyncOneDbManager asyncOneManager = new AsyncOneDbManager
+                (context, table_name, null, full_url, true,
+                        EquipmentItemActivity.class, new Pair<String, Object>("inventory_num", inventory_num),
+                        null, HttpMethod.GET);
 
-        asyncOneDbManager.runAsyncOneDbManager();
+        asyncOneManager.runAsyncLoader();
 
     }
 

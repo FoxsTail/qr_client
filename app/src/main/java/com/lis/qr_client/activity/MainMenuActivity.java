@@ -14,9 +14,9 @@ import android.view.View;
 import android.widget.*;
 import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.extra.async_helpers.AsyncMultiDbManager;
 import com.lis.qr_client.extra.utility.ObjectUtility;
 import com.lis.qr_client.extra.utility.PreferenceUtility;
-import com.lis.qr_client.extra.async_helpers.AsyncMultiDbManager;
 import com.lis.qr_client.extra.dialog_fragment.ScanDialogFragment;
 import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
@@ -54,7 +54,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //----Full screen
-       Utility.fullScreen(this);
+        Utility.fullScreen(this);
 
         super.onCreate(savedInstanceState);
 
@@ -68,7 +68,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         //---get framing layout for dimming
 
         final FrameLayout frameLayout = findViewById(R.id.frame_main_layout);
-        if(frameLayout != null) {
+        if (frameLayout != null) {
             frameLayout.getForeground().setAlpha(0);
         }
         //---set toolbar
@@ -83,7 +83,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         //--------
 
 
-        url ="http://" + getString(R.string.emu_ip) + ":"
+        url = "http://" + getString(R.string.emu_ip) + ":"
                 + getString(R.string.port) + getString(R.string.api_addresses_load);
 
         tvDialogChange = findViewById(R.id.tvDialogChange);
@@ -111,7 +111,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
                 String scanned_msg = scannedMapToMsg(scannedMap);
 
-                log.info("Scanned msg: "+ scanned_msg);
+                log.info("Scanned msg: " + scanned_msg);
 
                 dialogFragment.callDialog(context, bundle, scanned_msg, "qr_scan");
             }
@@ -139,8 +139,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.item_log_out:{
+        switch (item.getItemId()) {
+            case R.id.item_log_out: {
 
                 /*clean user's shared preferences (or all preferences?)*/
                 PreferenceUtility.removeLoginPrefernces(this, LogInActivity.PREFERENCE_SAVE_USER,
@@ -149,8 +149,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 /*launch welcome page*/
                 Intent intent = new Intent(this, WelcomeActivity.class);
                 startActivity(intent);
-                }
             }
+        }
         return super.onOptionsItemSelected(item);
 
     }
@@ -172,15 +172,19 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 log.info("---Remove old saved data---");
 
                   /*clear old saved data*/
-                PreferenceUtility.removeOldPreferences(context,PREFERENCE_FILE_NAME,
+                PreferenceUtility.removeOldPreferences(context, PREFERENCE_FILE_NAME,
                         InventoryParamSelectActivity.ADDRESS_ID_PREFERENCES,
                         InventoryParamSelectActivity.ROOM_ID_PREFERENCES);
 
                 /*load all available strings from ext db, starts new Db*/
                 if (url != null) {
-                    new AsyncMultiDbManager(table_name, url, this, dbHelper, db, btnInventory, pbInventory,
+            /*        new AsyncMultiDbManager(table_name, url, this, dbHelper, db, btnInventory, pbInventory,
                             InventoryParamSelectActivity.class, true, true, null)
                             .runAsyncMapListLoader();
+                    */
+                    new AsyncMultiDbManager(context, table_name, null, url, true,
+                            InventoryParamSelectActivity.class,null,
+                            btnInventory, pbInventory, true).runAsyncLoader();
                 } else {
                     log.warning("---URL IS NULL!---");
 

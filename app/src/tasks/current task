@@ -8,7 +8,6 @@
 
 +clean up utilities
 
--abstract method for asynctask
 
 -enum for strings and constants
 
@@ -28,7 +27,9 @@
 -define main colors
 
 
-//------------------
+//---------Refactoring---------
 
-fabric class for inventory adapter - things i can inventory
++abstract method for asynctask
+
+-fabric class for inventory adapter - things i can inventory
 

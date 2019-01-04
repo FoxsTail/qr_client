@@ -4,13 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.utility.DbUtility;
 import com.lis.qr_client.extra.utility.Utility;
@@ -19,103 +15,52 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
 
-    /*Gets city, street, number from api;
-     parses;
-     puts to the sqlite*/
-
-
 @Log
-/**cover class for AsyncMapListLoader; provides parameters from the inside class**/
-public class AsyncMultiDbManager {
+public class AsyncMultiDbManager extends AsyncAbstractManager {
 
-    private boolean isNextActivityLauncher = false;
-    private boolean isMapList;
-
-    private String table_name;
-    private String url;
-    private String column_name;
     private Object extra_data;
-
-    private Context context;
-    private DBHelper dbHelper;
-    private SQLiteDatabase db;
-
     private Button btn;
     private ProgressBar pb;
-    private Class activityTostart;
     private Runnable runnableToStart;
 
+    private boolean isMapList;
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg != null) {
-                Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
 
-    /*in case you need a button transformation and switch to the next activity*/
+    /*button, next activity*/
+    public AsyncMultiDbManager(Context context, String table_name, String column_name, String url,
+                               boolean isNextActivityLauncher, Class activityToStart, Object extra_data, Button btn,
+                               ProgressBar pb, boolean isMapList) {
 
-    public AsyncMultiDbManager(String table_name, String url, Context context,
-                               DBHelper dbHelper, SQLiteDatabase db, Button btn, ProgressBar pb, Class activityTostart,
-                               boolean isNextActivityLauncher, boolean isMapList, Object extra_data) {
-        this.isNextActivityLauncher = isNextActivityLauncher;
-        this.isMapList = isMapList;
-        this.table_name = table_name;
-        this.url = url;
-        this.context = context;
-        this.dbHelper = dbHelper;
-        this.db = db;
+        super(context, table_name, column_name, url, isNextActivityLauncher, activityToStart);
+
+        log.info("---AsyncMultiDbManager creation---");
+
+        this.extra_data = extra_data;
         this.btn = btn;
         this.pb = pb;
-        this.activityTostart = activityTostart;
-        this.extra_data = extra_data;
-    }
-
-    /*Simple db loader*/
-
-    public AsyncMultiDbManager(String table_name, String column_name, String url,
-                               Context context, DBHelper dbHelper, SQLiteDatabase db, boolean isMapList, Runnable runnableToStart) {
         this.isMapList = isMapList;
-        this.table_name = table_name;
-        this.url = url;
-        this.column_name = column_name;
-        this.context = context;
-        this.dbHelper = dbHelper;
-        this.db = db;
+    }
+
+    /*simple loader with runnable*/
+    public AsyncMultiDbManager(Context context, String table_name, String column_name, String url, boolean isNextActivityLauncher,
+                               Class activityToStart, Runnable runnableToStart, boolean isMapList) {
+        super(context, table_name, column_name, url, isNextActivityLauncher, activityToStart);
         this.runnableToStart = runnableToStart;
+        this.isMapList = isMapList;
     }
 
-    public void runAsyncMapListLoader() {
-        new AsyncMapListLoader(getContext()).execute(this);
+    @Override
+    public void runAsyncLoader() {
+        new AsyncMultiLoader().execute(this);
     }
 
 
-    /**
-     * loads list of maps from an external db with the given url;
-     * parses it, puts in the Context value and adds to the SQlite table (with the given table_name);
-     * All params are in the cover class AsyncDbManager;
-     */
-    public class AsyncMapListLoader extends AsyncTask<AsyncMultiDbManager, Void, Class> {
-
-        DBHelper dbHelper;
-        SQLiteDatabase db;
-        Context context;
-
-        public AsyncMapListLoader(Context context) {
-            this.context = context;
-        }
-
-        public AsyncMapListLoader() {
-        }
+    public class AsyncMultiLoader extends AsyncLoader {
 
         @Override
         protected void onPreExecute() {
@@ -124,47 +69,31 @@ public class AsyncMultiDbManager {
                 btn.setVisibility(View.INVISIBLE);
                 pb.setVisibility(View.VISIBLE);
             }
-            //Toast.makeText(context, "Loading adresses...", LENGTH_SHORT).show();
         }
 
-
         @Override
-        protected Class doInBackground(AsyncMultiDbManager... params) {
-            log.info("----Do in background----");
+        protected Class doInBackground(AsyncAbstractManager... params) {
+            log.info("----Async Multi Loader - Do in background----");
 
-            dbHelper = params[0].getDbHelper();
-            db = params[0].getDb();
 
-            /*request to the main db to get multiple maps with "city, street, numbers", which are available*/
-            String url = params[0].getUrl();
+            context = params[0].context;
             String table_name = params[0].getTable_name();
 
-            if (dbHelper != null && db != null) {
-            /*delete all data in table*/
-                db.beginTransaction();
-                log.info("----Delete all in table " + table_name + "----");
+            if (params[0].getTable_name() != null) {
 
-                try {
-                    db.delete(table_name, null, null);
-                    db.setTransactionSuccessful();
-                } finally {
-                    db.endTransaction();
-                }
+                dbHelper = new DBHelper(context);
+                db = dbHelper.getWritableDatabase();
+
+
+                String url = params[0].getUrl();
+
+                /*delete all data in table*/
+                DbUtility.deleteTransaction(table_name, db);
 
 
             /*connect to the url and put the result in sqlite table*/
-                try {
-                /*choose method for list and mapList*/
-                    if (isMapList) {
-                        saveMapListDataFromGetUrl(url, table_name);
-                    } else {
-                        saveListDataFromGetUrl(url, table_name, column_name);
-                    }
+                saveListOrMapDataFromGetUrl(url, table_name, params[0].getColumn_name(), db);
 
-                } catch (ResourceAccessException e) {
-                    log.warning("Failed to connect to " + url);
-                    log.warning("Failure cause: " + e.getMessage() + "\n" + e.getStackTrace().toString());
-                }
 
 //log track
             /*show me what u have*/
@@ -175,16 +104,17 @@ public class AsyncMultiDbManager {
 //------
 
             }
-            if (isNextActivityLauncher) {
-                return params[0].getActivityTostart();
+
+            if (params[0].isNextActivityLauncher()) {
+                return params[0].getActivityToStart();
             } else return null;
 
         }
 
         @Override
-        protected void onPostExecute(Class classTostart) {
-            super.onPostExecute(classTostart);
-            /*if we have buttons to change*/
+        protected void onPostExecute(Class classToLaunch) {
+            super.onPostExecute(classToLaunch);
+              /*if we have buttons to change*/
             if (btn != null && pb != null) {
                 pb.setVisibility(View.INVISIBLE);
                 btn.setVisibility(View.VISIBLE);
@@ -192,9 +122,9 @@ public class AsyncMultiDbManager {
 
             /*if we have activity to run*/
             if (isNextActivityLauncher) {
-                if (classTostart != null) {
+                if (classToLaunch != null) {
 
-                    Intent intent = new Intent(context, classTostart);
+                    Intent intent = new Intent(context, classToLaunch);
 
                     if (extra_data != null) {
                         intent.putExtra("room", extra_data.toString());
@@ -214,99 +144,51 @@ public class AsyncMultiDbManager {
         }
     }
 
-    //-----Additional methods-------//
-
     //-----List----//
 
     /**
-     * connects to the given url and put the result in sqlite table (list)
+     * connects to the given url and put the result in sqlite table (list/ maplist)
      */
 
-    private void saveListDataFromGetUrl(String url, String table_name, String column_name) throws ResourceAccessException {
+    private void saveListOrMapDataFromGetUrl(String url, String table_name, String column_name, SQLiteDatabase db) {
         log.info("----Getting data----");
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         try {
-            ResponseEntity<List<Object>> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<Object>>() {
-                    });
-            /*parsing*/
-            List<Object> list = responseEntity.getBody();
-
-            /*put into the given table (internal db)*/
-            DbUtility.putListToTableColumn(list, table_name, column_name, db);
-
-        } catch (Exception e) {
-            Utility.handleServerError(context, e, handler);
-        }
-
-    }
-
-
-    //-----MapList-----//
-
-    /**
-     * connects to the given url and put the result in sqlite table (mapList)
-     */
-
-    private void saveMapListDataFromGetUrl(String url, String table_name) throws ResourceAccessException {
-        log.info("----Getting data----");
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
-        try {
-            ResponseEntity<List<Map<String, Object>>> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<Map<String, Object>>>() {
-                    });
+            if (isMapList) {
+                ResponseEntity<List<Map<String, Object>>> responseEntity = restTemplate.exchange
+                        (url, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<List<Map<String, Object>>>() {
+                                });
 
             /*parsing*/
-            List<Map<String, Object>> mapList = responseEntity.getBody();
+                List<Map<String, Object>> mapList = responseEntity.getBody();
 
             /*put into the given table (internal db)*/
-            DbUtility.putMapListIntoTheTable(mapList, table_name, db);
+                DbUtility.putMapListIntoTheTable(mapList, table_name, db);
 
+            } else {
+
+                ResponseEntity<List<Object>> responseEntity = restTemplate.exchange
+                        (url, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<List<Object>>() {
+                                });
+
+            /*parsing*/
+                List<Object> list = responseEntity.getBody();
+
+            /*put into the given table (internal db)*/
+                DbUtility.putListToTableColumn(list, table_name, column_name, db);
+
+            }
         } catch (Exception e) {
             Utility.handleServerError(context, e, handler);
+            log.warning("Failed to connect to " + url);
+            log.warning("Failure cause: " + e.getMessage() + "\n" + e.getStackTrace().toString());
         }
-    }
 
-
-
-    //----Getters-----
-
-    public Button getBtn() {
-        return btn;
-    }
-
-    public ProgressBar getPb() {
-        return pb;
-    }
-
-    public Class getActivityTostart() {
-        return activityTostart;
-    }
-
-    public String getTable_name() {
-        return table_name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public Context getContext() {
-        return context;
-    }
-
-    public DBHelper getDbHelper() {
-        return dbHelper;
-    }
-
-    public SQLiteDatabase getDb() {
-        return db;
     }
 
 }
-

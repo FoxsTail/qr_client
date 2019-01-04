@@ -13,10 +13,10 @@ import android.view.*;
 import android.widget.*;
 import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.extra.async_helpers.AsyncMultiDbManager;
 import com.lis.qr_client.extra.utility.DbUtility;
 import com.lis.qr_client.extra.utility.PreferenceUtility;
 import com.lis.qr_client.extra.utility.Utility;
-import com.lis.qr_client.extra.async_helpers.AsyncMultiDbManager;
 import lombok.extern.java.Log;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
@@ -179,10 +179,10 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
                         InventoryListActivity.SCANNED_LIST);
 
                 AsyncMultiDbManager asyncMultiDbManager = new AsyncMultiDbManager
-                        (null, null, context, null, null, btnStart,
-                        pbLoadEquipment, InventoryListActivity.class,
-                        true, false, chosen_room);
-                asyncMultiDbManager.runAsyncMapListLoader();
+                        (context,null, null, null, true,
+                                InventoryListActivity.class, chosen_room, btnStart, pbLoadEquipment, false);
+
+                asyncMultiDbManager.runAsyncLoader();
 
             } else {
                 log.warning("---URL IS NULL---");
@@ -299,11 +299,11 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
                             String url_inventory = url + getString(R.string.api_inventory_by_address_load) + id_address;
                             String table_name = "inventory";
 
-
-                            AsyncMultiDbManager asyncMultiDbManager = new AsyncMultiDbManager
-                                    (table_name, url_inventory, context, dbHelper, db, btnStart, pbLoadEquipment,
-                                            null, false, true, chosen_room);
-                            asyncMultiDbManager.runAsyncMapListLoader();
+                            AsyncMultiDbManager asyncLoader = new AsyncMultiDbManager
+                                    (context,table_name, null, url_inventory, false,
+                                            null, chosen_room, btnStart, pbLoadEquipment,
+                                            true);
+                            asyncLoader.runAsyncLoader();
 
                         /*async get rooms from server*/
                             String url_room = url + getString(R.string.api_room_by_address_load) + id_address;
@@ -311,10 +311,12 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
                             String column_name = "room";
 
 
-                            AsyncMultiDbManager dbManager = new AsyncMultiDbManager(table_name, column_name,
-                                    url_room, context, dbHelper, db, false, runLoadRooms);
+                            AsyncMultiDbManager dbManager = new AsyncMultiDbManager(context, table_name, column_name,
+                                    url_room, false,null, runLoadRooms, false);
+
+
                             log.info("--- call AsyncMapListLoader---");
-                            dbManager.runAsyncMapListLoader();
+                            dbManager.runAsyncLoader();
                         } else {
                             log.warning("---URL IS NULL!---");
 

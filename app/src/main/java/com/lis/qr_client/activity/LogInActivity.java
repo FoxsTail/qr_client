@@ -12,13 +12,12 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import com.lis.qr_client.R;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.extra.async_helpers.AsyncOneDbManager;
 import com.lis.qr_client.extra.utility.DbUtility;
 import com.lis.qr_client.pojo.User;
 import com.lis.qr_client.extra.utility.Utility;
-import com.lis.qr_client.extra.async_helpers.AsyncOneDbManager;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpMethod;
 
@@ -37,11 +36,9 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     private Matcher matcher;
 
     private Toolbar toolbar;
-    private EditText et_email, et_password;
     private Button btn_log_in_the_app;
 
     DBHelper dbHelper;
-    SQLiteDatabase sqLiteDatabase;
 
     private TextInputLayout email_wrapper;
     private TextInputLayout password_wrapper;
@@ -61,7 +58,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
         //----set db
         dbHelper = new DBHelper(this);
-        sqLiteDatabase = dbHelper.getWritableDatabase();
 
 
         //---set toolbar
@@ -146,11 +142,11 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         String url = "http://" + resources.getString(R.string.emu_ip) + ":" + resources.getString(R.string.port) +
                 resources.getString(R.string.api_login_check);
 
-                    /*make a request*/
-        AsyncOneDbManager oneDbManager = new AsyncOneDbManager(true, table_name, url,
-                null, this, dbHelper, MainMenuActivity.class, HttpMethod.POST,
-                new User(email, password));
-        oneDbManager.runAsyncOneDbManager();
+        /*make a request*/
+        AsyncOneDbManager oneDbManager = new AsyncOneDbManager(this, table_name, null, url,
+                true, MainMenuActivity.class, null, new User(email, password),
+                HttpMethod.POST);
+        oneDbManager.runAsyncLoader();
     }
 
 
