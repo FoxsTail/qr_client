@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.*;
 import com.lis.qr_client.R;
+import com.lis.qr_client.constants.DbTables;
+import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.async_helpers.AsyncMultiDbManager;
 import com.lis.qr_client.extra.utility.DbUtility;
@@ -31,9 +33,6 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
     public static final int LOAD_ADDRESS = 1;
     public static final int LOAD_ROOMS = 2;
 
-    public static final String ADDRESS_ID_PREFERENCES = "address_id";
-    public static final String ROOM_ID_PREFERENCES = "room";
-
     private Spinner spinAddress, spinRoom;
     private ProgressBar pbLoadEquipment;
     private Button btnStart;
@@ -51,7 +50,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
     BidiMap<Integer, String> addresses = new DualHashBidiMap<>();
 
 
-    String table_to_select = "address";
+    String table_to_select = DbTables.TABLE_ADDRESS;
     String chosen_room = null;
     String chosen_address = null;
 
@@ -77,8 +76,8 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         setContentView(R.layout.activity_inventory_param_select);
 
         /*run load from preferences*/
-        saved_address_preference = PreferenceUtility.loadIntPreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
-                ADDRESS_ID_PREFERENCES);
+        saved_address_preference = PreferenceUtility.loadIntPreference(context, MyPreferences.PREFERENCE_FILE_NAME,
+                MyPreferences.ADDRESS_ID_PREFERENCES);
 
 
         //---get framing layout for dimming
@@ -173,10 +172,10 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
                 /*remove previous session data*/
                 PreferenceUtility.removeOldPreferences(context,
-                        MainMenuActivity.PREFERENCE_FILE_NAME,
-                        InventoryListActivity.INVENTORY_STATE_BOOLEAN,
-                        InventoryListActivity.TO_SCAN_LIST,
-                        InventoryListActivity.SCANNED_LIST);
+                        MyPreferences.PREFERENCE_FILE_NAME,
+                        MyPreferences.PREFERENCE_INVENTORY_STATE_BOOLEAN,
+                        MyPreferences.PREFERENCE_TO_SCAN_LIST,
+                        MyPreferences.PREFERENCE_SCANNED_LIST);
 
                 AsyncMultiDbManager asyncMultiDbManager = new AsyncMultiDbManager
                         (context,null, null, null, true,
@@ -276,7 +275,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
 
                     int saved_address = PreferenceUtility.loadIntPreference
-                            (context, MainMenuActivity.PREFERENCE_FILE_NAME, ADDRESS_ID_PREFERENCES);
+                            (context, MyPreferences.PREFERENCE_FILE_NAME, MyPreferences.ADDRESS_ID_PREFERENCES);
                     log.info("---pref is " + saved_address + "---");
 
 
@@ -297,7 +296,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
                         /*get data from server*/
                             String url_inventory = url + getString(R.string.api_inventory_by_address_load) + id_address;
-                            String table_name = "inventory";
+                            String table_name = DbTables.TABLE_INVENTORY;
 
                             AsyncMultiDbManager asyncLoader = new AsyncMultiDbManager
                                     (context,table_name, null, url_inventory, false,
@@ -307,7 +306,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
                         /*async get rooms from server*/
                             String url_room = url + getString(R.string.api_room_by_address_load) + id_address;
-                            table_name = "room";
+                            table_name = DbTables.TABLE_ROOM;
                             String column_name = "room";
 
 
@@ -323,8 +322,8 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
                         }
 
                         /*put to already loaded list*/
-                        PreferenceUtility.savePreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
-                                ADDRESS_ID_PREFERENCES, id_address);
+                        PreferenceUtility.savePreference(context, MyPreferences.PREFERENCE_FILE_NAME,
+                                MyPreferences.ADDRESS_ID_PREFERENCES, id_address);
                     }
 
 
@@ -338,8 +337,8 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
 
 
                     if (chosen_room != null) {
-                        PreferenceUtility.savePreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
-                                ROOM_ID_PREFERENCES, chosen_room);
+                        PreferenceUtility.savePreference(context, MyPreferences.PREFERENCE_FILE_NAME,
+                                MyPreferences.ROOM_ID_PREFERENCES, chosen_room);
                     }
 
                     break;
@@ -364,10 +363,10 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         @Override
         public void run() {
             log.info("---run load Rooms---");
-            cursor = db.query("room", null, null, null, null,
+            cursor = db.query(DbTables.TABLE_ROOM, null, null, null, null,
                     null, null);
 
-            rooms = DbUtility.cursorToList(cursor);
+            rooms = DbUtility.cursorToList(cursor, "room");
 
             System.out.println("-----Romz-----");
 
@@ -397,7 +396,8 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
             log.info("---Run Load addresses from sqLite---");
 
                     /*calling new thread to create an array from sqlite table */
-            cursor = db.query(table_to_select, new String[]{"id", "city", "street", "number"}, null, null, null,
+            cursor = db.query(table_to_select, new String[]{"id", "city", "street", "number"},
+                    null, null, null,
                     null, null);
 
         /*parse cursor to BidiMap*/

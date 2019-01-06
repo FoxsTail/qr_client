@@ -126,6 +126,7 @@ public class AsyncMultiDbManager extends AsyncAbstractManager {
 
                     Intent intent = new Intent(context, classToLaunch);
 
+                    //TODO: make it not so hardcode ("room")
                     if (extra_data != null) {
                         intent.putExtra("room", extra_data.toString());
                     }

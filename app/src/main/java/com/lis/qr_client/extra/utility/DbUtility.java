@@ -25,7 +25,7 @@ public class DbUtility {
      * parse cursor to List
      */
 
-    public static List cursorToList(Cursor cursor) {
+    public static List cursorToList(Cursor cursor, String column_name) {
         List convertedList = new ArrayList();
 
         /*first empty value for the spinner*/
@@ -34,7 +34,7 @@ public class DbUtility {
         if (cursor != null) {
             if (cursor.moveToNext()) {
                 do {
-                    convertedList.add(cursor.getInt(cursor.getColumnIndex("room")));
+                    convertedList.add(cursor.getInt(cursor.getColumnIndex(column_name)));
 
                 } while (cursor.moveToNext());
             }
@@ -204,7 +204,7 @@ public class DbUtility {
 
 
     /**
-     * Converts map to a ContextValue obj
+     * Converts map to a ContextValue obj (attributes hardcoded)
      */
 
     private static ContentValues mapToContextValueParser(Map<String, Object> mapToParse) {

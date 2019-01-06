@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
 
@@ -18,7 +19,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public DBHelper(Context context) {
-        super(context, "qr_db", null, DB_VERSION);
+        super(context, DbTables.DB_NAME, null, DB_VERSION);
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import com.lis.qr_client.R;
+import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.async_helpers.AsyncOneDbManager;
 import com.lis.qr_client.extra.utility.DbUtility;
@@ -26,12 +27,7 @@ import java.util.regex.Pattern;
 
 @Log
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final String PREFERENCE_SAVE_USER = "save_user";
-    public static final String PREFERENCE_ID_USER = "id_user";
-    public static final String PREFERENCE_IS_USER_SAVED = "is_user_saved";
-
-
-    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
+        private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
     private Pattern pattern = Pattern.compile(EMAIL_PATTERN);
     private Matcher matcher;
 
@@ -46,11 +42,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //----Full screen
-        Window window = getWindow();
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        Utility.fullScreen(this);
 
 
         super.onCreate(savedInstanceState);
@@ -105,7 +97,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     password_wrapper.setErrorEnabled(false);
 
                     /*ok, check user data*/
-                    String table_name = "user";
+                    String table_name = DbTables.TABLE_USER;
 
                      /*check in sqlite*/
                     SQLiteDatabase db = dbHelper.getWritableDatabase();

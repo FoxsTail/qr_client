@@ -9,7 +9,9 @@
 +clean up utilities
 
 
--enum for strings and constants
+-enum for strings and constants !
+    +preference(string)
+    +db table names
 
 -set dialog and navigation on back buttons
 

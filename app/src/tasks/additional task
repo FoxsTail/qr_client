@@ -50,4 +50,7 @@
     3.1 Code(API) to decode qr picture
     3.2 Info from qr-code to client's screen
 
-* Turn on the camera -> Scan -> Analize -> Parse -> To the screen
+* Turn on the camera -> Scan -> Analyze -> Parse -> To the screen
+
+11. Memory
+    -http enum usage

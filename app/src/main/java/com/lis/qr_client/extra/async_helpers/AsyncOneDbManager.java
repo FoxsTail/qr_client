@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Pair;
-import com.lis.qr_client.activity.LogInActivity;
+import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.utility.DbUtility;
 import com.lis.qr_client.extra.utility.PreferenceUtility;
@@ -146,9 +146,9 @@ public class AsyncOneDbManager extends AsyncAbstractManager {
         DbUtility.saveUserToDb(user, db);
 
                         /*save data to cache*/
-        PreferenceUtility.saveUsersDataToPreference(user, context, LogInActivity.PREFERENCE_SAVE_USER,
-                LogInActivity.PREFERENCE_ID_USER,
-                LogInActivity.PREFERENCE_IS_USER_SAVED);
+        PreferenceUtility.saveUsersDataToPreference(user, context, MyPreferences.PREFERENCE_SAVE_USER,
+                MyPreferences.PREFERENCE_ID_USER,
+                MyPreferences.PREFERENCE_IS_USER_SAVED);
 
         return true;
     }

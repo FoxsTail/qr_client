@@ -91,5 +91,6 @@
     <string name="no_data_about_user">Даних по користувачеві не знайдено!</string>
     <string name="remote_desktop">Віддалене \n робоче \n місце</string>
     <string name="not_found">Не знайдено!</string>
+    <string name="exit">вихід</string>
 
 </resources>

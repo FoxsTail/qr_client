@@ -13,6 +13,8 @@ import com.lis.qr_client.R;
 import com.lis.qr_client.activity.EquipmentItemActivity;
 import com.lis.qr_client.activity.InventoryListActivity;
 import com.lis.qr_client.activity.MainMenuActivity;
+import com.lis.qr_client.constants.DbTables;
+import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.adapter.InventoryAdapter;
 import com.lis.qr_client.extra.async_helpers.AsyncOneDbManager;
@@ -99,7 +101,7 @@ public class ItemDialogFragment extends DialogFragment {
         String full_url = url + context.getResources().getString(R.string.api_full_inventory_from_equipments)
                 + inventory_num;
 
-        String table_name = "equipment";
+        String table_name = DbTables.TABLE_EQUIPMENT;
 
         log.info("----Before load item's full info, save the data---");
 
@@ -107,7 +109,7 @@ public class ItemDialogFragment extends DialogFragment {
         InventoryListActivity inventoryActivity = (InventoryListActivity) context;
 
         if (inventoryActivity != null) {
-            inventoryActivity.saveInventoryToPreferences(context, MainMenuActivity.PREFERENCE_FILE_NAME);
+            inventoryActivity.saveInventoryToPreferences(context, MyPreferences.PREFERENCE_FILE_NAME);
         }
 
         /*load full equipment data from server*/

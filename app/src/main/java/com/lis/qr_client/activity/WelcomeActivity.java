@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import com.lis.qr_client.R;
+import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.extra.utility.PreferenceUtility;
 import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
@@ -86,7 +87,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     public void checkSavedUser() {
         log.info("checkSavedUser");
 
-        Boolean saved_user = PreferenceUtility.getBooleanDataFromPreferences(this, LogInActivity.PREFERENCE_IS_USER_SAVED);
+        Boolean saved_user = PreferenceUtility.getBooleanDataFromPreferences
+                (this, MyPreferences.PREFERENCE_IS_USER_SAVED);
         if (saved_user != null && saved_user) {
             Intent intent = new Intent(this, MainMenuActivity.class);
             startActivity(intent);

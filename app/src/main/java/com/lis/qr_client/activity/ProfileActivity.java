@@ -14,6 +14,8 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.lis.qr_client.R;
+import com.lis.qr_client.constants.DbTables;
+import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.utility.DbUtility;
 import com.lis.qr_client.extra.utility.PreferenceUtility;
@@ -73,7 +75,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         /*get user id from preferences*/
 
-        id_user = PreferenceUtility.getIntegerDataFromPreferences(this, LogInActivity.PREFERENCE_ID_USER);
+        id_user = PreferenceUtility.getIntegerDataFromPreferences(this, MyPreferences.PREFERENCE_ID_USER);
 
         if (id_user != 0) {
             log.info("User id is " + id_user);
@@ -113,8 +115,8 @@ public class ProfileActivity extends AppCompatActivity {
             case R.id.item_log_out:{
 
                 /*clean user's shared preferences (or all preferences?)*/
-                PreferenceUtility.removeLoginPrefernces(this, LogInActivity.PREFERENCE_SAVE_USER,
-                        LogInActivity.PREFERENCE_IS_USER_SAVED);
+                PreferenceUtility.removeLoginPreferences(this, MyPreferences.PREFERENCE_SAVE_USER,
+                        MyPreferences.PREFERENCE_IS_USER_SAVED);
 
                 /*launch welcome page*/
                 Intent intent = new Intent(this, WelcomeActivity.class);
@@ -135,7 +137,7 @@ public class ProfileActivity extends AppCompatActivity {
         public void run() {
 
             /*find user in db by id*/
-            Cursor cursor = getFromTableById("user", "id=?", id_user);
+            Cursor cursor = getFromTableById(DbTables.TABLE_USER, "id=?", id_user);
 
             user = (User) DbUtility.cursorToClass(cursor, User.class.getName());
 
@@ -152,7 +154,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
                 } else {
-                    cursor = getFromTableById("personal_data", "id=?", id_pd);
+                    cursor = getFromTableById(DbTables.TABLE_PERSONAL_DATA, "id=?", id_pd);
 
                     log.info("Cursor is " + cursor.getCount());
 
@@ -168,7 +170,7 @@ public class ProfileActivity extends AppCompatActivity {
                             log.info("Address is null");
                         } else {
                         /*find address*/
-                            cursor = getFromTableById("address", "id=?", id_tp);
+                            cursor = getFromTableById(DbTables.TABLE_ADDRESS, "id=?", id_tp);
 
                             address = (Address) DbUtility.cursorToClass(cursor, Address.class.getName());
                         }
@@ -180,7 +182,7 @@ public class ProfileActivity extends AppCompatActivity {
                         if (id_wp == null) {
                             log.info("Workplace is null");
                         } else {
-                            cursor = getFromTableById("workplace", "id=?", id_wp);
+                            cursor = getFromTableById(DbTables.TABLE_WORKPLACE, "id=?", id_wp);
                            workplace = (Workplace) DbUtility.cursorToClass(cursor, Workplace.class.getName());
                         }
 

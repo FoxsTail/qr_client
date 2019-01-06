@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.lis.qr_client.R;
+import com.lis.qr_client.constants.DbTables;
+import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.async_helpers.AsyncMultiDbManager;
 import com.lis.qr_client.extra.utility.ObjectUtility;
@@ -33,7 +35,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private Toolbar toolbar;
 
     protected final int REQUEST_SCAN_QR = 1;
-    public static final String PREFERENCE_FILE_NAME = "qr_preferences";
 
 
     protected HashMap<String, Object> scannedMap;
@@ -48,7 +49,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private Context context = this;
 
 
-    private String table_name = "address";
+    private String table_name = DbTables.TABLE_ADDRESS;
     private String url;
 
     @Override
@@ -143,8 +144,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             case R.id.item_log_out: {
 
                 /*clean user's shared preferences (or all preferences?)*/
-                PreferenceUtility.removeLoginPrefernces(this, LogInActivity.PREFERENCE_SAVE_USER,
-                        LogInActivity.PREFERENCE_IS_USER_SAVED);
+                PreferenceUtility.removeLoginPreferences(this, MyPreferences.PREFERENCE_SAVE_USER,
+                        MyPreferences.PREFERENCE_IS_USER_SAVED);
 
                 /*launch welcome page*/
                 Intent intent = new Intent(this, WelcomeActivity.class);
@@ -172,9 +173,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 log.info("---Remove old saved data---");
 
                   /*clear old saved data*/
-                PreferenceUtility.removeOldPreferences(context, PREFERENCE_FILE_NAME,
-                        InventoryParamSelectActivity.ADDRESS_ID_PREFERENCES,
-                        InventoryParamSelectActivity.ROOM_ID_PREFERENCES);
+                PreferenceUtility.removeOldPreferences(context, MyPreferences.PREFERENCE_FILE_NAME,
+                        MyPreferences.ADDRESS_ID_PREFERENCES,
+                        MyPreferences.ROOM_ID_PREFERENCES);
 
                 /*load all available strings from ext db, starts new Db*/
                 if (url != null) {

@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 import com.lis.qr_client.R;
+import com.lis.qr_client.constants.DbTables;
+import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.utility.DbUtility;
 import com.lis.qr_client.extra.utility.ObjectUtility;
@@ -38,11 +40,8 @@ import java.util.Map;
 
 @Log
 public class InventoryListActivity extends MainMenuActivity implements View.OnClickListener {
-
     private static final int REQUEST_SCAN_QR = 1;
-    static final String INVENTORY_STATE_BOOLEAN = "inventory_state";
-    static final String TO_SCAN_LIST = "to_scan_list";
-    static final String SCANNED_LIST = "scanned_list";
+
 
     private Cursor cursor;
     private DBHelper dbHelper;
@@ -80,8 +79,8 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
         setContentView(R.layout.activity_inventory_list);
 
         //---get room number for toolbar title
-        room_number = PreferenceUtility.loadStringOrJsonPreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
-                InventoryParamSelectActivity.ROOM_ID_PREFERENCES);
+        room_number = PreferenceUtility.loadStringOrJsonPreference(context, MyPreferences.PREFERENCE_FILE_NAME,
+                MyPreferences.ROOM_ID_PREFERENCES);
 
 
         //---get framing layout for dimming
@@ -225,10 +224,10 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
             /*check if there any saved inventory data*/
 
-            boolean is_saved_inventory = PreferenceUtility.loadBooleanPreference(context, MainMenuActivity.PREFERENCE_FILE_NAME,
-                    INVENTORY_STATE_BOOLEAN);
+            boolean is_saved_inventory = PreferenceUtility.loadBooleanPreference(context, MyPreferences.PREFERENCE_FILE_NAME,
+                    MyPreferences.PREFERENCE_INVENTORY_STATE_BOOLEAN);
 
-            table_to_select = "inventory";
+            table_to_select = DbTables.TABLE_INVENTORY;
 
             cursor = db.query(table_to_select, null, null, null, null, null,
                     null);
@@ -245,10 +244,10 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
 
                 toScanEquipments = PreferenceUtility.preferencesJsonToMapList
-                        (context, MainMenuActivity.PREFERENCE_FILE_NAME, TO_SCAN_LIST);
+                        (context, MyPreferences.PREFERENCE_FILE_NAME, MyPreferences.PREFERENCE_TO_SCAN_LIST);
 
                 scannedEquipments = PreferenceUtility.preferencesJsonToMapList
-                        (context, MainMenuActivity.PREFERENCE_FILE_NAME, SCANNED_LIST);
+                        (context, MyPreferences.PREFERENCE_FILE_NAME, MyPreferences.PREFERENCE_SCANNED_LIST);
 
             }
 
@@ -343,7 +342,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
    /*save data outside the activity*/
 
         //change to save to object
-        //saveInventoryToPreferences(context, MainMenuActivity.PREFERENCE_FILE_NAME);
+        //saveInventoryToPreferences(context, MyPreferences.PREFERENCE_FILE_NAME);
 
     }
 
@@ -372,13 +371,16 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
             public void run() {
                 log.info("--saveInventoryToPreferences--- current thread is " + Thread.currentThread());
 
-                PreferenceUtility.savePreference(context, preferenceFileName, INVENTORY_STATE_BOOLEAN, true);
+                PreferenceUtility.savePreference(context, preferenceFileName,
+                        MyPreferences.PREFERENCE_INVENTORY_STATE_BOOLEAN, true);
 
                 if (toScanEquipments != null) {
-                    PreferenceUtility.savePreference(context, preferenceFileName, TO_SCAN_LIST, toScanEquipments);
+                    PreferenceUtility.savePreference(context, preferenceFileName,
+                            MyPreferences.PREFERENCE_TO_SCAN_LIST, toScanEquipments);
                 }
                 if (scannedEquipments != null) {
-                    PreferenceUtility.savePreference(context, preferenceFileName, SCANNED_LIST, scannedEquipments);
+                    PreferenceUtility.savePreference(context, preferenceFileName,
+                            MyPreferences.PREFERENCE_SCANNED_LIST, scannedEquipments);
                 }
             }
         }).start();

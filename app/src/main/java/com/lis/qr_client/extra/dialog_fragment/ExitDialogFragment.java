@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.Toast;
+import com.lis.qr_client.R;
 import lombok.extern.java.Log;
 
 @Log
@@ -14,8 +15,8 @@ public class ExitDialogFragment extends ScanDialogFragment {
 
 
         log.info("Exit on createDialog");
-        builder.setPositiveButton("Cancel", dialogListener);
-        builder.setNegativeButton("Exit", dialogListener);
+        builder.setPositiveButton(getString(R.string.cancel), dialogListener);
+        builder.setNegativeButton(getString(R.string.exit), dialogListener);
         return builder.create();
     }
 
@@ -25,7 +26,7 @@ public class ExitDialogFragment extends ScanDialogFragment {
             log.info("Exit onClick");
             switch (which) {
                 case Dialog.BUTTON_POSITIVE: {
-                    Toast.makeText(getActivity(), "Ok", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.exit), Toast.LENGTH_SHORT).show();
                 }
                 break;
                 case Dialog.BUTTON_NEGATIVE: {

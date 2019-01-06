@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.lis.qr_client.R;
+import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.utility.DbUtility;
 import com.lis.qr_client.pojo.Equipment;
@@ -130,7 +131,7 @@ public class EquipmentItemActivity extends AppCompatActivity {
     private Runnable runLoadEquipments = new Runnable() {
         @Override
         public void run() {
-            String table_to_select = "equipment";
+            String table_to_select = DbTables.TABLE_EQUIPMENT;
 
 
             cursor = db.query(table_to_select, null, "inventory_num=?", new String[]{inventory_num},

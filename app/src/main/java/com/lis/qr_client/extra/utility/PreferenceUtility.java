@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lis.qr_client.activity.MainMenuActivity;
+import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.pojo.User;
 import lombok.extern.java.Log;
 
@@ -13,18 +13,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.lis.qr_client.constants.MyPreferences.*;
+
 import static android.content.Context.MODE_PRIVATE;
 
 @Log
 public class PreferenceUtility {
 
+
     /**
      * remove data from preferences
      */
 
-    public static void removeLoginPrefernces(Context context, String key_user_data, String key_is_logged_in) {
+    public static void removeLoginPreferences(Context context, @Preferences String key_user_data,
+                                              @Preferences String key_is_logged_in) {
         SharedPreferences sharedPreferences = context.getSharedPreferences
-                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+                (MyPreferences.PREFERENCE_FILE_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(key_user_data);
         editor.putBoolean(key_is_logged_in, false);
@@ -38,10 +42,10 @@ public class PreferenceUtility {
      * remove data from preferences
      */
 
-    public static void removePrefernces(Context context, String preference_key) {
+    public static void removePrefernces(Context context, @Preferences String preference_key) {
 
         SharedPreferences sharedPreferences = context.getSharedPreferences
-                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+                (MyPreferences.PREFERENCE_FILE_NAME, MODE_PRIVATE);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -53,7 +57,9 @@ public class PreferenceUtility {
      * save user's email and password to Set<String> and then to the preferences
      */
 
-    public static void saveUsersDataToPreference(User user, Context context, String key_user_data, String key_id_user, String key_is_logged_in) {
+    public static void saveUsersDataToPreference(User user, Context context,
+                                                 @MyPreferences.Preferences String key_user_data,
+                                                 @Preferences String key_id_user, @Preferences String key_is_logged_in) {
         Set<String> users_email_passwd = new HashSet<>();
         users_email_passwd.add(user.getEmail());
         users_email_passwd.add(user.getPassword());
@@ -68,9 +74,9 @@ public class PreferenceUtility {
      * save boolean to preferences
      */
 
-    public static void saveBooleanToPreferences(Context context, String preference_key) {
+    public static void saveBooleanToPreferences(Context context, @Preferences String preference_key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences
-                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+                (MyPreferences.PREFERENCE_FILE_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(preference_key, true);
         editor.apply();
@@ -81,9 +87,9 @@ public class PreferenceUtility {
      * save boolean to preferences
      */
 
-    public static void saveIntToPreferences(Context context, String preference_key, int value) {
+    public static void saveIntToPreferences(Context context, @Preferences String preference_key, int value) {
         SharedPreferences sharedPreferences = context.getSharedPreferences
-                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+                (MyPreferences.PREFERENCE_FILE_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(preference_key, value);
         editor.apply();
@@ -94,9 +100,10 @@ public class PreferenceUtility {
      * save data Set<String> to preferences
      */
 
-    public static void saveStringToPreferences(Context context, String preference_key, Set<String> strings_to_save) {
+    public static void saveStringToPreferences(Context context, @Preferences String preference_key,
+                                               Set<String> strings_to_save) {
         SharedPreferences sharedPreferences = context.getSharedPreferences
-                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+                (MyPreferences.PREFERENCE_FILE_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putStringSet(preference_key, strings_to_save);
         editor.apply();
@@ -108,9 +115,9 @@ public class PreferenceUtility {
      * get Set<String> data from preferences
      */
 
-    public static Boolean getBooleanDataFromPreferences(Context context, String preference_key) {
+    public static Boolean getBooleanDataFromPreferences(Context context, @Preferences String preference_key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences
-                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+                (MyPreferences.PREFERENCE_FILE_NAME, MODE_PRIVATE);
         if (preference_key != null) {
             return sharedPreferences.getBoolean(preference_key, false);
         } else {
@@ -122,9 +129,9 @@ public class PreferenceUtility {
      * get Set<String> data from preferences
      */
 
-    public static int getIntegerDataFromPreferences(Context context, String preference_key) {
+    public static int getIntegerDataFromPreferences(Context context, @Preferences String preference_key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences
-                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+                (MyPreferences.PREFERENCE_FILE_NAME, MODE_PRIVATE);
         if (preference_key != null) {
             return sharedPreferences.getInt(preference_key, 0);
         } else {
@@ -136,9 +143,9 @@ public class PreferenceUtility {
      * get Set<String> data from preferences
      */
 
-    public static Set<String> getDataFromPreferences(Context context, String preference_key) {
+    public static Set<String> getDataFromPreferences(Context context, @Preferences String preference_key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences
-                (MainMenuActivity.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+                (MyPreferences.PREFERENCE_FILE_NAME, MODE_PRIVATE);
         if (preference_key != null) {
             return sharedPreferences.getStringSet(preference_key, null);
         } else {
@@ -149,7 +156,8 @@ public class PreferenceUtility {
     /**
      * Save object (int, string, boolean, object) to preference
      */
-    public  static void savePreference(Context context, String preferenceFileName, String key, Object value) {
+    public static void savePreference(Context context, @Preferences String preferenceFileName, @Preferences String key,
+                                      Object value) {
         log.info("---Save object to preferences---");
         log.info("---value---" + value);
         SharedPreferences preferences = context.getSharedPreferences(preferenceFileName, MODE_PRIVATE);
@@ -178,7 +186,9 @@ public class PreferenceUtility {
         editor.apply();
     }
 
-    public static List<Map<String, Object>> preferencesJsonToMapList(Context context, String preferenceFileName, String preferenceKey) {
+    public static List<Map<String, Object>> preferencesJsonToMapList(Context context,
+                                                                     @Preferences String preferenceFileName,
+                                                                     @Preferences String preferenceKey) {
         String jsonToScan = loadStringOrJsonPreference
                 (context, preferenceFileName, preferenceKey);
 
@@ -190,7 +200,8 @@ public class PreferenceUtility {
     /**
      * Load Boolean from preference
      */
-    public static Boolean loadBooleanPreference(Context context, String preferenceFileName, String key) {
+    public static Boolean loadBooleanPreference(Context context, @Preferences String preferenceFileName,
+                                                @Preferences String key) {
         log.info("---Load Boolean from preferences---");
 
         SharedPreferences preferences = context.getSharedPreferences(preferenceFileName, MODE_PRIVATE);
@@ -202,7 +213,8 @@ public class PreferenceUtility {
     /**
      * Load String or Json from preference
      */
-    public static String loadStringOrJsonPreference(Context context, String preferenceFileName, String key) {
+    public static String loadStringOrJsonPreference(Context context,@Preferences String preferenceFileName,
+                                                    @Preferences String key) {
         log.info("---Load String from preferences---");
 
         SharedPreferences preferences = context.getSharedPreferences(preferenceFileName, MODE_PRIVATE);
@@ -216,7 +228,8 @@ public class PreferenceUtility {
     /**
      * Load int from preference
      */
-    public static int loadIntPreference(Context context, String preferenceFileName, String key) {
+    public static int loadIntPreference(Context context,@Preferences String preferenceFileName,
+                                        @Preferences String key) {
         log.info("---Load int from preferences---");
 
         SharedPreferences preferences = context.getSharedPreferences(preferenceFileName, MODE_PRIVATE);
@@ -228,7 +241,7 @@ public class PreferenceUtility {
     /**
      * Clear old preferences (apply - async)
      */
-    public static void clearOldReferences(Context context, String pref_name) {
+    public static void clearOldReferences(Context context,@Preferences String pref_name) {
         SharedPreferences preferences = context.getSharedPreferences(pref_name, MODE_PRIVATE);
         if (preferences != null) {
             SharedPreferences.Editor editor = preferences.edit();
@@ -241,7 +254,8 @@ public class PreferenceUtility {
      * Remove old session data from preferences (apply - async)
      */
 
-    public static void removeOldPreferences(Context context, String preferenceFileName, String... preferenceNames) {
+    public static void removeOldPreferences(Context context,@Preferences String preferenceFileName,
+                                            @Preferences String... preferenceNames) {
 
         for (String name : preferenceNames) {
             removeOldReference(context, preferenceFileName, name);
@@ -252,7 +266,8 @@ public class PreferenceUtility {
     /**
      * Remove old preference (apply - async)
      */
-    public static void removeOldReference(Context context, String preferenceFileName, String remove_key) {
+    public static void removeOldReference(Context context, @Preferences String preferenceFileName,
+                                          @Preferences String remove_key) {
         SharedPreferences preferences = context.getSharedPreferences(preferenceFileName, MODE_PRIVATE);
         if (preferences != null) {
             SharedPreferences.Editor editor = preferences.edit();

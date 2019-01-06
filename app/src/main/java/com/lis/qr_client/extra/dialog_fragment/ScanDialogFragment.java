@@ -56,7 +56,7 @@ public class ScanDialogFragment extends DialogFragment {
             log.info("Scan onClick");
             switch (which) {
                 case Dialog.BUTTON_POSITIVE: {
-                    Toast.makeText(getActivity(), "Ok", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.ok), Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
                 break;
