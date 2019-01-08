@@ -24,7 +24,7 @@ import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
 
 @Log
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity {
 
     TextView tv_fio, tv_workplace, tv_private_data, tv_phone_numbers, tv_address;
     private CheckBox is_remote_desktop;
@@ -35,7 +35,7 @@ public class ProfileActivity extends AppCompatActivity {
     private SQLiteDatabase db;
 
 
- //   PreferenceUtility preferenceUtility = new PreferenceUtility();
+    //   PreferenceUtility preferenceUtility = new PreferenceUtility();
 
 
     private User user;
@@ -44,7 +44,6 @@ public class ProfileActivity extends AppCompatActivity {
     private Workplace workplace;
 
     Handler handler = new Handler();
-    private Toolbar toolbar;
 
 
     @Override
@@ -55,12 +54,11 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        /*set toolbar*/
         toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
-            toolbar.setTitle(R.string.profile);
-            setSupportActionBar(toolbar);
-
-            Utility.toolbarSetter(getSupportActionBar(), null, true);
+            Utility.toolbarSetter(this, toolbar,
+                    getResources().getString(R.string.profile), null, true);
         }
 
 
@@ -91,40 +89,6 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.no_data_about_user), Toast.LENGTH_SHORT).show();
 /*finish()?*/
         }
-    }
-
-    //-----------Menu------------//
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        toolbar.inflateMenu(R.menu.qr_menu);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                log.info("---onMenuItemClick---");
-                return onOptionsItemSelected(menuItem);
-            }
-        });
-
-        return super.onCreateOptionsMenu(menu);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.item_log_out:{
-
-                /*clean user's shared preferences (or all preferences?)*/
-                PreferenceUtility.removeLoginPreferences(this, MyPreferences.PREFERENCE_SAVE_USER,
-                        MyPreferences.PREFERENCE_IS_USER_SAVED);
-
-                /*launch welcome page*/
-                Intent intent = new Intent(this, WelcomeActivity.class);
-                startActivity(intent);
-            }
-        }
-        return super.onOptionsItemSelected(item);
-
     }
 
 
@@ -183,7 +147,7 @@ public class ProfileActivity extends AppCompatActivity {
                             log.info("Workplace is null");
                         } else {
                             cursor = getFromTableById(DbTables.TABLE_WORKPLACE, "id=?", id_wp);
-                           workplace = (Workplace) DbUtility.cursorToClass(cursor, Workplace.class.getName());
+                            workplace = (Workplace) DbUtility.cursorToClass(cursor, Workplace.class.getName());
                         }
 
 
@@ -216,14 +180,14 @@ public class ProfileActivity extends AppCompatActivity {
 
             if (address != null) {
                 tv_address.setText(address.getFullAddress());
-            }else{
+            } else {
                 tv_address.setVisibility(View.GONE);
             }
 
             if (workplace != null) {
                 tv_workplace.setText(workplace.getWorkplace());
                 is_remote_desktop.setChecked(workplace.getRemote_workstation());
-            }else{
+            } else {
                 tv_workplace.setVisibility(View.GONE);
                 is_remote_desktop.setVisibility(View.GONE);
             }
@@ -231,4 +195,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        log.info("---Profile -- onDestroy()---");
+    }
 }

@@ -20,6 +20,7 @@ import static android.util.Log.d;
 import static android.util.Log.e;
 
 //TODO:wtf unlock camera is?
+@lombok.extern.java.Log
 public class CameraActivity extends AppCompatActivity {
 
     /*Methods run in this order:
@@ -388,4 +389,10 @@ Return scanned data to the parent activity
             mCamera.addCallbackBuffer(data);
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        log.info("---Camera -- onDestroy()---");
+    }
 }

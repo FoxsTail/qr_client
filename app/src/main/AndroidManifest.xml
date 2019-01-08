@@ -51,9 +51,11 @@
                 android:name=".activity.SignUpActivity"
                 android:parentActivityName=".activity.WelcomeActivity">
         </activity>
-        <activity android:name=".activity.ProfileActivity"
-        android:parentActivityName=".activity.MainMenuActivity">
-
+        <activity
+                android:name=".activity.ProfileActivity"
+                android:parentActivityName=".activity.MainMenuActivity">
+        </activity>
+        <activity android:name=".activity.BaseActivity">
         </activity>
     </application>
 

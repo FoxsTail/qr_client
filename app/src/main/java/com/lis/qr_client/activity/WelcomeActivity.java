@@ -115,4 +115,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         btn_sign_up.setVisibility(View.VISIBLE);
         pb_welcome.setVisibility(View.INVISIBLE);
     }
+
+    @Override
+    protected void onDestroy() {
+        log.info("---Welcome -- onDestroy()---");
+        super.onDestroy();
+    }
 }

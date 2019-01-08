@@ -8,7 +8,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -49,10 +52,17 @@ public class Utility {
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
     }
 
+
     /**
      * Toolbar setter dimOnMenu, back button, name
      */
-    public static void toolbarSetter(ActionBar actionBar, final FrameLayout frameLayout, boolean isChildActivity) {
+    public static void toolbarSetter(AppCompatActivity activity, @NonNull Toolbar toolbar, String title,
+                                     final FrameLayout frameLayout, boolean isChildActivity) {
+        toolbar.setTitle(title);
+        activity.setSupportActionBar(toolbar);
+
+        ActionBar actionBar = activity.getSupportActionBar();
+
         if (actionBar != null) {
             if (isChildActivity) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
@@ -75,6 +85,7 @@ public class Utility {
             }
         }
     }
+
 
     //--------------Alerts----------------
 
@@ -110,21 +121,6 @@ public class Utility {
 
         handler.sendMessage(msg);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

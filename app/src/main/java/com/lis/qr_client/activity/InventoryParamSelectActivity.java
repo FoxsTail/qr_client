@@ -29,14 +29,13 @@ import java.util.Map;
 
 
 @Log
-public class InventoryParamSelectActivity extends AppCompatActivity implements View.OnClickListener {
+public class InventoryParamSelectActivity extends BaseActivity implements View.OnClickListener {
     public static final int LOAD_ADDRESS = 1;
     public static final int LOAD_ROOMS = 2;
 
     private Spinner spinAddress, spinRoom;
     private ProgressBar pbLoadEquipment;
     private Button btnStart;
-    private Toolbar toolbar;
 
     private Context context = this;
 
@@ -88,11 +87,8 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         toolbar = findViewById(R.id.toolbar);
 
         if (toolbar != null) {
-            toolbar.setTitle(R.string.select_room);
-            setSupportActionBar(toolbar);
-
-            Utility.toolbarSetter(getSupportActionBar(), frameLayout, true);
-
+            Utility.toolbarSetter(this, toolbar,getString(R.string.select_room),
+                    frameLayout, true);
         }
 
         //---------
@@ -121,32 +117,6 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         thread = new Thread(runLoadAddress);
         thread.start();
 
-
-    }
-
-    //-----------Menu------------//
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.qr_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        switch (id) {
-            // arrow <- is pressed
-            case android.R.id.home: {
-                NavUtils.navigateUpFromSameTask(this);
-                // super.onBackPressed();
-                return true;
-            }
-            default:
-                return true;
-        }
 
     }
 
@@ -424,5 +394,9 @@ public class InventoryParamSelectActivity extends AppCompatActivity implements V
         }
     };
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        log.info("---ParamSelect -- onDestroy()---");
+    }
 }

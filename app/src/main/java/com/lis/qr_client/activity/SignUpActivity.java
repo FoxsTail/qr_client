@@ -24,10 +24,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
-            toolbar.setTitle(R.string.sign_up);
-            setSupportActionBar(toolbar);
-
-            Utility.toolbarSetter(getSupportActionBar(), null, true);
+            Utility.toolbarSetter(this, toolbar, getString(R.string.sign_up), null, true);
         }
         //--------
     }

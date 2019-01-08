@@ -25,7 +25,7 @@ import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
 
 @Log
-public class EquipmentItemActivity extends AppCompatActivity {
+public class EquipmentItemActivity extends BaseActivity {
     private CollapsingToolbarLayout collapsingbar;
 
 
@@ -48,11 +48,10 @@ public class EquipmentItemActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         //----Full screen
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        Utility.fullScreen(this);
+
+        super.onCreate(savedInstanceState);
 
         log.info("---EquipmentItemActivity---");
         setContentView(R.layout.activity_equipment_item);
@@ -62,10 +61,14 @@ public class EquipmentItemActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         inventory_num = extras.getString("inventory_num");
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar_element));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        //---set toolbar
+        toolbar = findViewById(R.id.toolbar);
+
+        if (toolbar != null) {
+            Utility.toolbarSetter(this, toolbar, "", null, true);
+
+        }
 
 
         /*get collapse bar, set title*/
@@ -77,6 +80,9 @@ public class EquipmentItemActivity extends AppCompatActivity {
         tvAdditional = findViewById(R.id.tv_additional);
         tvUser = findViewById(R.id.tv_user);
         tvAddress = findViewById(R.id.tv_address);
+
+
+
 
         /*set all for db access*/
         dbHelper = new DBHelper(this);
@@ -154,6 +160,10 @@ public class EquipmentItemActivity extends AppCompatActivity {
         }
     };
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        log.info("---Equipment Item -- onDestroy()---");
+    }
 }
 

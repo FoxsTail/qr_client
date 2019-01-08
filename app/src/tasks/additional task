@@ -1,10 +1,9 @@
 1. Menu
-    -take out to the separate file
+    +take out to the separate file
     -set items
 
 2. Utilities
-    -separate per main logic
-
+    +separate per main logic
 
 3. Dialogs
 
@@ -14,12 +13,14 @@
     -replace with camera 2
 
 6. Navigation
-    -back button
-    -toolbar back button
+    +back button
+    +toolbar back button
     -long click
     -daren place click to close
 
 7. Design
+    -grid layout
+
     -adapt for all phones
 
     -basic colors
@@ -33,10 +34,7 @@
         -darken
 
 8. AsyncTask
-    -make abstract parent
-
-
-
+    +make abstract parent
 
 
 9. Produce qr-code:
@@ -54,3 +52,6 @@
 
 11. Memory
     -http enum usage
+    -activity finished, but never leaved the memory
+    -load from local first
+        -equipment item

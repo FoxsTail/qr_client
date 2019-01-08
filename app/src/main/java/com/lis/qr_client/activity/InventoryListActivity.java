@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -91,10 +94,8 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
         toolbar = findViewById(R.id.toolbar);
 
         if (toolbar != null) {
-            toolbar.setTitle(getString(R.string.room_number) + room_number);
-            setSupportActionBar(toolbar);
-
-            Utility.toolbarSetter(getSupportActionBar(), frameLayout, true);
+            Utility.toolbarSetter(this, toolbar,
+                    getString(R.string.room_number)+ room_number, frameLayout, true);
         }
 
 
@@ -212,6 +213,46 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
         Thread thread = new Thread(runLoadEquipments);
         thread.start();
     }
+
+    //-----------Menu------------//
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        toolbar.inflateMenu(R.menu.qr_menu);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                log.info("---onMenuItemClick---");
+                return onOptionsItemSelected(menuItem);
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:{
+                log.info("---Home is pressed call dialog---");
+                onBackPressed();
+                return true;
+            }
+            case R.id.item_log_out: {
+
+                /*clean user's shared preferences (or all preferences?)*/
+                PreferenceUtility.removeLoginPreferences(this, MyPreferences.PREFERENCE_SAVE_USER,
+                        MyPreferences.PREFERENCE_IS_USER_SAVED);
+
+                /*launch welcome page*/
+                Intent intent = new Intent(this, WelcomeActivity.class);
+                startActivity(intent);
+            }
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
     //--------Runnable------
 
 
@@ -387,5 +428,9 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     }
     /*or knock it from context in full info()*/
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        log.info("---Inventory List -- onDestroy()---");
+    }
 }

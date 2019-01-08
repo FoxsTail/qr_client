@@ -55,10 +55,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         //---set toolbar
         toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
-            toolbar.setTitle(R.string.log_in);
-            setSupportActionBar(toolbar);
-
-            Utility.toolbarSetter(getSupportActionBar(), null, true);
+            Utility.toolbarSetter(this, toolbar, getString(R.string.log_in), null, true);
         }
 
         //----set views
@@ -149,5 +146,11 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
     public boolean validatePassword(String password) {
         return password.length() >= 5;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        log.info("---Login -- onDestroy()---");
     }
 }

@@ -6,10 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.lis.qr_client.R;
@@ -17,9 +13,9 @@ import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.async_helpers.AsyncMultiDbManager;
+import com.lis.qr_client.extra.dialog_fragment.ScanDialogFragment;
 import com.lis.qr_client.extra.utility.ObjectUtility;
 import com.lis.qr_client.extra.utility.PreferenceUtility;
-import com.lis.qr_client.extra.dialog_fragment.ScanDialogFragment;
 import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
 
@@ -27,12 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Log
-public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainMenuActivity extends BaseActivity implements View.OnClickListener {
 
     private Button btnFormulyar, btnInventory, btnProfile, btnScanQR;
     private TextView tvDialogChange;
     private ProgressBar pbInventory;
-    private Toolbar toolbar;
 
     protected final int REQUEST_SCAN_QR = 1;
 
@@ -40,7 +35,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     protected HashMap<String, Object> scannedMap;
 
     private DBHelper dbHelper;
-    private SQLiteDatabase db;
 
     private String qr_hidden_key = "hidden";
     private Object qr_hidden_value;
@@ -59,6 +53,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         super.onCreate(savedInstanceState);
 
+        log.info("Main menu --- onCreate()");
+
         setContentView(R.layout.activity_main_menu);
 
       /*
@@ -75,12 +71,12 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         //---set toolbar
 
         toolbar = findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            toolbar.setTitle(R.string.main_menu);
-            setSupportActionBar(toolbar);
 
-            Utility.toolbarSetter(getSupportActionBar(), frameLayout, false);
+        if (toolbar != null) {
+                     Utility.toolbarSetter(this, toolbar, getResources().getString(R.string.main_menu),
+                    frameLayout, false);
         }
+
         //--------
 
 
@@ -101,7 +97,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         pbInventory = findViewById(R.id.pbInventory);
 
         dbHelper = new DBHelper(this);
-        db = dbHelper.getWritableDatabase();
 
         dialogHandler = new Handler() {
             @Override
@@ -118,41 +113,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             }
         };
 
-
-    }
-
-
-    //-----------Menu------------//
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        toolbar.inflateMenu(R.menu.qr_menu);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                log.info("---onMenuItemClick---");
-                return onOptionsItemSelected(menuItem);
-            }
-        });
-
-        return super.onCreateOptionsMenu(menu);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.item_log_out: {
-
-                /*clean user's shared preferences (or all preferences?)*/
-                PreferenceUtility.removeLoginPreferences(this, MyPreferences.PREFERENCE_SAVE_USER,
-                        MyPreferences.PREFERENCE_IS_USER_SAVED);
-
-                /*launch welcome page*/
-                Intent intent = new Intent(this, WelcomeActivity.class);
-                startActivity(intent);
-            }
-        }
-        return super.onOptionsItemSelected(item);
 
     }
 
@@ -270,6 +230,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         return null;
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        log.info("---MainMenu -- onDestroy()---");
+    }
 }
 

@@ -9,14 +9,16 @@
 +clean up utilities
 
 
--enum for strings and constants !
++enum for strings and constants !
     +preference(string)
     +db table names
 
--set dialog and navigation on back buttons
++set dialog and navigation on back buttons
+
++menu in one separate class
 
 ---
-- design for profile
+-design for profile
 
 ---
 
@@ -28,6 +30,12 @@
 
 -define main colors
 
+----
+
+- memory leaks
+    - all tasks in bg
+    - take info from db first (also in other thread)
+    - flush activity on finish
 
 //---------Refactoring---------
 
