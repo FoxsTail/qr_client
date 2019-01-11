@@ -13,7 +13,9 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.badoo.mobile.util.WeakHandler;
 import com.lis.qr_client.R;
+import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
@@ -26,24 +28,21 @@ import lombok.extern.java.Log;
 @Log
 public class ProfileActivity extends BaseActivity {
 
-    TextView tv_fio, tv_workplace, tv_private_data, tv_phone_numbers, tv_address;
+    private TextView tv_fio, tv_workplace, tv_private_data, tv_phone_numbers, tv_address;
     private CheckBox is_remote_desktop;
 
     private int id_user;
 
-    private DBHelper dbHelper;
     private SQLiteDatabase db;
 
 
     //   PreferenceUtility preferenceUtility = new PreferenceUtility();
 
-
-    private User user;
     private PersonalData personalData;
     private Address address;
     private Workplace workplace;
 
-    Handler handler = new Handler();
+    private WeakHandler handler = new WeakHandler();
 
 
     @Override
@@ -78,7 +77,7 @@ public class ProfileActivity extends BaseActivity {
         if (id_user != 0) {
             log.info("User id is " + id_user);
 
-            dbHelper = new DBHelper(this);
+            DBHelper dbHelper = QrApplication.getDbHelper();
             db = dbHelper.getWritableDatabase();
 
         /*load user data from db*/
@@ -95,7 +94,7 @@ public class ProfileActivity extends BaseActivity {
     //---------------------------//
 
 
-    Runnable runLoadUserData = new Runnable() {
+    private Runnable runLoadUserData = new Runnable() {
 
         @Override
         public void run() {
@@ -103,7 +102,7 @@ public class ProfileActivity extends BaseActivity {
             /*find user in db by id*/
             Cursor cursor = getFromTableById(DbTables.TABLE_USER, "id=?", id_user);
 
-            user = (User) DbUtility.cursorToClass(cursor, User.class.getName());
+            User user = (User) DbUtility.cursorToClass(cursor, User.class.getName());
 
             if (user == null) {
                 log.info("User is null. Can't load the user");
@@ -158,7 +157,7 @@ public class ProfileActivity extends BaseActivity {
 
                 }
 
-
+                cursor.close();
                /*set to text view*/
                 handler.post(runSetTextViews);
             }
@@ -197,8 +196,32 @@ public class ProfileActivity extends BaseActivity {
     };
 
     @Override
+    protected void onStop() {
+        log.info("---ProfileActivity -- onStop()---");
+        super.onStop();
+
+            /*set null buttons and pb*/
+        tv_fio = null;
+        tv_workplace = null;
+        tv_private_data = null;
+        tv_phone_numbers = null;
+        tv_address = null;
+
+        is_remote_desktop = null;
+
+        toolbar = null;
+
+        db = null;
+
+        /*runnables*/
+        runSetTextViews = null;
+        runLoadUserData = null;
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         log.info("---Profile -- onDestroy()---");
+        handler.removeCallbacksAndMessages(null);
     }
 }

@@ -127,6 +127,7 @@ public class AsyncOneDbManager extends AsyncAbstractManager {
 
             if (classToStart != null) {
                 Intent intent = new Intent(context, classToStart);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 if (extra_data != null) {
                     intent.putExtra(extra_data.first, extra_data.second.toString());
                 }

@@ -27,5 +27,6 @@ public class MyPreferences {
     public static final String PREFERENCE_INVENTORY_STATE_BOOLEAN = "inventory_state";
     public static final String PREFERENCE_TO_SCAN_LIST = "to_scan_list";
     public static final String PREFERENCE_SCANNED_LIST = "scanned_list";
+    public static final String PREFERENCE_ALL_EQUIPMENT_LIST = "all_equipment_list";
 
 }

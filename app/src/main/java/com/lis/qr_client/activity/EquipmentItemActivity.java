@@ -16,7 +16,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.google.zxing.qrcode.encoder.QRCode;
 import com.lis.qr_client.R;
+import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.utility.DbUtility;
@@ -32,7 +34,9 @@ public class EquipmentItemActivity extends BaseActivity {
     private DBHelper dbHelper;
     private SQLiteDatabase db;
     private Cursor cursor;
+/*
     private Context context = this;
+*/
 
     private String inventory_num;
     Equipment equipment;
@@ -51,9 +55,10 @@ public class EquipmentItemActivity extends BaseActivity {
         //----Full screen
         Utility.fullScreen(this);
 
+
         super.onCreate(savedInstanceState);
 
-        log.info("---EquipmentItemActivity---");
+        log.info("---EquipmentItemActivity- onCreate()--");
         setContentView(R.layout.activity_equipment_item);
 
 
@@ -85,7 +90,7 @@ public class EquipmentItemActivity extends BaseActivity {
 
 
         /*set all for db access*/
-        dbHelper = new DBHelper(this);
+        dbHelper = QrApplication.getDbHelper();
         db = dbHelper.getWritableDatabase();
 
 
@@ -107,7 +112,7 @@ public class EquipmentItemActivity extends BaseActivity {
             //TODO: make it bold in th easy way
             SpannableStringBuilder span;
             StyleSpan bold = new StyleSpan(Typeface.BOLD);
-            String label_name = context.getResources().getString(R.string.name)+" ";
+            String label_name = getString(R.string.name)+" ";
             String label_inventory = R.string.inventory_number+": ";
             String label_serial = getString(R.string.serial_number)+" ";
             String label_additional = getString(R.string.additional_params)+" ";
@@ -146,6 +151,7 @@ public class EquipmentItemActivity extends BaseActivity {
 
             equipment = DbUtility.cursorToEquipment(cursor);
 
+            cursor.close();
 //--logs---
             if (equipment != null) {
                 log.info("--Loaded equipment: " + equipment.toString() + " --");
@@ -164,6 +170,7 @@ public class EquipmentItemActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         log.info("---Equipment Item -- onDestroy()---");
+        handler.removeCallbacksAndMessages(null);
     }
 }
 

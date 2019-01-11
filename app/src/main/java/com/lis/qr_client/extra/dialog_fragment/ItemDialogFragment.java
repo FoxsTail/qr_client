@@ -4,6 +4,7 @@ package com.lis.qr_client.extra.dialog_fragment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import com.lis.qr_client.R;
 import com.lis.qr_client.activity.EquipmentItemActivity;
 import com.lis.qr_client.activity.InventoryListActivity;
 import com.lis.qr_client.activity.MainMenuActivity;
+import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
@@ -49,7 +51,7 @@ public class ItemDialogFragment extends DialogFragment {
 
         String title = args.getString(ARG_TITLE);
 
-        dbHelper = new DBHelper(context);
+        dbHelper = new DBHelper(QrApplication.getInstance());
 
         alertBuilder = new AlertDialog.Builder(getActivity());
 
@@ -105,12 +107,12 @@ public class ItemDialogFragment extends DialogFragment {
 
         log.info("----Before load item's full info, save the data---");
 
-        /*save scannedList and listToScan to the preferences*/
+      /*  *//*save scannedList and listToScan to the preferences*//*
         InventoryListActivity inventoryActivity = (InventoryListActivity) context;
 
         if (inventoryActivity != null) {
             inventoryActivity.saveInventoryToPreferences(context, MyPreferences.PREFERENCE_FILE_NAME);
-        }
+        }*/
 
         /*load full equipment data from server*/
         AsyncOneDbManager asyncOneManager = new AsyncOneDbManager
@@ -122,7 +124,7 @@ public class ItemDialogFragment extends DialogFragment {
 
     }
 
-    public void callDialog(Context context, Bundle bundle, InventoryAdapter adapter, String inventory_num, String tag) {
+    public void callDialog(Context context, FragmentManager fragmentManager, Bundle bundle, InventoryAdapter adapter, String inventory_num, String tag) {
         log.info("-----callDialog-----");
         this.context = context;
         this.inventory_num = inventory_num;
@@ -133,7 +135,7 @@ public class ItemDialogFragment extends DialogFragment {
         bundle.putString(ARG_TITLE, context.getResources().getString(R.string.choose_action));
         this.setArguments(bundle);
 
-        this.show(((AppCompatActivity) context).getFragmentManager(), tag);
+        this.show(fragmentManager, tag);
 
     }
 }

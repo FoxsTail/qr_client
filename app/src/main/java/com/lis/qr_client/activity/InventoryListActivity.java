@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
@@ -17,7 +18,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+import com.badoo.mobile.util.WeakHandler;
 import com.lis.qr_client.R;
+import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
@@ -33,8 +36,11 @@ import com.lis.qr_client.extra.fragment.InventoryFragment;
 import lombok.extern.java.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.security.AccessController.getContext;
 
 /**
  * Loads all view necessary items, runs thread loading data from sqlite db,
@@ -42,20 +48,14 @@ import java.util.Map;
  */
 
 @Log
-public class InventoryListActivity extends MainMenuActivity implements View.OnClickListener {
+public class InventoryListActivity extends BaseActivity implements View.OnClickListener {
     private static final int REQUEST_SCAN_QR = 1;
 
-
-    private Cursor cursor;
-    private DBHelper dbHelper;
     private SQLiteDatabase db;
 
-    private Button btnScanInventory;
-    String table_to_select;
-    private Toolbar toolbar;
     private ViewPager viewPager;
+    private Button btnScanInventory;
 
-    private SliderAdapter sliderAdapter;
 
     private List<Map<String, Object>> allEquipments = new ArrayList<>();
     private List<Map<String, Object>> scannedEquipments = new ArrayList<>();
@@ -64,12 +64,11 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     private InventoryFragment toScanFragment;
     private InventoryFragment resultFragment;
 
-    private String titleToScan;
-    private String titleResult;
-    private String inventoryNum = "inventory_num";
-
-    private Context context = this;
+    protected HashMap<String, Object> scannedMap;
     private String room_number;
+
+    WeakHandler dialogHandler;
+    Thread thread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,160 +80,65 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
         setContentView(R.layout.activity_inventory_list);
 
-        //---get room number for toolbar title
-        room_number = PreferenceUtility.loadStringOrJsonPreference(context, MyPreferences.PREFERENCE_FILE_NAME,
-                MyPreferences.ROOM_ID_PREFERENCES);
 
 
-        //---get framing layout for dimming
-        final FrameLayout frameLayout = findViewById(R.id.frame_inventory_layout);
-        frameLayout.getForeground().setAlpha(0);
-
-        //----set toolbar
-        toolbar = findViewById(R.id.toolbar);
-
-        if (toolbar != null) {
-            Utility.toolbarSetter(this, toolbar,
-                    getString(R.string.room_number)+ room_number, frameLayout, true);
-        }
+            //---get room number for toolbar title
+            room_number = PreferenceUtility.loadStringOrJsonPreference
+                    (QrApplication.getInstance(), MyPreferences.PREFERENCE_FILE_NAME,
+                            MyPreferences.ROOM_ID_PREFERENCES);
 
 
-        //--btn setup
-        btnScanInventory = findViewById(R.id.btnScanInventory);
-        btnScanInventory.setOnClickListener(this);
+            //---get framing layout for dimming
+            final FrameLayout frameLayout = findViewById(R.id.frame_inventory_layout);
+            frameLayout.getForeground().setAlpha(0);
 
+            //----set toolbar
+            Toolbar toolbar = findViewById(R.id.toolbar);
 
-        //--get data from sqlite
-        dbHelper = new DBHelper(this);
-        db = dbHelper.getWritableDatabase();
-
-
-        //----viewpager
-        viewPager = findViewById(R.id.inventory_viewpager);
-
-        //-----tab from viewPager
-        TabLayout tabLayout = findViewById(R.id.inventory_tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-        dialogHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-
-                /*create dialog*/
-                ScanDialogFragment dialogFragment = new ScanDialogFragment();
-                Bundle bundle = new Bundle();
-
-                /*get scanned mesage and inventory number*/
-                inventoryNum = (String) scannedMap.get("inventory_num");
-                String scanned_msg = scannedMapToMsg(scannedMap);
-                String dialog_tag;
-
-                //-------------------------//
-
-                /*get list from adapter*/
-                int position = -1;
-
-                /*find map with inventory_num in toScanList*/
-                Map<String, Object> searched_map = ObjectUtility.findMapByInventoryNum(toScanEquipments, inventoryNum);
-
-
-                /*searched map in toScanList: show result in dialog*/
-                if (searched_map != null) {
-
-                    log.info("--------------------" + searched_map.keySet() + " " + searched_map.values());
-                    dialog_tag = "qr_scan";
-
-                    position = toScanEquipments.indexOf(searched_map);
-
-                    dialogFragment.callDialog(context, bundle, scanned_msg, dialog_tag);
-
-
-                    /*if result in toScan list, remove, notify adapter*/
-                    if (position > -1) {
-
-                        /*for ok picture*/
-                        searched_map.put("scanned", true);
-
-                        toScanEquipments.remove(position);
-                        scannedEquipments.add(searched_map);
-
-                        if (scannedEquipments != null) {
-                            log.info("---Scanned---" + scannedEquipments.toString());
-                        }
-                        log.info("---Notify data changed---");
-
-                        toScanFragment.getAdapter().notifyDataSetChanged();
-                        resultFragment.getAdapter().notifyDataSetChanged();
-
-                    }
-
-                /*try to find in scannedList*/
-                } else {
-                    /*reset searche_map*/
-                    searched_map = ObjectUtility.findMapByInventoryNum(scannedEquipments, inventoryNum);
-
-                    /*searched map in scannedList: show "already scanned" in dialog*/
-                    if (searched_map != null) {
-                        dialog_tag = "qr_scanned";
-
-                        log.info("--Map was found in the scanned list" + searched_map.toString());
-
-                        scanned_msg = getString(R.string.equipment_already_scanned, inventoryNum);
-
-                        new ScanDialogFragment().callDialog(context, bundle, scanned_msg, dialog_tag);
-                        log.info(scanned_msg);
-
-                    /*still couldn't find: show "No such item" in dialog*/
-                    } else if ((searched_map = ObjectUtility.findMapByInventoryNum(allEquipments, inventoryNum)) != null) {
-
-                        log.info("--Equipment was found in the other room list" + searched_map.toString());
-                        scanned_msg = getString(R.string.equipment_in_the_other_room)+" ";
-
-                        Object room = searched_map.get("room");
-
-                        if (room != null) {
-                            scanned_msg += room.toString();
-                        }
-
-                        dialog_tag = "qr_found_in_address";
-                        new ScanDialogFragment().callDialog(context, bundle, scanned_msg, dialog_tag);
-                    } else {
-
-                        log.info("--Equipment was not found in this ");
-
-                        dialog_tag = "qr_not_found";
-                        scanned_msg = getString(R.string.equipment_not_found);
-                        new ScanDialogFragment().callDialog(context, bundle, scanned_msg, dialog_tag);
-                    }
-                }
+            if (toolbar != null) {
+                Utility.toolbarSetter(this, toolbar,
+                        getString(R.string.room_number) + room_number, frameLayout, true);
             }
-        };
 
-        Thread thread = new Thread(runLoadEquipments);
-        thread.start();
+
+            //--btn setup
+            btnScanInventory = findViewById(R.id.btnScanInventory);
+            btnScanInventory.setOnClickListener(this);
+            btnScanInventory.setEnabled(false);
+
+
+            //--get data from sqlite
+            DBHelper dbHelper = QrApplication.getDbHelper();
+            db = dbHelper.getWritableDatabase();
+
+
+            //----viewpager
+            viewPager = findViewById(R.id.inventory_viewpager);
+
+            //-----tab from viewPager
+            TabLayout tabLayout = findViewById(R.id.inventory_tabs);
+            tabLayout.setupWithViewPager(viewPager);
+
+            dialogHandler = new WeakHandler(callback);
+
+        if (savedInstanceState == null) {
+            thread = new Thread(runLoadEquipments);
+            thread.start();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        log.info("---OnStart InventoryListActivity---");
     }
 
     //-----------Menu------------//
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        toolbar.inflateMenu(R.menu.qr_menu);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                log.info("---onMenuItemClick---");
-                return onOptionsItemSelected(menuItem);
-            }
-        });
-
-        return super.onCreateOptionsMenu(menu);
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:{
-                log.info("---Home is pressed call dialog---");
+            case android.R.id.home: {
                 onBackPressed();
                 return true;
             }
@@ -253,6 +157,105 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
     }
 
+    //-------Callback------//
+
+    private Handler.Callback callback = new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            //create dialog
+            ScanDialogFragment dialogFragment = new ScanDialogFragment();
+            Bundle bundle = new Bundle();
+
+            //get scanned mesage and inventory number
+            String inventoryNum = (String) scannedMap.get("inventory_num");
+            String scanned_msg = ObjectUtility.scannedMapToMsg(scannedMap);
+            String dialog_tag;
+
+            //-------------------------//
+
+            //get list from adapter
+            int position = -1;
+
+            //find map with inventory_num in toScanList
+            Map<String, Object> searched_map = ObjectUtility.findMapByInventoryNum(toScanEquipments, inventoryNum);
+
+
+            //searched map in toScanList: show result in dialog
+            if (searched_map != null) {
+
+                log.info("--------------------" + searched_map.keySet() + " " + searched_map.values());
+                dialog_tag = "qr_scan";
+
+                position = toScanEquipments.indexOf(searched_map);
+
+                dialogFragment.callDialog(getFragmentManager(),
+                        bundle, scanned_msg, dialog_tag);
+
+
+                //if result in toScan list, remove, notify adapter
+                if (position > -1) {
+
+                    //for ok picture
+                    searched_map.put("scanned", true);
+
+                    toScanEquipments.remove(position);
+                    scannedEquipments.add(searched_map);
+
+                    if (scannedEquipments != null) {
+                        log.info("---Scanned---" + scannedEquipments.toString());
+                    }
+                    log.info("---Notify data changed---");
+
+                    toScanFragment.getAdapter().notifyDataSetChanged();
+                    resultFragment.getAdapter().notifyDataSetChanged();
+
+                }
+
+                //try to find in scannedList
+            } else {
+                //reset searche_map
+                searched_map = ObjectUtility.findMapByInventoryNum(scannedEquipments, inventoryNum);
+
+                //searched map in scannedList: show "already scanned" in dialog
+                if (searched_map != null) {
+                    dialog_tag = "qr_scanned";
+
+                    log.info("--Map was found in the scanned list" + searched_map.toString());
+
+                    scanned_msg = getString(R.string.equipment_already_scanned, inventoryNum);
+
+                    new ScanDialogFragment().callDialog
+                            (getFragmentManager(), bundle, scanned_msg, dialog_tag);
+                    log.info(scanned_msg);
+
+                    //still couldn't find: show "No such item" in dialog
+                } else if ((searched_map = ObjectUtility.findMapByInventoryNum(allEquipments, inventoryNum)) != null) {
+
+                    log.info("--Equipment was found in the other room list" + searched_map.toString());
+                    scanned_msg = getString(R.string.equipment_in_the_other_room) + " ";
+
+                    Object room = searched_map.get("room");
+
+                    if (room != null) {
+                        scanned_msg += room.toString();
+                    }
+
+                    dialog_tag = "qr_found_in_address";
+                    new ScanDialogFragment().callDialog(getFragmentManager(), bundle, scanned_msg, dialog_tag);
+                } else {
+
+                    log.info("--Equipment was not found in this ");
+
+                    dialog_tag = "qr_not_found";
+                    scanned_msg = getString(R.string.equipment_not_found);
+                    new ScanDialogFragment().callDialog(getFragmentManager(),
+                            bundle, scanned_msg, dialog_tag);
+                }
+            }
+            return false;
+        }
+    };
+
     //--------Runnable------
 
 
@@ -263,17 +266,22 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
         @Override
         public void run() {
 
+            log.info("-- runLoadEquipments --");
+
             /*check if there any saved inventory data*/
 
-            boolean is_saved_inventory = PreferenceUtility.loadBooleanPreference(context, MyPreferences.PREFERENCE_FILE_NAME,
+            boolean is_saved_inventory = PreferenceUtility.loadBooleanPreference(QrApplication.getInstance(),
+                    MyPreferences.PREFERENCE_FILE_NAME,
                     MyPreferences.PREFERENCE_INVENTORY_STATE_BOOLEAN);
 
-            table_to_select = DbTables.TABLE_INVENTORY;
+            String table_to_select = DbTables.TABLE_INVENTORY;
 
-            cursor = db.query(table_to_select, null, null, null, null, null,
+             /*select all equipments by the following address from the table*/
+            Cursor cursor = db.query(table_to_select, null, null, null, null, null,
                     null);
 
             allEquipments = DbUtility.cursorToMapList(cursor);
+
 
             /*if so load equpments*/
 
@@ -285,19 +293,21 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
 
 
                 toScanEquipments = PreferenceUtility.preferencesJsonToMapList
-                        (context, MyPreferences.PREFERENCE_FILE_NAME, MyPreferences.PREFERENCE_TO_SCAN_LIST);
+                        (QrApplication.getInstance(), MyPreferences.PREFERENCE_FILE_NAME, MyPreferences.PREFERENCE_TO_SCAN_LIST);
+
 
                 scannedEquipments = PreferenceUtility.preferencesJsonToMapList
-                        (context, MyPreferences.PREFERENCE_FILE_NAME, MyPreferences.PREFERENCE_SCANNED_LIST);
+                        (QrApplication.getInstance(), MyPreferences.PREFERENCE_FILE_NAME, MyPreferences.PREFERENCE_SCANNED_LIST);
 
             }
 
             /*load equipments to scan*/
             else {
                 //-----inventory------
+                log.info("---No saved data. Taking from db---");
 
-                cursor = null;
 
+                /*select only this room equipments*/
                 cursor = db.query(table_to_select, null, "room=?", new String[]{room_number}, null, null,
                         null);
 
@@ -313,6 +323,7 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
             /*put equipments in the list*/
             dialogHandler.post(postEquipmentInList);
         }
+
     };
 
 
@@ -322,25 +333,41 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     private Runnable postEquipmentInList = new Runnable() {
         @Override
         public void run() {
-            Toast.makeText(context, getString(R.string.done_loading), Toast.LENGTH_SHORT).show();
+
+            log.info("-- postEquipmentInList --");
+
+            if (toScanFragment == null) {
+                log.info(" long before toScanFragment == null");
+            } else {
+                if (toScanFragment.getAdapter() == null) {
+                    log.info("long before toScanFragment.getAdapter() == null");
+                } else {
+                    log.info("long before all is ok");
+                }
+            }
+
+            Toast.makeText(QrApplication.getInstance(), getString(R.string.done_loading), Toast.LENGTH_SHORT).show();
 
             /*create adapter and add fragments with data*/
             System.out.println("--------Create slider adapter--------");
-            sliderAdapter = new SliderAdapter(getSupportFragmentManager());
+            SliderAdapter sliderAdapter = new SliderAdapter(getSupportFragmentManager());
 
-            titleToScan = context.getResources().getString(R.string.to_scan);
-            titleResult = context.getResources().getString(R.string.result);
+            String titleToScan = getString(R.string.to_scan);
+            String titleResult = getString(R.string.result);
 
 
+            /*add list to scan to the visual component*/
             sliderAdapter.addFragment(InventoryFragment.newInstance
-                    (new UniversalSerializablePojo(toScanEquipments)), titleToScan);
+                    (new UniversalSerializablePojo(toScanEquipments), getFragmentManager()), titleToScan);
 
+            /*add scanned list (or null, if the session is new) to the visual component*/
             if (scannedEquipments == null) {
                 sliderAdapter.addFragment(InventoryFragment.newInstance
-                        (new UniversalSerializablePojo(new ArrayList<Map<String, Object>>())), titleResult);
+                                (new UniversalSerializablePojo(new ArrayList<Map<String, Object>>()), getFragmentManager()),
+                        titleResult);
             } else {
                 sliderAdapter.addFragment(InventoryFragment.newInstance
-                        (new UniversalSerializablePojo(scannedEquipments)), titleResult);
+                        (new UniversalSerializablePojo(scannedEquipments), getFragmentManager()), titleResult);
             }
 
             /*set adapter to viewPager*/
@@ -350,18 +377,19 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
             /*get list to scan and already scanned lists*/
             toScanFragment = (InventoryFragment) sliderAdapter.getFragmentByTitle(titleToScan);
             toScanEquipments = toScanFragment.getAdapter().getInventories();
-
             resultFragment = (InventoryFragment) sliderAdapter.getFragmentByTitle(titleResult);
             scannedEquipments = resultFragment.getAdapter().getInventories();
 
 
-            Toast.makeText(context, getString(R.string.done_all), Toast.LENGTH_SHORT).show();
+            Toast.makeText(QrApplication.getInstance(), getString(R.string.done_all), Toast.LENGTH_SHORT).show();
+
+            btnScanInventory.setEnabled(true);
 
         }
     };
 
-
     //-------------------Clicks--------------------//
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -376,16 +404,32 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        log.info("---OnStop InventoryListActivity---");
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {
+            return;
+        }
 
-   /*save data outside the activity*/
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_SCAN_QR) {
+                final String scan_result = data.getStringExtra("scan_result");
 
-        //change to save to object
-        //saveInventoryToPreferences(context, MyPreferences.PREFERENCE_FILE_NAME);
+                /*show alertDialog with scanned data*/
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                       /* converts gotten data from json to map*/
+                        scannedMap = ObjectUtility.scannedJsonToMap(scan_result);
+                        dialogHandler.sendEmptyMessage(1);
+                    }
 
+                }).start();
+
+            }
+        } else if (resultCode == RESULT_CANCELED) {
+            Toast.makeText(this, getString(R.string.mission_was_canceled), Toast.LENGTH_LONG).show();
+        }
     }
+
 
     @Override
     protected void onRestart() {
@@ -393,18 +437,56 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
         log.info("---OnRestart InventoryListActivity---");
     }
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        log.info("---OnStop InventoryListActivity---");
+        saveInventoryToPreferences(QrApplication.getInstance(), MyPreferences.PREFERENCE_FILE_NAME);
+    }
+
+
     @Override
     public void onBackPressed() {
         log.info("InventoryListActivity on backPressed");
         ExitDialogFragment exitDialogFragment = new ExitDialogFragment();
-        exitDialogFragment.callDialog(context, new Bundle(), getString(R.string.quit_room_msg), "exit");
+        exitDialogFragment.callDialog(getFragmentManager(), new Bundle(), getString(R.string.quit_room_msg), "exit");
     }
+
+    /*or knock it from context in full info()*/
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onDestroy() {
+        super.onDestroy();
+        log.info("---Inventory List -- onDestroy()---");
+/*
+   remove links
+*/
+        if (thread != null) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            thread = null;
+        }
+
+        callback = null;
+        dialogHandler = null;
+
+        db = null;
+
+        viewPager = null;
+
+        runLoadEquipments = null;
+        postEquipmentInList = null;
+
+        resultFragment = null;
+        toScanFragment = null;
+
     }
 
+    //------Methods-----
     public void saveInventoryToPreferences(final Context context, final String preferenceFileName) {
 
         new Thread(new Runnable() {
@@ -426,11 +508,16 @@ public class InventoryListActivity extends MainMenuActivity implements View.OnCl
             }
         }).start();
     }
-    /*or knock it from context in full info()*/
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        log.info("---Inventory List -- onDestroy()---");
-    }
 }
+
+
+//----------QUESTIONS-----------
+/*
+ON SVAED INSTANCE STATE
+    onSvaedInstanceState - не использую. потому что сохранение идет всегда, а восстановление от случая к случаю. При переходе
+    к отдельному оборудованию состояние и списки не сохраняются, приходится вытягивать из сохраненных преференсес. При повороте экрана,
+    восстановление (onRestoreInstanceState) проходит норм.
+    Проще закидывать все в преференсес и вытягивать в случае перегрузки активити.
+
+
+*/

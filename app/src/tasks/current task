@@ -1,29 +1,26 @@
-+Errors on server error
+----
 
-+/- handle possible errors
+-all in background
+
+----
+
+- memory leaks
+    - take info from db first (also in other thread)
+    - remove references on Stop()
+
+ 
+----
+
+-try all in bg
+-static context (why)
+-first to sqlite
+-create onResume, free onStop;
 
 ---
 
-+remove nulls from spinners
-
-+clean up utilities
-
-
-+enum for strings and constants !
-    +preference(string)
-    +db table names
-
-+set dialog and navigation on back buttons
-
-+menu in one separate class
-
----
 -design for profile
 
 ---
-
--make a report in inventory
--all in background
 
 ---
 -paint design (flat)
@@ -32,14 +29,13 @@
 
 ----
 
-- memory leaks
-    - all tasks in bg
-    - take info from db first (also in other thread)
-    - flush activity on finish
+-make a report in inventory
+
+---
+
+-when addr and room 've been chosen - show button start with animation
 
 //---------Refactoring---------
-
-+abstract method for asynctask
 
 -fabric class for inventory adapter - things i can inventory
 

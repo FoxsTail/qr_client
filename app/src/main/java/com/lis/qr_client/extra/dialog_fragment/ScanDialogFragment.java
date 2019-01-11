@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 import com.lis.qr_client.R;
+import com.lis.qr_client.application.QrApplication;
 import lombok.extern.java.Log;
 
 @Log
@@ -80,8 +81,8 @@ public class ScanDialogFragment extends DialogFragment {
         log.info("-----Cancel-----");
     }
 
-    public void callDialog(Context context, Bundle bundle, String msg, String tag){
-        bundle.putString(ScanDialogFragment.ARG_TITLE, context.getResources().getString(R.string.inventory_scan_result));
+    public void callDialog(FragmentManager fragmentManager,  Bundle bundle, String msg, String tag){
+        bundle.putString(ScanDialogFragment.ARG_TITLE, QrApplication.getInstance().getResources().getString(R.string.inventory_scan_result));
         bundle.putString(ScanDialogFragment.ARG_MESSAGE, msg);
 
         log.info("-----Call dialog-----");
@@ -97,7 +98,7 @@ public class ScanDialogFragment extends DialogFragment {
 
         this.setArguments(bundle);
         /*even if Jesus asks u, don't put the Activity instead of the AppCompatActivity*/
-        this.show( ((AppCompatActivity) context).getFragmentManager(), tag);
+        this.show(fragmentManager, tag);
     }
 
 }

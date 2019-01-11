@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import com.lis.qr_client.R;
+import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.async_helpers.AsyncOneDbManager;
@@ -49,7 +50,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_log_in);
 
         //----set db
-        dbHelper = new DBHelper(this);
+        dbHelper = QrApplication.getDbHelper();
 
 
         //---set toolbar
@@ -111,6 +112,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     } else {
                         log.info("Cursor is ok");
                         DbUtility.logCursor(cursor, "test");
+                        cursor.close();
                                 /*ok, load new page*/
                         Intent intent = new Intent(this, MainMenuActivity.class);
                         startActivity(intent);

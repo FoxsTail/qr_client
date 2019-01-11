@@ -1,5 +1,6 @@
 package com.lis.qr_client.extra.fragment;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,8 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.lis.qr_client.R;
-import com.lis.qr_client.pojo.UniversalSerializablePojo;
+import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.extra.adapter.InventoryAdapter;
+import com.lis.qr_client.pojo.UniversalSerializablePojo;
 import lombok.extern.java.Log;
 
 import java.util.ArrayList;
@@ -24,39 +26,53 @@ public class InventoryFragment extends Fragment {
     public static final String ARGUMENT_SCAN_LIST = "arg_scan_list";
 
 
-
+    static FragmentManager fragmentManager;
     private List<Map<String, Object>> show_list = new ArrayList<>();
     private InventoryAdapter adapter;
     private RecyclerView rv;
 
-    public static InventoryFragment newInstance(UniversalSerializablePojo scanListPojo) {
+    public static InventoryFragment newInstance(UniversalSerializablePojo scanListPojo, FragmentManager fragmentManager) {
+        log.info("InventoryFragment newInstance");
         InventoryFragment inventoryFragment = new InventoryFragment();
         Bundle argument = new Bundle();
 
         argument.putSerializable(ARGUMENT_SCAN_LIST, scanListPojo);
         inventoryFragment.setArguments(argument);
+        InventoryFragment.fragmentManager = fragmentManager;
         return inventoryFragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            UniversalSerializablePojo univeral_pojo = (UniversalSerializablePojo)
-                    getArguments().getSerializable(ARGUMENT_SCAN_LIST);
-            show_list = univeral_pojo.getMapList();
+        log.info("InventoryFragment onCreate");
 
+        UniversalSerializablePojo univeral_pojo = (UniversalSerializablePojo)
+                getArguments().getSerializable(ARGUMENT_SCAN_LIST);
+        show_list = univeral_pojo.getMapList();
+
+
+        //retain from reload
+        //  setRetainInstance(true);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
+        log.info("InventoryFragment onCreateView");
         rv = (RecyclerView) inflater.inflate(R.layout.scanlist_recycler, null);
 
         /*upload list from db*/
 
-        adapter = new InventoryAdapter(getContext(), show_list);
+        adapter = new InventoryAdapter(QrApplication.getInstance(), show_list, fragmentManager);
+        log.info("InventoryFragment onCreateView adapter is ");
+        if(adapter == null){
+            log.info("NULL");
+
+        }else{
+            log.info("NOT NULL");
+        }
 
         rv.setAdapter(adapter);
         rv.setHasFixedSize(true);
@@ -66,7 +82,7 @@ public class InventoryFragment extends Fragment {
 
         //TODO:make custom decoration
         DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-        divider.setDrawable(getResources().getDrawable( R.drawable.divider));
+        divider.setDrawable(getResources().getDrawable(R.drawable.divider));
         rv.addItemDecoration(divider);
 
         return rv;

@@ -3,6 +3,7 @@ package com.lis.qr_client.extra.utility;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,6 +45,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class Utility {
 
     //-------Front---------
+
 
     public static void fullScreen(Activity activity) {
         Window window = activity.getWindow();
@@ -121,6 +124,8 @@ public class Utility {
 
         handler.sendMessage(msg);
     }
+
+
 
 
 }

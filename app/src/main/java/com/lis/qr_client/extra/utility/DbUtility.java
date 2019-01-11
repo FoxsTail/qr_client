@@ -38,6 +38,7 @@ public class DbUtility {
 
                 } while (cursor.moveToNext());
             }
+            cursor.close();
         }
 
         return convertedList;
@@ -62,6 +63,7 @@ public class DbUtility {
 
                 } while (cursor.moveToNext());
             }
+            cursor.close();
             return mapList;
         } else {
             log.warning("Cursor is null");
@@ -98,7 +100,9 @@ public class DbUtility {
 
         if (cursor != null && (cursor.moveToFirst())) {
             MicroOrm microOrm = new MicroOrm();
-            return microOrm.fromCursor(cursor, Equipment.class);
+            Equipment equipment =  microOrm.fromCursor(cursor, Equipment.class);
+            cursor.close();
+            return equipment;
         }
         return null;
     }
@@ -172,6 +176,7 @@ public class DbUtility {
                     sb.setLength(0);
                 } while (cursor.moveToNext());
             }
+            cursor.close();
         } else {
             log.warning("Cursor is null");
         }
@@ -236,7 +241,6 @@ public class DbUtility {
                 cv.put(map.getKey(), (String) null);
             }
         }
-
         return cv;
     }
 
@@ -258,6 +262,7 @@ public class DbUtility {
         } finally {
             db.endTransaction();
         }
+
     }
 
     /**

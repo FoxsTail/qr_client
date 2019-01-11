@@ -1,5 +1,6 @@
 package com.lis.qr_client.extra.adapter;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -20,13 +21,15 @@ import java.util.Map;
 public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.InventoryViewHolder> {
 
     private final Context context;
-    List<Map<String, Object>> inventories = new ArrayList<>();
+    private List<Map<String, Object>> inventories = new ArrayList<>();
+    private FragmentManager fragmentManager;
 
 
-    public InventoryAdapter(final Context context, List<Map<String, Object>> inventories) {
+    public InventoryAdapter(final Context context, List<Map<String, Object>> inventories, FragmentManager fragmentManager) {
         log.info("---- InventoryAdapter constructor---");
         this.context = context;
         this.inventories = inventories;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -46,11 +49,11 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
 
         Map<String, Object> inventory = inventories.get(item_id);
 
-        log.info("-----------"+inventory+"--------");
+        log.info("-----------" + inventory + "--------");
 
         //----set ok pic---
         Object isScanned = inventory.get("scanned");
-        if(isScanned != null && (boolean)isScanned) {
+        if (isScanned != null && (boolean) isScanned) {
             ImageView ok_pic = inventoryViewHolder.itemView.findViewById(R.id.image_smallOk);
             ok_pic.setVisibility(View.VISIBLE);
         }
@@ -65,7 +68,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
         final Object inventory_num = inventory.get("inventory_num");
         if (inventory_num != null) {
             inventoryViewHolder.itemView.setTag(inventory_num);
-            log.info("-----TAG SET-----"+inventory_num);
+            log.info("-----TAG SET-----" + inventory_num);
             inventoryViewHolder.tvItemInventoryNum.setText(inventory_num.toString());
 
             //----set onClickListener for each initialized item. use inventory_num as search marker
@@ -73,16 +76,16 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
                 @Override
                 public void onClick(View v) {
 
-                   new Thread(new Runnable() {
-                       @Override
-                       public void run() {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                           ItemDialogFragment dialogFragment = new ItemDialogFragment();
-                           Bundle bundle = new Bundle();
+                            ItemDialogFragment dialogFragment = new ItemDialogFragment();
+                            Bundle bundle = new Bundle();
 
-                           dialogFragment.callDialog(context, bundle, getThisAdapter(), inventory_num.toString(), "item_actions");
-                       }
-                   }).start();
+                            dialogFragment.callDialog(context, fragmentManager, bundle, getThisAdapter(), inventory_num.toString(), "item_actions");
+                        }
+                    }).start();
 
                 }
             });
@@ -90,12 +93,11 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
     }
 
 
-
     @Override
     public int getItemCount() {
-        return inventories.size();
-    }
+            return inventories.size();
 
+    }
 
 
     class InventoryViewHolder extends RecyclerView.ViewHolder {
@@ -115,7 +117,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
         return inventories;
     }
 
-    public InventoryAdapter getThisAdapter(){
+    public InventoryAdapter getThisAdapter() {
         return this;
     }
 }

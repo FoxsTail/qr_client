@@ -69,5 +69,21 @@ public class ObjectUtility {
         return searched_map;
     }
 
+    /**
+     Parsing scannedMap, hidden value saves in the global var,
+     other data build into a plain string
+     */
+    public static String scannedMapToMsg(HashMap<String, Object> scannedMap) {
+        StringBuilder message = new StringBuilder();
 
+        if (scannedMap != null) {
+            for (Map.Entry<String, Object> map : scannedMap.entrySet()) {
+
+                message.append(map.getKey()).append(" : ").append(map.getValue()).append("\n");
+            }
+            return message.toString();
+
+        }
+        return null;
+    }
 }

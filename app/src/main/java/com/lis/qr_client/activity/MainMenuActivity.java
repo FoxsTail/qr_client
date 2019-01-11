@@ -1,14 +1,14 @@
 package com.lis.qr_client.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.*;
+import com.badoo.mobile.util.WeakHandler;
 import com.lis.qr_client.R;
+import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
@@ -23,27 +23,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Log
-public class MainMenuActivity extends BaseActivity implements View.OnClickListener {
+public class MainMenuActivity extends BaseActivity {
 
     private Button btnFormulyar, btnInventory, btnProfile, btnScanQR;
-    private TextView tvDialogChange;
     private ProgressBar pbInventory;
 
-    protected final int REQUEST_SCAN_QR = 1;
+    private final int REQUEST_SCAN_QR = 1;
 
 
     protected HashMap<String, Object> scannedMap;
 
-    private DBHelper dbHelper;
 
     private String qr_hidden_key = "hidden";
     private Object qr_hidden_value;
 
-    static Handler dialogHandler;
-    private Context context = this;
+    WeakHandler dialogHandler;
 
-
-    private String table_name = DbTables.TABLE_ADDRESS;
     private String url;
 
     @Override
@@ -73,7 +68,7 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
         toolbar = findViewById(R.id.toolbar);
 
         if (toolbar != null) {
-                     Utility.toolbarSetter(this, toolbar, getResources().getString(R.string.main_menu),
+            Utility.toolbarSetter(this, toolbar, getResources().getString(R.string.main_menu),
                     frameLayout, false);
         }
 
@@ -83,90 +78,91 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
         url = "http://" + getString(R.string.emu_ip) + ":"
                 + getString(R.string.port) + getString(R.string.api_addresses_load);
 
-        tvDialogChange = findViewById(R.id.tvDialogChange);
-
         btnFormulyar = findViewById(R.id.btnFormulyar);
-        btnFormulyar.setOnClickListener(this);
+        btnFormulyar.setOnClickListener(onClickListener);
         btnInventory = findViewById(R.id.btnInventory);
-        btnInventory.setOnClickListener(this);
+        btnInventory.setOnClickListener(onClickListener);
         btnProfile = findViewById(R.id.btnProfile);
-        btnProfile.setOnClickListener(this);
+        btnProfile.setOnClickListener(onClickListener);
         btnScanQR = findViewById(R.id.btnScanQR);
-        btnScanQR.setOnClickListener(this);
+        btnScanQR.setOnClickListener(onClickListener);
 
         pbInventory = findViewById(R.id.pbInventory);
 
-        dbHelper = new DBHelper(this);
-
-        dialogHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-
-                ScanDialogFragment dialogFragment = new ScanDialogFragment();
-                Bundle bundle = new Bundle();
-
-                String scanned_msg = scannedMapToMsg(scannedMap);
-
-                log.info("Scanned msg: " + scanned_msg);
-
-                dialogFragment.callDialog(context, bundle, scanned_msg, "qr_scan");
-            }
-        };
-
+        dialogHandler = new WeakHandler(callback);
 
     }
+
+    Handler.Callback callback = new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+
+            ScanDialogFragment dialogFragment = new ScanDialogFragment();
+            Bundle bundle = new Bundle();
+
+            String scanned_msg = ObjectUtility.scannedMapToMsg(scannedMap);
+
+            log.info("Scanned msg: " + scanned_msg);
+
+            dialogFragment.callDialog(getFragmentManager(), bundle, scanned_msg, "qr_scan");
+            return false;
+        }
+    };
 
 
     //---------------------------//
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnFormulyar: {
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.btnFormulyar: {
 
-                Intent intent = new Intent(this, null);
-                startActivity(intent);
-            }
-            break;
-            case R.id.btnInventory: {
+                    Intent intent = new Intent(QrApplication.getInstance(), TestActivity.class);
+                    startActivity(intent);
+                }
+                break;
+                case R.id.btnInventory: {
 
-                log.info("---Remove old saved data---");
+                    log.info("---Remove old saved data---");
 
                   /*clear old saved data*/
-                PreferenceUtility.removeOldPreferences(context, MyPreferences.PREFERENCE_FILE_NAME,
-                        MyPreferences.ADDRESS_ID_PREFERENCES,
-                        MyPreferences.ROOM_ID_PREFERENCES);
+                    PreferenceUtility.removeOldPreferences(QrApplication.getInstance(), MyPreferences.PREFERENCE_FILE_NAME,
+                            MyPreferences.ADDRESS_ID_PREFERENCES,
+                            MyPreferences.ROOM_ID_PREFERENCES);
 
                 /*load all available strings from ext db, starts new Db*/
-                if (url != null) {
+                    if (url != null) {
             /*        new AsyncMultiDbManager(table_name, url, this, dbHelper, db, btnInventory, pbInventory,
                             InventoryParamSelectActivity.class, true, true, null)
                             .runAsyncMapListLoader();
                     */
-                    new AsyncMultiDbManager(context, table_name, null, url, true,
-                            InventoryParamSelectActivity.class,null,
-                            btnInventory, pbInventory, true).runAsyncLoader();
-                } else {
-                    log.warning("---URL IS NULL!---");
+                        String table_name = DbTables.TABLE_ADDRESS;
+                        new AsyncMultiDbManager(QrApplication.getInstance(), table_name, null, url, true,
+                                InventoryParamSelectActivity.class, null,
+                                btnInventory, pbInventory, true).runAsyncLoader();
+                    } else {
+                        log.warning("---URL IS NULL!---");
 
+                    }
                 }
-            }
-            break;
-            case R.id.btnProfile: {
-                Intent intent = new Intent(this, ProfileActivity.class);
-                startActivity(intent);
-            }
-            break;
+                break;
+                case R.id.btnProfile: {
+                    Intent intent = new Intent(QrApplication.getInstance(), ProfileActivity.class);
+                    startActivity(intent);
+                }
+                break;
 
             /*call CameraActivity for scanning*/
-            case R.id.btnScanQR: {
-                Intent intent = new Intent(this, CameraActivity.class);
-                startActivityForResult(intent, REQUEST_SCAN_QR);
-            }
-            break;
+                case R.id.btnScanQR: {
+                    Intent intent = new Intent(QrApplication.getInstance(), CameraActivity.class);
+                    startActivityForResult(intent, REQUEST_SCAN_QR);
+                }
+                break;
 
+            }
         }
-    }
+    };
 
 
     /*
@@ -203,31 +199,30 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
 
     //----------------------------------------//
 
-    /*
-     Parsing scannedMap, hidden value saves in the global var,
-     other data build into a plain string
-     */
-    String scannedMapToMsg(HashMap<String, Object> scannedMap) {
-        StringBuilder message = new StringBuilder();
 
-        if (scannedMap != null) {
-            for (Map.Entry<String, Object> map : scannedMap.entrySet()) {
 
-                /*saves hidden key value, for extended db search*/
+    @Override
+    protected void onStop() {
+        log.info("---MainMenu -- onStop()---");
+        super.onStop();
 
-                if (map.getKey().equals(qr_hidden_key)) {
-                    qr_hidden_value = map.getValue();
-                    message.append("------hidden---").append(qr_hidden_value).append("-------");
 
-                    break;
-                }
+        dialogHandler.removeCallbacksAndMessages(null);
 
-                message.append(map.getKey()).append(" : ").append(map.getValue()).append("\n");
-            }
-            return message.toString();
 
-        }
-        return null;
+            /*set null buttons and pb*/
+        btnScanQR = null;
+        btnProfile = null;
+        btnInventory = null;
+        btnFormulyar = null;
+
+        pbInventory = null;
+
+            /*other ref's*/
+        onClickListener = null;
+        callback = null;
+
+        toolbar = null;
     }
 
     @Override

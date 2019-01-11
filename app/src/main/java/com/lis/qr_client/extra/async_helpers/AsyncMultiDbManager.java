@@ -125,6 +125,7 @@ public class AsyncMultiDbManager extends AsyncAbstractManager {
                 if (classToLaunch != null) {
 
                     Intent intent = new Intent(context, classToLaunch);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                     //TODO: make it not so hardcode ("room")
                     if (extra_data != null) {

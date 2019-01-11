@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.lis.qr_client.R;
+import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.extra.utility.PreferenceUtility;
 import lombok.extern.java.Log;
