@@ -1,6 +1,7 @@
 package com.lis.qr_client.extra.async_helpers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -14,6 +15,8 @@ public abstract class AsyncAbstractManager {
     private String table_name;
     private String column_name;
     private String url;
+
+    int[] activityFlags;
 
 
     protected boolean isNextActivityLauncher = false;
@@ -30,13 +33,14 @@ public abstract class AsyncAbstractManager {
     };
 
     public AsyncAbstractManager(Context context, String table_name, String column_name, String url,
-                                boolean isNextActivityLauncher, Class activityToStart) {
+                                boolean isNextActivityLauncher, Class activityToStart, int[] activityFlags) {
         this.context = context;
         this.table_name = table_name;
         this.column_name = column_name;
         this.url = url;
         this.isNextActivityLauncher = isNextActivityLauncher;
         this.activityToStart = activityToStart;
+        this.activityFlags = activityFlags;
     }
 
     public abstract void runAsyncLoader();

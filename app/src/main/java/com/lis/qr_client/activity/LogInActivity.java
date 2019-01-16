@@ -15,9 +15,12 @@ import android.widget.Button;
 import com.lis.qr_client.R;
 import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
+import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.async_helpers.AsyncOneDbManager;
 import com.lis.qr_client.extra.utility.DbUtility;
+import com.lis.qr_client.extra.utility.ObjectUtility;
+import com.lis.qr_client.extra.utility.PreferenceUtility;
 import com.lis.qr_client.pojo.User;
 import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
@@ -28,14 +31,12 @@ import java.util.regex.Pattern;
 
 @Log
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener {
-        private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
+    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
     private Pattern pattern = Pattern.compile(EMAIL_PATTERN);
     private Matcher matcher;
 
     private Toolbar toolbar;
     private Button btn_log_in_the_app;
-
-    DBHelper dbHelper;
 
     private TextInputLayout email_wrapper;
     private TextInputLayout password_wrapper;
@@ -49,14 +50,10 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        //----set db
-        dbHelper = QrApplication.getDbHelper();
-
-
         //---set toolbar
         toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
-            Utility.toolbarSetter(this, toolbar, getString(R.string.log_in), null, true);
+            Utility.toolbarSetter(this, toolbar, getString(R.string.log_in), null, false);
         }
 
         //----set views
@@ -97,6 +94,10 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     /*ok, check user data*/
                     String table_name = DbTables.TABLE_USER;
 
+
+                    //----set db
+                    DBHelper dbHelper = QrApplication.getDbHelper();
+
                      /*check in sqlite*/
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -110,13 +111,27 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                         checkLoginAtServer(table_name, email, password);
 
                     } else {
+//----log---
                         log.info("Cursor is ok");
                         DbUtility.logCursor(cursor, "test");
+//-----Save user to preferences---
+                        User user = (User) DbUtility.cursorToClass(cursor, User.class.getName());
+
+                        if (user != null) {
+                            log.info("Saving user to preferences...");
+                            PreferenceUtility.saveUsersDataToPreference(user, QrApplication.getInstance(),
+                                    MyPreferences.PREFERENCE_SAVE_USER,
+                                    MyPreferences.PREFERENCE_ID_USER,
+                                    MyPreferences.PREFERENCE_IS_USER_SAVED);
+                        } else {
+                            log.info("Can't save to preferences. User is null");
+                        }
+//------
                         cursor.close();
                                 /*ok, load new page*/
-                        Intent intent = new Intent(this, MainMenuActivity.class);
+                        Intent intent = new Intent(QrApplication.getInstance(), MainMenuActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-
                     }
                 }
 
@@ -135,9 +150,11 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
         /*make a request*/
         AsyncOneDbManager oneDbManager = new AsyncOneDbManager(this, table_name, null, url,
-                true, MainMenuActivity.class, null, new User(email, password),
+                true, MainMenuActivity.class, new int[]{Intent.FLAG_ACTIVITY_CLEAR_TASK,
+                Intent.FLAG_ACTIVITY_NEW_TASK}, null, new User(email, password),
                 HttpMethod.POST);
         oneDbManager.runAsyncLoader();
+
     }
 
 
@@ -151,8 +168,32 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        log.info("---Login -- onStop()---");
+        Intent intent = new Intent(QrApplication.getInstance(), WelcomeActivity.class);
+        /*intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);*/
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        log.info("---Login -- onStop()---");
+
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         log.info("---Login -- onDestroy()---");
+
+        matcher = null;
+
+        toolbar = null;
+        btn_log_in_the_app = null;
+
+        email_wrapper = null;
+        password_wrapper = null;
     }
 }

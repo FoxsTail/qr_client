@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
@@ -117,7 +118,7 @@ public class ItemDialogFragment extends DialogFragment {
         /*load full equipment data from server*/
         AsyncOneDbManager asyncOneManager = new AsyncOneDbManager
                 (context, table_name, null, full_url, true,
-                        EquipmentItemActivity.class, new Pair<String, Object>("inventory_num", inventory_num),
+                        EquipmentItemActivity.class,new int[]{Intent.FLAG_ACTIVITY_NEW_TASK}, new Pair<String, Object>("inventory_num", inventory_num),
                         null, HttpMethod.GET);
 
         asyncOneManager.runAsyncLoader();

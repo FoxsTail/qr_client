@@ -33,10 +33,10 @@ public class AsyncMultiDbManager extends AsyncAbstractManager {
 
     /*button, next activity*/
     public AsyncMultiDbManager(Context context, String table_name, String column_name, String url,
-                               boolean isNextActivityLauncher, Class activityToStart, Object extra_data, Button btn,
+                               boolean isNextActivityLauncher, Class activityToStart, int[] activityFlags, Object extra_data, Button btn,
                                ProgressBar pb, boolean isMapList) {
 
-        super(context, table_name, column_name, url, isNextActivityLauncher, activityToStart);
+        super(context, table_name, column_name, url, isNextActivityLauncher, activityToStart, activityFlags);
 
         log.info("---AsyncMultiDbManager creation---");
 
@@ -48,8 +48,8 @@ public class AsyncMultiDbManager extends AsyncAbstractManager {
 
     /*simple loader with runnable*/
     public AsyncMultiDbManager(Context context, String table_name, String column_name, String url, boolean isNextActivityLauncher,
-                               Class activityToStart, Runnable runnableToStart, boolean isMapList) {
-        super(context, table_name, column_name, url, isNextActivityLauncher, activityToStart);
+                               Class activityToStart, int[] activityFlags, Runnable runnableToStart, boolean isMapList) {
+        super(context, table_name, column_name, url, isNextActivityLauncher, activityToStart, activityFlags);
         this.runnableToStart = runnableToStart;
         this.isMapList = isMapList;
     }
@@ -126,7 +126,6 @@ public class AsyncMultiDbManager extends AsyncAbstractManager {
 
                     Intent intent = new Intent(context, classToLaunch);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
                     //TODO: make it not so hardcode ("room")
                     if (extra_data != null) {
                         intent.putExtra("room", extra_data.toString());

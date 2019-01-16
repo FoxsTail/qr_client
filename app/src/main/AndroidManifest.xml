@@ -19,7 +19,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".activity.WelcomeActivity">
+        <activity android:name=".activity.MainMenuActivity">
         </activity>
         <activity android:name=".activity.CameraActivity">
         </activity>
@@ -33,22 +33,20 @@
                 android:parentActivityName=".activity.InventoryParamSelectActivity"
                 android:configChanges="orientation|screenSize|keyboardHidden">
         </activity>
-        <activity
-                android:name=".activity.EquipmentItemActivity"
+        <activity  android:name=".activity.EquipmentItemActivity"
                 android:parentActivityName=".activity.InventoryListActivity">
         </activity>
         <activity android:name=".activity.Camera2Activity">
         </activity>
-        <activity android:name=".activity.MainMenuActivity">
+        <activity android:name=".activity.WelcomeActivity" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
                 android:name=".activity.LogInActivity"
-                android:parentActivityName=".activity.WelcomeActivity">
+                android:parentActivityName=".activity.WelcomeActivity" android:noHistory="true">
         </activity>
         <activity
                 android:name=".activity.SignUpActivity"

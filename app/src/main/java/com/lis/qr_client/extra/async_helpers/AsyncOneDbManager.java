@@ -30,9 +30,9 @@ public class AsyncOneDbManager extends AsyncAbstractManager {
 
 
     public AsyncOneDbManager(Context context, String table_name, String column_name, String url,
-                             boolean isNextActivityLauncher, Class activityToStart, Pair<String, Object> extra_data,
-                             Object post_request, HttpMethod httpMethod) {
-        super(context, table_name, column_name, url, isNextActivityLauncher, activityToStart);
+                             boolean isNextActivityLauncher, Class activityToStart, int[] activityFlags,
+                             Pair<String, Object> extra_data, Object post_request, HttpMethod httpMethod) {
+        super(context, table_name, column_name, url, isNextActivityLauncher, activityToStart, activityFlags);
         this.extra_data = extra_data;
         this.post_request = post_request;
         this.httpMethod = httpMethod;
@@ -95,7 +95,7 @@ public class AsyncOneDbManager extends AsyncAbstractManager {
                             /*check, cast and save*/
                             if (response != null) {
                                 User user = (User) response;
-                                postLoginSave(user, db);
+                                log.info("User saved: " + PreferenceUtility.postLoginSave(context, user, db));
                             } else {
                                 log.info("Post response is null");
                                 return null;
@@ -127,7 +127,14 @@ public class AsyncOneDbManager extends AsyncAbstractManager {
 
             if (classToStart != null) {
                 Intent intent = new Intent(context, classToStart);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (activityFlags != null) {
+                    for (int flag : activityFlags) {
+                        log.info("Flag"+String.valueOf(flag));
+                        intent.setFlags(flag);
+                    }
+                }else{
+                    log.info("flag is null");
+                }
                 if (extra_data != null) {
                     intent.putExtra(extra_data.first, extra_data.second.toString());
                 }
@@ -137,22 +144,6 @@ public class AsyncOneDbManager extends AsyncAbstractManager {
     }
 
 
-    /**
-     * Post request for logging in user
-     */
-
-    public boolean postLoginSave(User user, SQLiteDatabase db) {
-
-      /*save data to SQLite*/
-        DbUtility.saveUserToDb(user, db);
-
-                        /*save data to cache*/
-        PreferenceUtility.saveUsersDataToPreference(user, context, MyPreferences.PREFERENCE_SAVE_USER,
-                MyPreferences.PREFERENCE_ID_USER,
-                MyPreferences.PREFERENCE_IS_USER_SAVED);
-
-        return true;
-    }
 
     /**
      * Get Map<String, Object> from server by url, method post

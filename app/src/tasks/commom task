@@ -11,6 +11,14 @@
     + Name, logo
     + log in, sing up buttons
     + saved data check
+    + login page moving
+        +   welcome - no history
+            welcome (on user check true) -> main menu
+            login - no history
+            login (on back) -> welcome
+            login (on login) save user to preferences
+            main menu (on back) - finish;
+            main menu (logout) - clear preferences -> welcome page
 
 1. Log in
     + clean preferences

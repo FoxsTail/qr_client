@@ -33,11 +33,7 @@ public class MainMenuActivity extends BaseActivity {
 
     protected HashMap<String, Object> scannedMap;
 
-
-    private String qr_hidden_key = "hidden";
-    private Object qr_hidden_value;
-
-    WeakHandler dialogHandler;
+    private WeakHandler dialogHandler;
 
     private String url;
 
@@ -51,6 +47,9 @@ public class MainMenuActivity extends BaseActivity {
         log.info("Main menu --- onCreate()");
 
         setContentView(R.layout.activity_main_menu);
+
+        int id_user = PreferenceUtility.getIntegerDataFromPreferences(this, MyPreferences.PREFERENCE_ID_USER);
+        log.info(String.valueOf(id_user));
 
       /*
         TODO: set dim only for the main window, exclude toolbar
@@ -133,13 +132,10 @@ public class MainMenuActivity extends BaseActivity {
 
                 /*load all available strings from ext db, starts new Db*/
                     if (url != null) {
-            /*        new AsyncMultiDbManager(table_name, url, this, dbHelper, db, btnInventory, pbInventory,
-                            InventoryParamSelectActivity.class, true, true, null)
-                            .runAsyncMapListLoader();
-                    */
+
                         String table_name = DbTables.TABLE_ADDRESS;
                         new AsyncMultiDbManager(QrApplication.getInstance(), table_name, null, url, true,
-                                InventoryParamSelectActivity.class, null,
+                                InventoryParamSelectActivity.class, new int[]{Intent.FLAG_ACTIVITY_NEW_TASK}, null,
                                 btnInventory, pbInventory, true).runAsyncLoader();
                     } else {
                         log.warning("---URL IS NULL!---");
@@ -200,6 +196,12 @@ public class MainMenuActivity extends BaseActivity {
     //----------------------------------------//
 
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        log.info("---MainMenu onBackPressed()---");
+        finish();
+    }
 
     @Override
     protected void onStop() {
@@ -230,5 +232,7 @@ public class MainMenuActivity extends BaseActivity {
         super.onDestroy();
         log.info("---MainMenu -- onDestroy()---");
     }
+
+
 }
 

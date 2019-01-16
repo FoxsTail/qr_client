@@ -1,20 +1,20 @@
++launch mode for the app
+    +main menu base activity
+    +redirect to the welcome page
+    +logout new task
+    +enter to the app again with saved user
+    +delete from db when out
+
 ----
 
 -all in background
 
 ----
 
-- memory leaks
-    - take info from db first (also in other thread)
-    - remove references on Stop()
-
- 
-----
-
 -try all in bg
--static context (why)
--first to sqlite
--create onResume, free onStop;
++static context (why)
++first to sqlite
++free onStop;
 
 ---
 
@@ -38,4 +38,10 @@
 //---------Refactoring---------
 
 -fabric class for inventory adapter - things i can inventory
+
+
+
+//-----------questions-------------
+Если в асинктаске при запуске следущего активити указать флаг new_task, будет реально новый таск запущен и что будет с
+памятью? Можно ли избежать?
 

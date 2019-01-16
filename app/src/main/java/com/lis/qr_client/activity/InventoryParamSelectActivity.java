@@ -1,6 +1,7 @@
 package com.lis.qr_client.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -143,7 +144,8 @@ public class InventoryParamSelectActivity extends BaseActivity {
 
                     AsyncMultiDbManager asyncMultiDbManager = new AsyncMultiDbManager
                             (QrApplication.getInstance(), null, null, null, true,
-                                    InventoryListActivity.class, chosen_room, btnStart, pbLoadEquipment, false);
+                                    InventoryListActivity.class, new int[]{Intent.FLAG_ACTIVITY_NEW_TASK},
+                                    chosen_room, btnStart, pbLoadEquipment, false);
 
                     asyncMultiDbManager.runAsyncLoader();
 
@@ -264,9 +266,9 @@ public class InventoryParamSelectActivity extends BaseActivity {
                             String table_name = DbTables.TABLE_INVENTORY;
 
                             AsyncMultiDbManager asyncLoader = new AsyncMultiDbManager
-                                    (QrApplication.getInstance(), table_name, null, url_inventory, false,
-                                            null, chosen_room, btnStart, pbLoadEquipment,
-                                            true);
+                                    (QrApplication.getInstance(), table_name, null, url_inventory,
+                                            false, null, null, chosen_room,
+                                            btnStart, pbLoadEquipment, true);
                             asyncLoader.runAsyncLoader();
 
                         /*async get rooms from server*/
@@ -276,7 +278,7 @@ public class InventoryParamSelectActivity extends BaseActivity {
 
 
                             AsyncMultiDbManager dbManager = new AsyncMultiDbManager(QrApplication.getInstance(), table_name, column_name,
-                                    url_room, false, null, runLoadRooms, false);
+                                    url_room, false, null, null, runLoadRooms, false);
 
 
                             log.info("--- call AsyncMapListLoader---");

@@ -12,6 +12,7 @@ public class QrApplication extends Application {
     private static Context instance;
     protected static DBHelper dbHelper;
 
+
     @Override
     public void onCreate() {
         super.onCreate();

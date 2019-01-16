@@ -63,6 +63,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 /*start log in page*/
                 Intent intent = new Intent(this, LogInActivity.class);
                 startActivity(intent);
+                finish();
 
                 break;
             }
@@ -91,7 +92,9 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 (this, MyPreferences.PREFERENCE_IS_USER_SAVED);
         if (saved_user != null && saved_user) {
             Intent intent = new Intent(this, MainMenuActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         }else {
             log.info("Nothing was saved");
         }
@@ -117,8 +120,27 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
+    protected void onStop() {
+        log.info("---Welcome -- onStop()---");
+        super.onStop();
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        log.info("---Welcome -- onBackPressed()---");
+        finish();
+    }
+
+    @Override
     protected void onDestroy() {
         log.info("---Welcome -- onDestroy()---");
         super.onDestroy();
+
+        btn_log_in = null;
+        btn_sign_up = null;
+        pb_welcome = null;
     }
 }

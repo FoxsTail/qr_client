@@ -2,6 +2,7 @@ package com.lis.qr_client.extra.utility;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lis.qr_client.constants.MyPreferences;
@@ -67,14 +68,14 @@ public class PreferenceUtility {
 
         saveStringToPreferences(context, key_user_data, users_email_passwd);
         saveIntToPreferences(context, key_id_user, user.getId());
-        saveBooleanToPreferences(context, key_is_logged_in);
+        saveBooleanTrueToPreferences(context, key_is_logged_in);
     }
 
     /**
      * save boolean to preferences
      */
 
-    public static void saveBooleanToPreferences(Context context, @Preferences String preference_key) {
+    public static void saveBooleanTrueToPreferences(Context context, @Preferences String preference_key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences
                 (MyPreferences.PREFERENCE_FILE_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -112,7 +113,7 @@ public class PreferenceUtility {
 
 
     /**
-     * get Set<String> data from preferences
+     * get boolean data from preferences
      */
 
     public static Boolean getBooleanDataFromPreferences(Context context, @Preferences String preference_key) {
@@ -213,7 +214,7 @@ public class PreferenceUtility {
     /**
      * Load String or Json from preference
      */
-    public static String loadStringOrJsonPreference(Context context,@Preferences String preferenceFileName,
+    public static String loadStringOrJsonPreference(Context context, @Preferences String preferenceFileName,
                                                     @Preferences String key) {
         log.info("---Load String from preferences---");
 
@@ -228,7 +229,7 @@ public class PreferenceUtility {
     /**
      * Load int from preference
      */
-    public static int loadIntPreference(Context context,@Preferences String preferenceFileName,
+    public static int loadIntPreference(Context context, @Preferences String preferenceFileName,
                                         @Preferences String key) {
         log.info("---Load int from preferences---");
 
@@ -241,7 +242,7 @@ public class PreferenceUtility {
     /**
      * Clear old preferences (apply - async)
      */
-    public static void clearOldReferences(Context context,@Preferences String pref_name) {
+    public static void clearOldReferences(Context context, @Preferences String pref_name) {
         SharedPreferences preferences = context.getSharedPreferences(pref_name, MODE_PRIVATE);
         if (preferences != null) {
             SharedPreferences.Editor editor = preferences.edit();
@@ -254,7 +255,7 @@ public class PreferenceUtility {
      * Remove old session data from preferences (apply - async)
      */
 
-    public static void removeOldPreferences(Context context,@Preferences String preferenceFileName,
+    public static void removeOldPreferences(Context context, @Preferences String preferenceFileName,
                                             @Preferences String... preferenceNames) {
 
         for (String name : preferenceNames) {
@@ -276,4 +277,21 @@ public class PreferenceUtility {
         }
     }
 
+    /**
+     * Post request for logging in user
+     */
+
+    public static boolean postLoginSave(Context context, User user, SQLiteDatabase db) {
+
+      /*save data to SQLite*/
+        DbUtility.saveUserToDb(user, db);
+
+                        /*save data to cache*/
+        PreferenceUtility.saveUsersDataToPreference(user, context, MyPreferences.PREFERENCE_SAVE_USER,
+                MyPreferences.PREFERENCE_ID_USER,
+                MyPreferences.PREFERENCE_IS_USER_SAVED);
+
+        return true;
+
+    }
 }
