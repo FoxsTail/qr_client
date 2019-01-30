@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -86,7 +87,7 @@ public class EquipmentItemActivity extends BaseActivity {
         tvUser = findViewById(R.id.tv_user);
         tvAddress = findViewById(R.id.tv_address);
 
-
+        CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator_element_layout);
 
 
         /*set all for db access*/

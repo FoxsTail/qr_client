@@ -83,7 +83,8 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
                             ItemDialogFragment dialogFragment = new ItemDialogFragment();
                             Bundle bundle = new Bundle();
 
-                            dialogFragment.callDialog(context, fragmentManager, bundle, getThisAdapter(), inventory_num.toString(), "item_actions");
+                            dialogFragment.callDialog(context, fragmentManager, bundle, getThisAdapter(),
+                                    inventory_num.toString(), "item_actions");
                         }
                     }).start();
 

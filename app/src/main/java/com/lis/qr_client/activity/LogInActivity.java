@@ -130,7 +130,9 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                         cursor.close();
                                 /*ok, load new page*/
                         Intent intent = new Intent(QrApplication.getInstance(), MainMenuActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                .setFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                         startActivity(intent);
                     }
                 }

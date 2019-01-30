@@ -47,6 +47,8 @@ public class BaseActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.item_log_out: {
 
+                log.info("Logging out and removing preferences...");
+
                 /*clean user's shared preferences (or all preferences?)*/
                 PreferenceUtility.removeLoginPreferences(this, MyPreferences.PREFERENCE_SAVE_USER,
                         MyPreferences.PREFERENCE_IS_USER_SAVED);

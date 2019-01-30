@@ -20,11 +20,13 @@ public class ScanDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         log.info("Scan on createDialog");
 
+        /*Ger all arguments*/
         Bundle args = getArguments();
         String title = args.getString(ARG_TITLE);
         String message = args.getString(ARG_MESSAGE);
 
 
+        /*build new dialog with arguments*/
         builder = new AlertDialog.Builder(getActivity());
 
            /*set positive/negative buttons*/
@@ -81,11 +83,12 @@ public class ScanDialogFragment extends DialogFragment {
         log.info("-----Cancel-----");
     }
 
-    public void callDialog(FragmentManager fragmentManager,  Bundle bundle, String msg, String tag){
-        bundle.putString(ScanDialogFragment.ARG_TITLE, QrApplication.getInstance().getResources().getString(R.string.inventory_scan_result));
+    public void callDialog(FragmentManager fragmentManager,  Bundle bundle, String msg, String title, String tag){
+        bundle.putString(ScanDialogFragment.ARG_TITLE, title);
         bundle.putString(ScanDialogFragment.ARG_MESSAGE, msg);
 
         log.info("-----Call dialog-----");
+        log.info("-----Show args-----"+bundle.size());
 
 
         /*FragmentManager fragmentManager  =((AppCompatActivity) context).getFragmentManager();

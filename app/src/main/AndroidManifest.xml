@@ -19,34 +19,35 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainMenuActivity">
+        <activity android:name=".activity.MainMenuActivity" android:launchMode="singleTop">
         </activity>
         <activity android:name=".activity.CameraActivity">
         </activity>
         <activity
                 android:name=".activity.InventoryParamSelectActivity"
-                android:parentActivityName=".activity.MainMenuActivity"
-                android:configChanges="orientation|screenSize|keyboardHidden">
+                android:configChanges="orientation|screenSize|keyboardHidden"
+                android:parentActivityName=".activity.MainMenuActivity">
         </activity>
         <activity
                 android:name=".activity.InventoryListActivity"
-                android:parentActivityName=".activity.InventoryParamSelectActivity"
-                android:configChanges="orientation|screenSize|keyboardHidden">
+                android:configChanges="orientation|screenSize|keyboardHidden"
+                android:parentActivityName=".activity.InventoryParamSelectActivity">
         </activity>
-        <activity  android:name=".activity.EquipmentItemActivity"
+        <activity
+                android:name=".activity.EquipmentItemActivity"
                 android:parentActivityName=".activity.InventoryListActivity">
         </activity>
         <activity android:name=".activity.Camera2Activity">
         </activity>
-        <activity android:name=".activity.WelcomeActivity" android:noHistory="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+        <!--<activity
+                android:name=".activity.WelcomeActivity"
+                android:noHistory="true">
+
+        </activity>-->
         <activity
                 android:name=".activity.LogInActivity"
-                android:parentActivityName=".activity.WelcomeActivity" android:noHistory="true">
+                android:noHistory="true"
+                android:parentActivityName=".activity.WelcomeActivity">
         </activity>
         <activity
                 android:name=".activity.SignUpActivity"
@@ -58,7 +59,18 @@
         </activity>
         <activity android:name=".activity.BaseActivity">
         </activity>
+
         <activity android:name=".activity.TestActivity">
+
+        </activity>
+
+        <activity android:name=".activity.WelcomeActivity" android:theme="@style/SplashTheme" android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
         </activity>
     </application>
 

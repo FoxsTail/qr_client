@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="279.0873697916667" y="542.0">com.lis.qr_client.activity.BaseActivity</node>
+    <node x="161.0" y="-13.0">com.lis.qr_client.activity.ProfileActivity</node>
+    <node x="-51.0" y="51.0">com.lis.qr_client.activity.TestActivity</node>
+    <node x="778.4858072916667" y="-38.0">com.lis.qr_client.activity.InventoryListActivity</node>
+    <node x="302.1420572916667" y="348.0">com.lis.qr_client.activity.SignUpActivity</node>
+    <node x="231.36458333333337" y="211.0">com.lis.qr_client.activity.MainMenuActivity</node>
+    <node x="242.08736979166667" y="629.0">com.lis.qr_client.activity.EquipmentItemActivity</node>
+    <node x="457.4962239583333" y="-77.0">com.lis.qr_client.activity.CameraActivity</node>
+    <node x="485.1420572916667" y="348.0">com.lis.qr_client.activity.LogInActivity</node>
+    <node x="383.7123697916667" y="445.0">com.lis.qr_client.activity.WelcomeActivity</node>
+    <node x="435.73958333333337" y="167.0">com.lis.qr_client.activity.InventoryParamSelectActivity</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.lis.qr_client.activity.LogInActivity" target="com.lis.qr_client.activity.WelcomeActivity">
+      <point x="37.75" y="18.5" />
+      <point x="598.3920572916667" y="415.0" />
+      <point x="507.61236979166665" y="415.0" />
+      <point x="35.39999999999998" y="-18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.WelcomeActivity" target="com.lis.qr_client.activity.MainMenuActivity">
+      <point x="-70.80000000000001" y="-18.5" />
+      <point x="401.41236979166666" y="425.0" />
+      <point x="291.6420572916667" y="425.0" />
+      <point x="291.6420572916667" y="323.0" />
+      <point x="340.86458333333337" y="323.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.TestActivity" target="com.lis.qr_client.activity.BaseActivity">
+      <point x="-35.0" y="18.5" />
+      <point x="35.0" y="522.0" />
+      <point x="291.0873697916667" y="522.0" />
+      <point x="-60.0" y="-18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.MainMenuActivity" target="com.lis.qr_client.activity.CameraActivity">
+      <point x="23.375" y="-18.5" />
+      <point x="364.23958333333337" y="62.0" />
+      <point x="464.9962239583333" y="62.0" />
+      <point x="-41.5" y="18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.MainMenuActivity" target="com.lis.qr_client.activity.ProfileActivity">
+      <point x="-23.375" y="-18.5" />
+      <point x="317.48958333333337" y="236.0" />
+      <point x="277.75" y="236.0" />
+      <point x="39.25" y="18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.LogInActivity" target="com.lis.qr_client.activity.MainMenuActivity">
+      <point x="0.0" y="-18.5" />
+      <point x="560.6420572916667" y="323.0" />
+      <point x="403.1979166666667" y="323.0" />
+      <point x="62.333333333333314" y="18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.WelcomeActivity" target="com.lis.qr_client.activity.LogInActivity">
+      <point x="0.0" y="-18.5" />
+      <point x="472.2123697916667" y="405.0" />
+      <point x="522.8920572916667" y="405.0" />
+      <point x="-37.75" y="18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.WelcomeActivity" target="com.lis.qr_client.activity.SignUpActivity">
+      <point x="-35.400000000000034" y="-18.5" />
+      <point x="436.81236979166664" y="415.0" />
+      <point x="383.6420572916667" y="415.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.MainMenuActivity" target="com.lis.qr_client.activity.BaseActivity">
+      <point x="-62.333333333333314" y="18.5" />
+      <point x="278.53125000000006" y="323.0" />
+      <point x="260.9296875" y="323.0" />
+      <point x="260.9296875" y="502.0" />
+      <point x="339.0873697916667" y="502.0" />
+      <point x="-12.0" y="-18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.InventoryListActivity" target="com.lis.qr_client.activity.WelcomeActivity">
+      <point x="0.0" y="18.5" />
+      <point x="651.4858072916667" y="149.0" />
+      <point x="672.5520833333334" y="149.0" />
+      <point x="672.5520833333334" y="425.0" />
+      <point x="543.0123697916666" y="425.0" />
+      <point x="70.79999999999995" y="-18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.InventoryListActivity" target="com.lis.qr_client.activity.BaseActivity">
+      <point x="67.33333333333326" y="18.5" />
+      <point x="718.8191406249999" y="149.0" />
+      <point x="698.9671875" y="149.0" />
+      <point x="698.9671875" y="522.0" />
+      <point x="411.0873697916667" y="522.0" />
+      <point x="60.0" y="-18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.BaseActivity" target="com.lis.qr_client.activity.WelcomeActivity">
+      <point x="12.0" y="-18.5" />
+      <point x="363.0873697916667" y="502.0" />
+      <point x="472.2123697916667" y="502.0" />
+      <point x="0.0" y="18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.ProfileActivity" target="com.lis.qr_client.activity.BaseActivity">
+      <point x="-39.25" y="18.5" />
+      <point x="199.25000000000003" y="512.0" />
+      <point x="315.0873697916667" y="512.0" />
+      <point x="-36.0" y="-18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.InventoryParamSelectActivity" target="com.lis.qr_client.activity.InventoryListActivity">
+      <point x="-5.6843418860808015E-14" y="-18.5" />
+      <point x="506.7395833333333" y="149.0" />
+      <point x="584.1524739583333" y="149.0" />
+      <point x="-67.33333333333337" y="18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.InventoryListActivity" target="com.lis.qr_client.activity.CameraActivity">
+      <point x="0.0" y="-18.5" />
+      <point x="651.4858072916667" y="62.0" />
+      <point x="547.9962239583333" y="62.0" />
+      <point x="41.50000000000006" y="18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.MainMenuActivity" target="com.lis.qr_client.activity.InventoryParamSelectActivity">
+      <point x="70.125" y="-18.5" />
+      <point x="410.98958333333337" y="236.0" />
+      <point x="440.73958333333337" y="236.0" />
+      <point x="-66.0" y="18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.MainMenuActivity" target="com.lis.qr_client.activity.TestActivity">
+      <point x="-70.125" y="-18.5" />
+      <point x="270.73958333333337" y="236.0" />
+      <point x="105.0" y="236.0" />
+      <point x="35.0" y="18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.InventoryParamSelectActivity" target="com.lis.qr_client.activity.BaseActivity">
+      <point x="65.99999999999994" y="18.5" />
+      <point x="572.7395833333333" y="236.0" />
+      <point x="687.9671875" y="236.0" />
+      <point x="687.9671875" y="512.0" />
+      <point x="387.0873697916667" y="512.0" />
+      <point x="36.0" y="-18.5" />
+    </edge>
+    <edge source="com.lis.qr_client.activity.EquipmentItemActivity" target="com.lis.qr_client.activity.BaseActivity">
+      <point x="0.0" y="-18.5" />
+      <point x="0.0" y="18.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="374.0" y="308.5" />
+  <SelectedNodes>
+    <node>com.lis.qr_client.activity.CameraActivity</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

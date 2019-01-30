@@ -22,7 +22,7 @@
     <string name="del">Видалити</string>
     <string name="equipments">Тест</string>
     <string name="message">Повідомлення</string>
-    <string name="scan">Сканувати QR-код</string>
+    <string name="scan">Сканувати</string>
     <string name="create_qr">Створити QR-код из даних</string>
     <string name="Formulyar">Формуляр</string>
     <string name="Inventory">Інвентарізация</string>
@@ -92,5 +92,13 @@
     <string name="remote_desktop">Віддалене \n робоче \n місце</string>
     <string name="not_found">Не знайдено!</string>
     <string name="exit">вихід</string>
+    <string name="home">На головну</string>
+    <string name="finish">Завершити</string>
+    <string name="no_storage_write_permission">Нема дозволу для запису у файл! Неможливо зберегти сессію</string>
+    <string name="finish_and_save">Завершити та зберегти результат у файл?</string>
+    <string name="found_title">Знайдено</string>
+    <string name="already_scanned_title">Вже відскановано</string>
+    <string name="other_room_title">В іншій кімнаті</string>
+    <string name="not_found_title">Не знайдено</string>
 
 </resources>

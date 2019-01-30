@@ -25,6 +25,9 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         //----Full screen
         Utility.fullScreen(this);
 
+        //replace splash screen theme with app theme
+        setTheme(R.style.AppTheme);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 

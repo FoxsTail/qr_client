@@ -1,15 +1,22 @@
 package com.lis.qr_client.activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -17,13 +24,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.badoo.mobile.util.WeakHandler;
 import com.lis.qr_client.R;
 import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
+import com.lis.qr_client.constants.MyBundle;
 import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.extra.dialog_fragment.FinishInventoryDialogFragment;
 import com.lis.qr_client.extra.utility.DbUtility;
 import com.lis.qr_client.extra.utility.ObjectUtility;
 import com.lis.qr_client.extra.utility.PreferenceUtility;
@@ -48,8 +58,11 @@ import static java.security.AccessController.getContext;
  */
 
 @Log
-public class InventoryListActivity extends BaseActivity implements View.OnClickListener {
+public class InventoryListActivity extends BaseActivity {
     private static final int REQUEST_SCAN_QR = 1;
+    private static final int REQUEST_WRITE_STORAGE = 112;
+
+    Activity activity = this;
 
     private SQLiteDatabase db;
 
@@ -81,45 +94,56 @@ public class InventoryListActivity extends BaseActivity implements View.OnClickL
         setContentView(R.layout.activity_inventory_list);
 
 
-
-            //---get room number for toolbar title
-            room_number = PreferenceUtility.loadStringOrJsonPreference
-                    (QrApplication.getInstance(), MyPreferences.PREFERENCE_FILE_NAME,
-                            MyPreferences.ROOM_ID_PREFERENCES);
-
-
-            //---get framing layout for dimming
-            final FrameLayout frameLayout = findViewById(R.id.frame_inventory_layout);
-            frameLayout.getForeground().setAlpha(0);
-
-            //----set toolbar
-            Toolbar toolbar = findViewById(R.id.toolbar);
-
-            if (toolbar != null) {
-                Utility.toolbarSetter(this, toolbar,
-                        getString(R.string.room_number) + room_number, frameLayout, true);
-            }
+        //---get room number for toolbar title
+        room_number = PreferenceUtility.loadStringOrJsonPreference
+                (QrApplication.getInstance(), MyPreferences.PREFERENCE_FILE_NAME,
+                        MyPreferences.ROOM_ID_PREFERENCES);
 
 
-            //--btn setup
-            btnScanInventory = findViewById(R.id.btnScanInventory);
-            btnScanInventory.setOnClickListener(this);
-            btnScanInventory.setEnabled(false);
+        //---get framing layout for dimming
+        final FrameLayout frameLayout = findViewById(R.id.frame_inventory_layout);
+        frameLayout.getForeground().setAlpha(0);
+
+        //----set toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        if (toolbar != null) {
+            Utility.toolbarSetter(this, toolbar,
+                    getString(R.string.room_number) + room_number, frameLayout, true);
+        }
 
 
-            //--get data from sqlite
-            DBHelper dbHelper = QrApplication.getDbHelper();
-            db = dbHelper.getWritableDatabase();
+        //--btn setup
+        // btnScanInventory = findViewById(R.id.btnScanInventory);
+            /*btnScanInventory.setOnClickListener(this);
+            btnScanInventory.setEnabled(false);*/
 
 
-            //----viewpager
-            viewPager = findViewById(R.id.inventory_viewpager);
+        //--get data from sqlite
+        DBHelper dbHelper = QrApplication.getDbHelper();
+        db = dbHelper.getWritableDatabase();
 
-            //-----tab from viewPager
-            TabLayout tabLayout = findViewById(R.id.inventory_tabs);
-            tabLayout.setupWithViewPager(viewPager);
 
-            dialogHandler = new WeakHandler(callback);
+        //----viewpager
+        viewPager = findViewById(R.id.inventory_viewpager);
+
+        //-----tab from viewPager
+        TabLayout tabLayout = findViewById(R.id.inventory_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        dialogHandler = new WeakHandler(callback);
+
+
+        //--bottom navigation bar
+
+        LinearLayout layout_home = findViewById(R.id.layout_home);
+        LinearLayout layout_scan = findViewById(R.id.layout_scan);
+        LinearLayout layout_finish = findViewById(R.id.layout_finish);
+
+        layout_home.setOnClickListener(onClickListener);
+        layout_scan.setOnClickListener(onClickListener);
+        layout_finish.setOnClickListener(onClickListener);
+
 
         if (savedInstanceState == null) {
             thread = new Thread(runLoadEquipments);
@@ -189,7 +213,7 @@ public class InventoryListActivity extends BaseActivity implements View.OnClickL
                 position = toScanEquipments.indexOf(searched_map);
 
                 dialogFragment.callDialog(getFragmentManager(),
-                        bundle, scanned_msg, dialog_tag);
+                        bundle, scanned_msg, getString(R.string.found_title), dialog_tag);
 
 
                 //if result in toScan list, remove, notify adapter
@@ -225,7 +249,7 @@ public class InventoryListActivity extends BaseActivity implements View.OnClickL
                     scanned_msg = getString(R.string.equipment_already_scanned, inventoryNum);
 
                     new ScanDialogFragment().callDialog
-                            (getFragmentManager(), bundle, scanned_msg, dialog_tag);
+                            (getFragmentManager(), bundle, scanned_msg, getString(R.string.already_scanned_title), dialog_tag);
                     log.info(scanned_msg);
 
                     //still couldn't find: show "No such item" in dialog
@@ -241,7 +265,8 @@ public class InventoryListActivity extends BaseActivity implements View.OnClickL
                     }
 
                     dialog_tag = "qr_found_in_address";
-                    new ScanDialogFragment().callDialog(getFragmentManager(), bundle, scanned_msg, dialog_tag);
+                    new ScanDialogFragment().callDialog(getFragmentManager(), bundle, scanned_msg,
+                            getString(R.string.other_room_title), dialog_tag);
                 } else {
 
                     log.info("--Equipment was not found in this ");
@@ -249,7 +274,7 @@ public class InventoryListActivity extends BaseActivity implements View.OnClickL
                     dialog_tag = "qr_not_found";
                     scanned_msg = getString(R.string.equipment_not_found);
                     new ScanDialogFragment().callDialog(getFragmentManager(),
-                            bundle, scanned_msg, dialog_tag);
+                            bundle, scanned_msg, getString(R.string.not_found_title), dialog_tag);
                 }
             }
             return false;
@@ -383,25 +408,60 @@ public class InventoryListActivity extends BaseActivity implements View.OnClickL
 
             Toast.makeText(QrApplication.getInstance(), getString(R.string.done_all), Toast.LENGTH_SHORT).show();
 
+/*
             btnScanInventory.setEnabled(true);
+*/
 
         }
     };
 
     //-------------------Clicks--------------------//
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnScanInventory: {
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.layout_home: {
+                    log.info("Inventory list --- home button pressed");
+                    Intent intent = new Intent(QrApplication.getInstance(), MainMenuActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    break;
+                }
+                case R.id.layout_scan: {
+                    log.info("Inventory list --- scan button pressed");
+                    Intent intent = new Intent(QrApplication.getInstance(), CameraActivity.class);
+                    startActivityForResult(intent, REQUEST_SCAN_QR);
+                    break;
+                }
+                case R.id.layout_finish: {
+                    log.info("Inventory list --- finish inventory button pressed");
+                    /* request the permission */
+                    checkStoragePermission(activity);
 
-            /*start Camera activity with result*/
-                Intent intent = new Intent(this, CameraActivity.class);
-                startActivityForResult(intent, REQUEST_SCAN_QR);
-                break;
+                    /* show dialog "finish inventory and make a report?" */
+                    FinishInventoryDialogFragment finishDialog = new FinishInventoryDialogFragment();
+
+                    /*transfer scanned and to_scan lists to the dialog*/
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(MyBundle.TO_SCAN_LIST, new UniversalSerializablePojo(toScanEquipments));
+                    bundle.putSerializable(MyBundle.SCANNED_LIST, new UniversalSerializablePojo(scannedEquipments));
+                    bundle.putString(MyBundle.ROOM, room_number);
+
+                    log.info("Bundle size to pass "+bundle.size());
+                    finishDialog.callDialog(getFragmentManager(), bundle, getString(R.string.finish_and_save),
+                            getString(R.string.finish), "finish");
+
+                    /*create csv and save to the phone memory*/
+
+                    /*notify user and finish the activity*/
+
+                    break;
+                }
             }
         }
-    }
+    };
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -450,7 +510,7 @@ public class InventoryListActivity extends BaseActivity implements View.OnClickL
     public void onBackPressed() {
         log.info("InventoryListActivity on backPressed");
         ExitDialogFragment exitDialogFragment = new ExitDialogFragment();
-        exitDialogFragment.callDialog(getFragmentManager(), new Bundle(), getString(R.string.quit_room_msg), "exit");
+        exitDialogFragment.callDialog(getFragmentManager(), new Bundle(), getString(R.string.quit_room_msg), getString(R.string.exit),"exit");
     }
 
     /*or knock it from context in full info()*/
@@ -487,6 +547,7 @@ public class InventoryListActivity extends BaseActivity implements View.OnClickL
     }
 
     //------Methods-----
+
     public void saveInventoryToPreferences(final Context context, final String preferenceFileName) {
 
         new Thread(new Runnable() {
@@ -508,9 +569,43 @@ public class InventoryListActivity extends BaseActivity implements View.OnClickL
             }
         }).start();
     }
+
+
+    //-------------Permission-------------------
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case REQUEST_WRITE_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    /*ok, run save file*/
+                } else {
+                    Toast.makeText(QrApplication.getInstance(), getString(R.string.no_storage_write_permission),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    public void checkStoragePermission(Activity activity) {
+
+        boolean hasPermission = ContextCompat.checkSelfPermission(activity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+
+        if (hasPermission) {
+            log.info("Has storage permission");
+            /*run save file*/
+
+        } else {
+            log.info("No storage permission. Ask for it");
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_WRITE_STORAGE);
+        }
+    }
 }
-
-
 //----------QUESTIONS-----------
 /*
 ON SVAED INSTANCE STATE

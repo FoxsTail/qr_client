@@ -1,38 +1,18 @@
-+launch mode for the app
-    +main menu base activity
-    +redirect to the welcome page
-    +logout new task
-    +enter to the app again with saved user
-    +delete from db when out
 
+-wtf with camera?
 ----
 
 -all in background
 
 ----
 
--try all in bg
-+static context (why)
-+first to sqlite
-+free onStop;
+-make a report
+    -call finish dialog
+    +get permission to folders
+    -csv creation method
+    -to the dir saver method
 
 ---
-
--design for profile
-
----
-
----
--paint design (flat)
-
--define main colors
-
-----
-
--make a report in inventory
-
----
-
 -when addr and room 've been chosen - show button start with animation
 
 //---------Refactoring---------
@@ -44,4 +24,5 @@
 //-----------questions-------------
 Если в асинктаске при запуске следущего активити указать флаг new_task, будет реально новый таск запущен и что будет с
 памятью? Можно ли избежать?
+
 

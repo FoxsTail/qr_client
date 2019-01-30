@@ -23,9 +23,11 @@
 
     -adapt for all phones
 
-    -basic colors
+    +basic colors
 
-    -main design
+    +plan main design
+
+    -create design to the working field
 
     -animation
 
@@ -55,3 +57,6 @@
     +activity finished, but never leaved the memory
     -load from local first
         -equipment item
+
+12. Code better ideas
+    -replace ArrayList with LinkedList

@@ -103,7 +103,8 @@ public class MainMenuActivity extends BaseActivity {
 
             log.info("Scanned msg: " + scanned_msg);
 
-            dialogFragment.callDialog(getFragmentManager(), bundle, scanned_msg, "qr_scan");
+            dialogFragment.callDialog(getFragmentManager(), bundle, scanned_msg,
+                    getString(R.string.inventory_scan_result), "qr_scan");
             return false;
         }
     };
@@ -200,7 +201,9 @@ public class MainMenuActivity extends BaseActivity {
     public void onBackPressed() {
         super.onBackPressed();
         log.info("---MainMenu onBackPressed()---");
+/*
         finish();
+*/
     }
 
     @Override

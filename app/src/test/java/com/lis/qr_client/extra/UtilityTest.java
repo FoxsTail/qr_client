@@ -9,12 +9,12 @@ public class UtilityTest {
 
     @Test
     public void cursorToClass(){
-        Cursor cursor = null;
+    /*    Cursor cursor = null;
         Object o = Utility.cursorToClass(cursor, User.class.getName());
 
         if(o != null){
             System.out.println(o.toString());
-        }
+        }*/
     }
 
 }
