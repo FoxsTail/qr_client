@@ -1,6 +1,5 @@
 package com.lis.qr_client.activity;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
@@ -8,16 +7,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.zxing.qrcode.encoder.QRCode;
 import com.lis.qr_client.R;
 import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
@@ -107,7 +101,7 @@ public class EquipmentItemActivity extends BaseActivity {
 
             /*stop waiting circle*/
             collapsingbar.setTitle(equipment.getType());
-            imageElement.setImageResource(R.drawable.videocard);
+            imageElement.setImageResource(R.drawable.pic_videocard);
 
             //---style----
             //TODO: make it bold in th easy way

@@ -10,16 +10,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -33,24 +29,25 @@ import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.constants.MyBundle;
 import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
+import com.lis.qr_client.extra.adapter.SliderAdapter;
+import com.lis.qr_client.extra.dialog_fragment.ExitDialogFragment;
 import com.lis.qr_client.extra.dialog_fragment.FinishInventoryDialogFragment;
+import com.lis.qr_client.extra.dialog_fragment.ScanDialogFragment;
+import com.lis.qr_client.extra.fragment.InventoryFragment;
 import com.lis.qr_client.extra.utility.DbUtility;
 import com.lis.qr_client.extra.utility.ObjectUtility;
 import com.lis.qr_client.extra.utility.PreferenceUtility;
-import com.lis.qr_client.pojo.UniversalSerializablePojo;
 import com.lis.qr_client.extra.utility.Utility;
-import com.lis.qr_client.extra.adapter.SliderAdapter;
-import com.lis.qr_client.extra.dialog_fragment.ExitDialogFragment;
-import com.lis.qr_client.extra.dialog_fragment.ScanDialogFragment;
-import com.lis.qr_client.extra.fragment.InventoryFragment;
+import com.lis.qr_client.pojo.UniversalSerializablePojo;
 import lombok.extern.java.Log;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Loads all view necessary items, runs thread loading data from sqlite db,
@@ -61,6 +58,11 @@ import static java.security.AccessController.getContext;
 public class InventoryListActivity extends BaseActivity {
     private static final int REQUEST_SCAN_QR = 1;
     private static final int REQUEST_WRITE_STORAGE = 112;
+
+    LinearLayout layout_home;
+    LinearLayout layout_scan;
+    LinearLayout layout_finish;
+
 
     Activity activity = this;
 
@@ -144,6 +146,10 @@ public class InventoryListActivity extends BaseActivity {
         layout_scan.setOnClickListener(onClickListener);
         layout_finish.setOnClickListener(onClickListener);
 
+        layout_home.setEnabled(false);
+        layout_scan.setEnabled(false);
+        layout_finish.setEnabled(false);
+
 
         if (savedInstanceState == null) {
             thread = new Thread(runLoadEquipments);
@@ -219,7 +225,7 @@ public class InventoryListActivity extends BaseActivity {
                 //if result in toScan list, remove, notify adapter
                 if (position > -1) {
 
-                    //for ok picture
+                    //for pic_ok picture
                     searched_map.put("scanned", true);
 
                     toScanEquipments.remove(position);
@@ -331,12 +337,20 @@ public class InventoryListActivity extends BaseActivity {
                 //-----inventory------
                 log.info("---No saved data. Taking from db---");
 
-
                 /*select only this room equipments*/
-                cursor = db.query(table_to_select, null, "room=?", new String[]{room_number}, null, null,
-                        null);
+                cursor = db.query(table_to_select, new String[]{DbTables.TABLE_INVENTORY_COLUMN_NAME,
+                                DbTables.TABLE_INVENTORY__COLUMN_INV_NUMBER}, "room=?",
+                        new String[]{room_number}, null, null,
+                        DbTables.TABLE_INVENTORY__COLUMN_INV_NUMBER);
 
                 toScanEquipments = DbUtility.cursorToMapList(cursor);
+
+                try {
+                    log.info("SIZE OF THE LIST: " + getBytesFromList(toScanEquipments) + " bytes");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    log.info("error getting bytes, so sad");
+                }
 
 //--logs---
                 System.out.println("--------What have we taken from Sqlite--------");
@@ -351,6 +365,13 @@ public class InventoryListActivity extends BaseActivity {
 
     };
 
+    public static long getBytesFromList(List list) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(baos);
+        out.writeObject(list);
+        out.close();
+        return baos.toByteArray().length;
+    }
 
     /**
      * Print equipment into the list
@@ -367,7 +388,7 @@ public class InventoryListActivity extends BaseActivity {
                 if (toScanFragment.getAdapter() == null) {
                     log.info("long before toScanFragment.getAdapter() == null");
                 } else {
-                    log.info("long before all is ok");
+                    log.info("long before all is pic_ok");
                 }
             }
 
@@ -412,8 +433,39 @@ public class InventoryListActivity extends BaseActivity {
             btnScanInventory.setEnabled(true);
 */
 
+            /*enable buttons layout*/
+            layout_home.setEnabled(true);
+            layout_scan.setEnabled(true);
+            layout_finish.setEnabled(true);
+
+
         }
     };
+
+    /* finish inventory show dialog and make a report*/
+    private Runnable finishInventory = new Runnable() {
+        @Override
+        public void run() {
+                    /* show dialog "finish inventory and make a report?" */
+            FinishInventoryDialogFragment finishDialog = new FinishInventoryDialogFragment();
+
+                    /*transfer scanned and to_scan lists to the dialog*/
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(MyBundle.TO_SCAN_LIST, new UniversalSerializablePojo(toScanEquipments));
+            bundle.putSerializable(MyBundle.SCANNED_LIST, new UniversalSerializablePojo(scannedEquipments));
+            bundle.putString(MyBundle.ROOM, room_number);
+            bundle.putStringArray(MyBundle.RESULT_FILE_TITLES, new String[]{MyBundle.EQUIPMENT_NAME,
+                    MyBundle.EQUIPMENT_INVENTORY,
+                    MyBundle.EQUIPMENT_STATE_VALUE});
+
+
+            log.info("Bundle size to pass " + bundle.size());
+
+            finishDialog.callDialog(getFragmentManager(), bundle, getString(R.string.finish_and_save),
+                    getString(R.string.finish), "finish");
+        }
+    };
+
 
     //-------------------Clicks--------------------//
 
@@ -439,20 +491,9 @@ public class InventoryListActivity extends BaseActivity {
                     /* request the permission */
                     checkStoragePermission(activity);
 
-                    /* show dialog "finish inventory and make a report?" */
-                    FinishInventoryDialogFragment finishDialog = new FinishInventoryDialogFragment();
-
-                    /*transfer scanned and to_scan lists to the dialog*/
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(MyBundle.TO_SCAN_LIST, new UniversalSerializablePojo(toScanEquipments));
-                    bundle.putSerializable(MyBundle.SCANNED_LIST, new UniversalSerializablePojo(scannedEquipments));
-                    bundle.putString(MyBundle.ROOM, room_number);
-
-                    log.info("Bundle size to pass "+bundle.size());
-                    finishDialog.callDialog(getFragmentManager(), bundle, getString(R.string.finish_and_save),
-                            getString(R.string.finish), "finish");
-
-                    /*create csv and save to the phone memory*/
+                    /*show dialog and make a report*/
+                    thread = new Thread(finishInventory);
+                    thread.start();
 
                     /*notify user and finish the activity*/
 
@@ -510,7 +551,7 @@ public class InventoryListActivity extends BaseActivity {
     public void onBackPressed() {
         log.info("InventoryListActivity on backPressed");
         ExitDialogFragment exitDialogFragment = new ExitDialogFragment();
-        exitDialogFragment.callDialog(getFragmentManager(), new Bundle(), getString(R.string.quit_room_msg), getString(R.string.exit),"exit");
+        exitDialogFragment.callDialog(getFragmentManager(), new Bundle(), getString(R.string.quit_room_msg), getString(R.string.exit), "exit");
     }
 
     /*or knock it from context in full info()*/
@@ -540,9 +581,12 @@ public class InventoryListActivity extends BaseActivity {
 
         runLoadEquipments = null;
         postEquipmentInList = null;
+        finishInventory = null;
 
         resultFragment = null;
         toScanFragment = null;
+
+        activity = null;
 
     }
 
@@ -581,7 +625,7 @@ public class InventoryListActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_WRITE_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    /*ok, run save file*/
+                    /*pic_ok, run save file*/
                 } else {
                     Toast.makeText(QrApplication.getInstance(), getString(R.string.no_storage_write_permission),
                             Toast.LENGTH_SHORT).show();

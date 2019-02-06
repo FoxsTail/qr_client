@@ -32,12 +32,13 @@
     + data in profile
     - password field cancel the enter in password
 
+//-------no need--------
 2. Sing up
     -Activity + xml
     -Validation at client (correctness)
     -Sing up api
     -on success login page
-
+//---------------
 
 3. Profile
     + simple xml
@@ -60,11 +61,7 @@
                 - load to local db
                 - reload page, show result
 
-        -google design
-            -pic
-            -small pic
-            -data
-            -data to change
+        +google design
 
 4. Log out +
     + Add button in menu
@@ -125,10 +122,12 @@
 
 
         - make a report
-            -menu item "make the report"
-            -save all scanned and not scanned data to the separate file
-                - ? user's device or server ?
-                - ? txt or csv ?
+            +menu item "make the report"
+            +save all scanned and not scanned data to the separate file
+                + user's device
+                - in the other room
+                - server
+                + csv
 
     ? think about session saving button (save and continue later) ?
 

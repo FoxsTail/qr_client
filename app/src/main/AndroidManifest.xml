@@ -45,7 +45,7 @@
 
         </activity>-->
         <activity
-                android:name=".activity.LogInActivity"
+                android:name=".activity.WelcomeActivity"
                 android:noHistory="true"
                 android:parentActivityName=".activity.WelcomeActivity">
         </activity>
@@ -60,11 +60,15 @@
         <activity android:name=".activity.BaseActivity">
         </activity>
 
-        <activity android:name=".activity.TestActivity">
 
-        </activity>
+       <!-- <activity android:name=".activity.TestActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
-        <activity android:name=".activity.WelcomeActivity" android:theme="@style/SplashTheme" android:noHistory="true">
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+        </activity>--> <activity android:name=".activity.LogInActivity" android:theme="@style/SplashTheme" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

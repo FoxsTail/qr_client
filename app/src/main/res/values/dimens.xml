@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Text size-->
+    <dimen name="title_text_size">26sp</dimen>
     <dimen name="textSize">18sp</dimen>
+
+    <dimen name="errorTextSize">14sp</dimen>
+    <dimen name="hintTextSize">16sp</dimen>
+
+
     <dimen name="check_pic_size">15dp</dimen>
+
+    <!--Padding-->
     <dimen name="button_padding">20dp</dimen>
     <dimen name="edit_text_start_padding">15dp</dimen>
-</resources>
+
+    </resources>

@@ -326,7 +326,7 @@ public class DbUtility {
 
 
             db.setTransactionSuccessful();
-            log.info("----all is ok----");
+            log.info("----all is pic_ok----");
         } finally {
             db.endTransaction();
             log.info("----End----");
@@ -359,7 +359,7 @@ public class DbUtility {
             }
 
             db.setTransactionSuccessful();
-            log.info("----all is ok----");
+            log.info("----all is pic_ok----");
         } finally {
             db.endTransaction();
             log.info("----End----");
@@ -393,7 +393,7 @@ public class DbUtility {
             }
 
             db.setTransactionSuccessful();
-            log.info("----all is ok----");
+            log.info("----all is pic_ok----");
         } finally {
             db.endTransaction();
             log.info("----End----");

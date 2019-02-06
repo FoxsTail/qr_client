@@ -41,7 +41,7 @@
 
         </TextView>
         <ImageView android:layout_width="15dp" android:layout_height="15dp"
-                   android:layout_gravity="end" android:src="@drawable/ok"
+                   android:layout_gravity="end" android:src="@drawable/pic_ok"
                    android:id="@+id/image_smallOk"
                    android:visibility="invisible"
                    android:layout_marginRight="8dp"
@@ -83,7 +83,7 @@
                 android:textSize="15sp" android:textColor="@color/colorBlack" >
 
             <ImageView android:layout_width="@dimen/check_pic_size" android:layout_height="@dimen/check_pic_size"
-                       android:layout_gravity="end" android:src="@drawable/ok" android:id="@+id/image_smallOk"
+                       android:layout_gravity="end" android:src="@drawable/pic_ok" android:id="@+id/image_smallOk"
                        android:layout_marginEnd="5dp"/>
         </TextView>
 

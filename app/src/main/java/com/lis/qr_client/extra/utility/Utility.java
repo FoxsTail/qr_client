@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -128,6 +129,20 @@ public class Utility {
         }
 
         handler.sendMessage(msg);
+    }
+
+    /**
+     * hide keyboard
+     */
+    public static boolean hideSoftKeyboard(Activity activity) {
+        final InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (inputMethodManager.isActive()) {
+            if (activity.getCurrentFocus() != null) {
+                inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+            }
+            return true;
+        }
+        return false;
     }
 
 }

@@ -13,6 +13,11 @@ public class MyBundle {
 
     public static final String SCANNED_LIST = "scanned_list";
     public static final String TO_SCAN_LIST = "to_scan_list";
+    public static final String OTHER_ROOM_LIST = "other_room_list";
     public static final String ROOM = "room";
+    public static final String RESULT_FILE_TITLES = "result_file_titles";
+    public static final String EQUIPMENT_NAME = "Обладнання";
+    public static final String EQUIPMENT_INVENTORY = "Інвентарний номер";
+    public static final String EQUIPMENT_STATE_VALUE = "Стан";
 
 }

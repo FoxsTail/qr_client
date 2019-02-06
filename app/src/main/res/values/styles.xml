@@ -7,7 +7,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="android:actionMenuTextColor">@color/colorBlack</item>
+        <item name="android:actionMenuTextColor">@color/colorDark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <!--<item name="android:backgroundTint">@color/colorLightGrey</item>-->
@@ -23,16 +23,32 @@
         <item name="android:dropDownVerticalOffset">4.0dip</item>
     </style>
 
-    <style name="TextAppearance.Design.Hint." parent="TextAppearance.Design.Hint.">
-        <item name="android:textSize">16dp</item>
-    </style>
-
-    <style name="MyAppTheme.TextInputLayout" parent="@android:style/TextAppearance">
-        <item name="android:textColor">@color/red</item>
-    </style>
-
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen_bg</item>
     </style>
+
+
+    <!--TextInputLayout-->
+    <style name="TextInputLayoutAppearance" parent="Widget.Design.TextInputLayout">
+        <item name="errorTextAppearance">@style/ErrorText</item>
+        <item name="hintTextAppearance">@style/HintText</item>
+        <item name="android:textColor">@color/colorUserInput</item>
+        <item name="android:textColorHint">@color/colorUnfocused</item>
+        <item name="android:colorControlNormal"> @color/colorUnderlineGrey</item>
+        <item name="android:colorControlActivated"> @color/colorAccent</item>
+        <item name="android:colorControlHighlight">@color/colorAccent</item>
+    </style>
+
+
+    <style name="ErrorText" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/colorRed</item>
+        <item name="android:textSize">@dimen/errorTextSize</item>
+    </style>
+
+    <style name="HintText" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/colorDark</item>
+        <item name="android:textSize">@dimen/hintTextSize</item>
+    </style>
+
 
 </resources>

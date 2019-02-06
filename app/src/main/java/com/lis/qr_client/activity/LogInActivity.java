@@ -1,13 +1,17 @@
 package com.lis.qr_client.activity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -41,11 +45,16 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     private TextInputLayout email_wrapper;
     private TextInputLayout password_wrapper;
 
+    Activity context = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //----Full screen
         Utility.fullScreen(this);
 
+
+        //replace splash screen theme with app theme
+        setTheme(R.style.AppTheme);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
@@ -64,6 +73,25 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         btn_log_in_the_app = findViewById(R.id.btn_log_in_the_app);
         btn_log_in_the_app.setOnClickListener(this);
 
+
+        ConstraintLayout layout_login = findViewById(R.id.layout_log_in);
+        layout_login.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Utility.hideSoftKeyboard(context);
+                return false;
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        log.info("---Login OnResume---");
+        super.onResume();
+
+        checkSavedUser();
 
     }
 
@@ -91,7 +119,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     email_wrapper.setErrorEnabled(false);
                     password_wrapper.setErrorEnabled(false);
 
-                    /*ok, check user data*/
+                    /*pic_ok, check user data*/
                     String table_name = DbTables.TABLE_USER;
 
 
@@ -112,7 +140,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
                     } else {
 //----log---
-                        log.info("Cursor is ok");
+                        log.info("Cursor is pic_ok");
                         DbUtility.logCursor(cursor, "test");
 //-----Save user to preferences---
                         User user = (User) DbUtility.cursorToClass(cursor, User.class.getName());
@@ -128,7 +156,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                         }
 //------
                         cursor.close();
-                                /*ok, load new page*/
+                                /*pic_ok, load new page*/
                         Intent intent = new Intent(QrApplication.getInstance(), MainMenuActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -144,6 +172,29 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
 
     //----Methods----
+
+
+    /**
+     * If there any saved user's email and password -> go straight to the MainMenu
+     **/
+
+    public void checkSavedUser() {
+        log.info("checkSavedUser");
+
+        Boolean saved_user = PreferenceUtility.getBooleanDataFromPreferences
+                (this, MyPreferences.PREFERENCE_IS_USER_SAVED);
+        if (saved_user != null && saved_user) {
+            log.info("Have saved user, go to the main page");
+            Intent intent = new Intent(this, MainMenuActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        } else {
+            log.info("Nothing was saved");
+        }
+    }
+
+
     public void checkLoginAtServer(String table_name, String email, String password) {
         /*prepare data*/
         Resources resources = this.getResources();
@@ -172,10 +223,14 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        log.info("---Login -- onStop()---");
-        Intent intent = new Intent(QrApplication.getInstance(), WelcomeActivity.class);
+        log.info("---Login -- onBack pressed()---");
+
+        if (!Utility.hideSoftKeyboard(this)) {
+
+            Intent intent = new Intent(QrApplication.getInstance(), WelcomeActivity.class);
         /*intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);*/
-        startActivity(intent);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -197,5 +252,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
         email_wrapper = null;
         password_wrapper = null;
+
+        context = null;
     }
 }

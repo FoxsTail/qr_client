@@ -1,15 +1,14 @@
 package com.lis.qr_client.extra.utility;
 
 import android.os.Environment;
-import android.util.Pair;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lis.qr_client.R;
+import com.lis.qr_client.application.QrApplication;
+import com.lis.qr_client.constants.DbTables;
 import lombok.extern.java.Log;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -93,26 +92,28 @@ public class ObjectUtility {
 
     //---------Convert and out-----------
 
-    public static void convertAndSaveListsToCsvFile(String additionalPartForFileName, String[] list_titles, List<Map<String, Object>> list1,
-                                                    List<Map<String, Object>> list2,
-                                                    List<Map<String, Object>> list3) {
+    public static void convertAndSaveListsToCsvFile(String additionalPartForFileName, String[] list_titles,
+                                                    List<Map<String, Object>> listScanned,
+                                                    List<Map<String, Object>> listOtherRoom,
+                                                    List<Map<String, Object>> listNotFound) {
 
-        String csv_string = convertToStringForCsv(list_titles, list1, list2, list3);
+        String csv_string = convertToStringForCsv(list_titles, listScanned, listOtherRoom, listNotFound);
 
         if (csv_string == null) {
             log.info("Nothing to save to the file. Empty data set");
 
         } else {
-            log.info("Data is ok. Saving to the file...");
+            log.info("Data is pic_ok. Saving to the file...");
             log.info("Data string: " + csv_string);
 
-        /*prepare place in the storage*/
+/*
+        prepare place in the phone storage
+*/
             File root = Environment.getExternalStorageDirectory();
-            //File dir = new File(root.getAbsolutePath() + "/qr_inventory_result");
-            File dir = new File(root.getAbsolutePath() + "/qr_inventory_result");
+            File dir = new File(root.getAbsolutePath() + "/Qr_inventory_result");
             dir.mkdirs();
-
             log.info("dir created");
+
         /*create csv file name*/
             String filename = getDataTimeForFilename(additionalPartForFileName);
 
@@ -121,17 +122,18 @@ public class ObjectUtility {
             if (filename != null) {
                 destination_file = new File(dir, filename);
             } else {
-                destination_file = new File(dir, "empty_name.csv");
+                destination_file = new File(dir, "empty_name.txt");
             }
 
 
         /*write to file*/
             try {
-                FileWriter fileWriter = new FileWriter(destination_file);
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter
+                        (new FileOutputStream(destination_file), "cp1251"));
 
-                fileWriter.write(csv_string);
+                bufferedWriter.write(csv_string);
 
-                fileWriter.close();
+                bufferedWriter.close();
             } catch (IOException e) {
                 e.printStackTrace();
                 log.info("Error writing to file-- convertListsToCsv -- cause:" + e.getMessage() + " \n");
@@ -139,9 +141,17 @@ public class ObjectUtility {
         }
     }
 
-    public static String convertToStringForCsv(String[] list_titles, List<Map<String, Object>> list1,
-                                               List<Map<String, Object>> list2,
-                                               List<Map<String, Object>> list3) {
+    /**
+     * Convert transferred titles and lists to the one string for csv file
+     */
+
+    public static String convertToStringForCsv(String[] list_titles, List<Map<String, Object>> listScanned,
+                                               List<Map<String, Object>> listOtherRoom,
+                                               List<Map<String, Object>> listNotFound) {
+        final String SCANNED_STATE = QrApplication.getInstance().getString(R.string.scanned_title);
+        final String OTHER_ROOM_STATE = QrApplication.getInstance().getString(R.string.other_room_title);
+        final String NOT_FOUND_STATE = QrApplication.getInstance().getString(R.string.not_found_title);
+
         StringBuilder sb = new StringBuilder();
 
 
@@ -152,54 +162,71 @@ public class ObjectUtility {
                 sb.append(list_titles[i])
                         .append(";");
             }
-            sb.append("\n");
+            sb.append("\r\n");
         }
 
 
             /*columns data*/
-            /*a bit hardcode, best decision for now*/
+        String temp_string;
 
-            /*find list which is not null*/
-        List<List<String>> lists = new ArrayList<>();
-        List<Integer> lists_size = new ArrayList<>();
-
-
-        if (list1 != null && list1.size() > 0) {
-            lists.add(mapListToStringList(list1));
-            lists_size.add(list1.size());
-            log.info("List1 size: " + list1.size());
-        }
-        if (list2 != null && list2.size() > 0) {
-            lists.add(mapListToStringList(list2));
-            lists_size.add(list2.size());
-            log.info("List2 size: " + list2.size());
-        }
-        if (list3 != null && list3.size()>0) {
-            lists.add(mapListToStringList(list3));
-            lists_size.add(list3.size());
-            log.info("List3 size: " + list3.size());
+        /*convert mapList to fileString*/
+        temp_string = fileStringFromList(listScanned, SCANNED_STATE);
+        if (temp_string != null) {
+            sb.append(temp_string);
         }
 
-        if (lists_size != null && lists_size.size() > 0) {
-            log.info("Convert to csv...Set data");
+        temp_string = fileStringFromList(listOtherRoom, OTHER_ROOM_STATE);
+        if (temp_string != null) {
+            sb.append(temp_string);
+        }
 
-            Collections.reverse(lists_size);
+        temp_string = fileStringFromList(listNotFound, NOT_FOUND_STATE);
+        if (temp_string != null) {
+            sb.append(temp_string);
+        }
 
-            /*define the longest list*/
 
-            for (int i = 0; i < lists_size.get(0); i++) {
-                for (List<String> list : lists) {
-                    if (i < list.size()) {
-                        sb.append(list.get(i));
-                    }
-                    sb.append(";");
-                }
-                sb.append("\n");
-            }
-
+        if (sb != null) {
+            log.info("Convert to file string is successful...return data");
             return sb.toString();
         } else {
             log.info("Convert to csv has failed...empty data");
+            return null;
+        }
+
+    }
+
+    /**
+     * Check if null,
+     * convert internal map to string format "xxx;xxx;",
+     * put to the result string in format "xxx;xxx;value;\r\n"
+     */
+    public static String fileStringFromList(List<Map<String, Object>> list, String state_value) {
+        List<String> temp_list;
+        StringBuilder sb = new StringBuilder();
+
+        if (list != null && list.size() > 0) {
+
+            /*tale only map values from mapList*/
+            temp_list = mapListInventoryToStringList(list);
+
+            if (temp_list != null) {
+
+                /*to format "xxx;xxx;value;\r\n"*/
+                for (String list_string : temp_list) {
+                    sb.append(list_string)
+                            .append(state_value)
+                            .append(";")
+                            .append("\r\n");
+                }
+
+
+                return sb.toString();
+
+            } else {
+                return null;
+            }
+        } else {
             return null;
         }
     }
@@ -208,14 +235,43 @@ public class ObjectUtility {
         return new SimpleDateFormat("yyyyMMddHHmm").format(new Date()) + "_" + additional + ".csv";
     }
 
-    public static List<String> mapListToStringList(List<Map<String, Object>> mapList) {
+    /**
+     * returns string from mapList in format "xxx;xxx;"
+     */
+    public static List<String> mapListInventoryToStringList(List<Map<String, Object>> mapList) {
         List<String> stringList = new ArrayList<>();
 
-        for (Map<String, Object> map : mapList) {
-            stringList.add(map.values().toString());
+        String map_name;
+        String map_inventory_num;
+        StringBuilder sb = new StringBuilder();
+
+        if (mapList != null) {
+            for (Map<String, Object> map : mapList) {
+                /*extract name and inv_number*/
+/* //any data
+                templist = map.values().toString();
+                sb.append(templist)
+                        .append(";");
+                stringList.add(sb.toString());
+
+*/
+                map_name = (String) map.get(DbTables.TABLE_INVENTORY_COLUMN_NAME);
+                map_inventory_num = (String) map.get(DbTables.TABLE_INVENTORY__COLUMN_INV_NUMBER);
+
+                /*form string "xxx;xxx;" */
+                 sb.append(map_name)
+                        .append(";")
+                        .append(map_inventory_num)
+                        .append(";");
+
+                stringList.add(sb.toString());
+            /*remove old data*/
+            sb = new StringBuilder();
+            }
+            return stringList;
+        } else {
+            return null;
         }
 
-        return stringList;
     }
-
 }

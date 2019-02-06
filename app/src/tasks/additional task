@@ -60,3 +60,9 @@
 
 12. Code better ideas
     -replace ArrayList with LinkedList
+    -sort or quick sort the equipment arrays
+        -put sorted data in sqlite
+        -take sorted data from sqlite
+        -put sorted data to scanned list
+        -sort search for everyone
+    -get allEquipments from sqLite

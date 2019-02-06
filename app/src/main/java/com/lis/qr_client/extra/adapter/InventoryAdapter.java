@@ -51,7 +51,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
 
         log.info("-----------" + inventory + "--------");
 
-        //----set ok pic---
+        //----set pic_ok pic---
         Object isScanned = inventory.get("scanned");
         if (isScanned != null && (boolean) isScanned) {
             ImageView ok_pic = inventoryViewHolder.itemView.findViewById(R.id.image_smallOk);

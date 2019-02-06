@@ -2,7 +2,9 @@
 <resources>
     <string name="port">8090</string>
     <string name="server_ip">172.36.2.47</string>
-    <string name="emu_ip">10.0.3.2</string>
+    <string name="localhost_ip">127.0.0.1</string>
+    <!--<string name="emu_ip">10.0.3.2</string>-->
+    <string name="emu_ip">10.11.12.110</string>
     <string name="test">Т</string>
     <string name="api_addresses_load">/addresses/only_address</string>
     <string name="api_inventory_by_address_load">/inventory/address/</string>
@@ -16,8 +18,8 @@
     <string name="all">Все</string>
     <string name="sync">Синхронізувати</string>
     <string name="next">Далі</string>
-    <string name="password">Пароль</string>
-    <string name="email">Email</string>
+    <string name="password">Ваш пароль</string>
+    <string name="email">Email адреса</string>
     <string name="name">Ім\'я:</string>
     <string name="del">Видалити</string>
     <string name="equipments">Тест</string>
@@ -72,7 +74,6 @@
     <string name="equipment_not_found">Обладнання не знайдено!</string>
     <string name="log_in">Вхід</string>
     <string name="sign_up">Реєстрація</string>
-    <string name="login">Логін:</string>
     <string name="email_example">example@gmail.com</string>
     <string name="password_example">8-16 max</string>
     <string name="toast_enter_email">Введіть email!</string>
@@ -100,5 +101,8 @@
     <string name="already_scanned_title">Вже відскановано</string>
     <string name="other_room_title">В іншій кімнаті</string>
     <string name="not_found_title">Не знайдено</string>
+    <string name="scanned_title">Знайдено</string>
+    <string name="saved">Збережено</string>
+    <string name="forgot_password">Забули пароль?</string>
 
 </resources>

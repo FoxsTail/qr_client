@@ -21,6 +21,7 @@ public class FinishInventoryDialogFragment extends ScanDialogFragment {
     List<Map<String, Object>> to_scan_list;
     List<Map<String, Object>> scanned_list;
     String room = null;
+    String[] file_titles;
 
 
     @Override
@@ -34,8 +35,9 @@ public class FinishInventoryDialogFragment extends ScanDialogFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             room = bundle.getString(MyPreferences.ROOM_ID_PREFERENCES, null);
-            to_scan_list = extractElementsFromBundle(bundle, MyBundle.TO_SCAN_LIST);
-            scanned_list = extractElementsFromBundle(bundle, MyBundle.SCANNED_LIST);
+            to_scan_list = extractMapListFromBundle(bundle, MyBundle.TO_SCAN_LIST);
+            scanned_list = extractMapListFromBundle(bundle, MyBundle.SCANNED_LIST);
+            file_titles = bundle.getStringArray(MyBundle.RESULT_FILE_TITLES);
 
         } else {
             log.info("Bundle is null");
@@ -54,9 +56,10 @@ public class FinishInventoryDialogFragment extends ScanDialogFragment {
             switch (which) {
                 case Dialog.BUTTON_POSITIVE: {
                     /*save data to csv etc*/
-                    Toast.makeText(QrApplication.getInstance(), getString(R.string.ok), Toast.LENGTH_SHORT).show();
-                    ObjectUtility.convertAndSaveListsToCsvFile(room, new String[]{MyBundle.TO_SCAN_LIST,
-                            MyBundle.SCANNED_LIST}, to_scan_list, scanned_list, null);
+                    ObjectUtility.convertAndSaveListsToCsvFile(room, file_titles, to_scan_list, scanned_list,
+                            null);
+                    Toast.makeText(QrApplication.getInstance(), getString(R.string.saved), Toast.LENGTH_SHORT).show();
+                    getActivity().finish();
                 }
                 break;
                 case Dialog.BUTTON_NEGATIVE: {
@@ -67,8 +70,8 @@ public class FinishInventoryDialogFragment extends ScanDialogFragment {
         }
     };
 
-    public List<Map<String, Object>> extractElementsFromBundle(Bundle bundle, String list_name) {
-        log.info("extractElementsFromBundle");
+    public List<Map<String, Object>> extractMapListFromBundle(Bundle bundle, String list_name) {
+        log.info("extractMapListFromBundle");
         Serializable serializable_bundle = bundle.getSerializable(list_name);
 
             /*extract to_scan to map list*/

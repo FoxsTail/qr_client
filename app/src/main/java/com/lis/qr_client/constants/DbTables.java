@@ -20,5 +20,9 @@ public class DbTables {
     public static final String TABLE_EQUIPMENT = "equipment";
     public static final String TABLE_INVENTORY = "inventory";
     public static final String TABLE_ROOM = "room";
+    public static final String TABLE_INVENTORY_COLUMN_NAME = "name";
+    public static final String TABLE_INVENTORY__COLUMN_INV_NUMBER = "inventory_num";
+
+
 
 }
