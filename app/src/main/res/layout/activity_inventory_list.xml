@@ -50,7 +50,7 @@
         android:layout_height="wrap_content" android:id="@+id/btnScanInventory"
         android:layout_marginTop="0dp"
         android:layout_gravity="center|bottom"
-        android:background="@drawable/ripple"/>-->
+        android:background="@drawable/drawable_btn_ripple"/>-->
         <!--
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                       xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -75,7 +75,7 @@
                 app:layout_constraintVertical_weight="3"
                 app:layout_constraintTop_toBottomOf="@+id/lvEquipments" android:layout_marginLeft="0dp"
                 app:layout_constraintLeft_toLeftOf="@+id/lvEquipments" android:layout_weight="0.03"
-                android:background="@drawable/ripple"/>
+                android:background="@drawable/drawable_btn_ripple"/>
 
         </LinearLayout>
         -->

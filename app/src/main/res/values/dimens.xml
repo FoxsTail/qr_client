@@ -8,6 +8,8 @@
     <dimen name="hintTextSize">16sp</dimen>
 
 
+    <!--Other-->
+
     <dimen name="check_pic_size">15dp</dimen>
 
     <!--Padding-->

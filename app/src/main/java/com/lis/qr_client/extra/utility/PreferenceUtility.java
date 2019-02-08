@@ -30,6 +30,8 @@ public class PreferenceUtility {
                                               @Preferences String key_is_logged_in) {
         SharedPreferences sharedPreferences = context.getSharedPreferences
                 (MyPreferences.PREFERENCE_FILE_NAME, MODE_PRIVATE);
+
+
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(key_user_data);
         editor.putBoolean(key_is_logged_in, false);

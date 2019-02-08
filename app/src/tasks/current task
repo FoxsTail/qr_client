@@ -2,14 +2,20 @@
 +start from login layout check all the conditions
 
 -design
-    -grid or adapt for all phones
-    -button design
-    -login page
+
+    +login page
         +toolbar
-        -serif size on big screen
         +ripple button
         +edit text expand with pics and borders
         +visible/invisible passwd
+    -main menu
+        + drawable buttons colorful (menu buttons or usual)
+        -elevation
+        +title
+        +custom toolbar
+        -title icons with layout
+
+
 
 
 -----

@@ -10,22 +10,31 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorDark">#413f43</color>
     <color name="colorLightGrey">#fafafa</color>
-    <color name="colorLightGrey2">#bdbdbd</color>
+    <color name="colorLightGrey2">#cacaca</color>
+    <color name="colorLightGrey3">#bdbdbd</color>
     <color name="colorGrey">#eeeeee</color>
     <color name="colorRed">#F31919</color>
 
 
-    <!--            -->
-    <color name="start_gradient">#4DB6AC</color>
-    <color name="center_gradient">#44ACC7</color>
-    <color name="end_gradient">#3CA4DE</color>
+    <!--Main colors-->
+    <color name="colorSeaGreen">#4DB6AC</color>
+    <color name="colorGreenBlue">#44ACC7</color>
+    <color name="colorMediumBlue">#3CA4DE</color>
+    <color name="colorBlue">#3A85CE</color>
+
+    <!--  Gradient  -->
+    <color name="start_gradient">@color/colorSeaGreen</color>
+    <color name="center_gradient">@color/colorGreenBlue</color>
+    <color name="end_gradient">@color/colorMediumBlue</color>
+
     <color name="btn_color">#45ADC4</color>
     <color name="colorAccent">#68BBBB</color>
-    <color name="colorIconBlue">#3CA4DE</color>
+    <color name="colorIconBlue">@color/colorMediumBlue</color>
     <color name="colorActiveText">#1C456E</color>
     <color name="colorUnderlineGrey">#E5E5E5</color>
 
 
     <color name="colorUserInput">@color/colorDark</color>
     <color name="colorUnfocused">@color/colorLightGrey2</color>
+    <color name="colorDarker">#343434</color>
 </resources>

@@ -28,7 +28,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lis.qr_client.R;
+import com.lis.qr_client.activity.LogInActivity;
 import com.lis.qr_client.activity.MainMenuActivity;
+import com.lis.qr_client.activity.WelcomeActivity;
+import com.lis.qr_client.application.QrApplication;
+import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.pojo.*;
 import com.lis.qr_client.extra.adapter.InventoryAdapter;
 import lombok.extern.java.Log;
@@ -92,6 +96,28 @@ public class Utility {
                     }
                 });
             }
+        }
+    }
+
+    /**
+     * Logout.
+     * Clear saved user's preferences,
+     * clear task stack, go to login page
+     */
+    public static void logout(Activity activity) {
+
+        /*remove saved user's data*/
+        PreferenceUtility.removeLoginPreferences(QrApplication.getInstance(), MyPreferences.PREFERENCE_SAVE_USER,
+                MyPreferences.PREFERENCE_IS_USER_SAVED);
+
+        /*clear app's task and run login page*/
+        Intent intent = new Intent(QrApplication.getInstance(), LogInActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (activity != null) {
+            activity.startActivity(intent);
+            activity.finish();
+        }else{
+            log.info("activity is null");
         }
     }
 

@@ -60,7 +60,7 @@
             app:layout_constraintTop_toBottomOf="@+id/spinRoom"
             app:layout_constraintVertical_bias="0.468" android:layout_marginLeft="129dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:background="@drawable/ripple"/>
+            android:background="@drawable/drawable_btn_ripple"/>
     <ProgressBar
             style="?android:attr/progressBarStyle"
             android:layout_width="66dp"

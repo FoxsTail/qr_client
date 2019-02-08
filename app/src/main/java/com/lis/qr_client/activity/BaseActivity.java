@@ -11,6 +11,7 @@ import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.extra.utility.PreferenceUtility;
+import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
 
 @Log
@@ -50,21 +51,14 @@ public class BaseActivity extends AppCompatActivity {
                 log.info("Logging out and removing preferences...");
 
                 /*clean user's shared preferences (or all preferences?)*/
-                PreferenceUtility.removeLoginPreferences(this, MyPreferences.PREFERENCE_SAVE_USER,
-                        MyPreferences.PREFERENCE_IS_USER_SAVED);
                 /*launch welcome page*/
-                logout();
+               Utility.logout(this);
             }
         }
         return super.onOptionsItemSelected(item);
 
     }
 
-    public void logout(){
-        Intent intent = new Intent(QrApplication.getInstance(), WelcomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-    }
+
 
 }

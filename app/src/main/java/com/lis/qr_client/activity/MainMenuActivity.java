@@ -1,9 +1,12 @@
 package com.lis.qr_client.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.*;
 import com.badoo.mobile.util.WeakHandler;
@@ -11,7 +14,6 @@ import com.lis.qr_client.R;
 import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.constants.MyPreferences;
-import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.async_helpers.AsyncMultiDbManager;
 import com.lis.qr_client.extra.dialog_fragment.ScanDialogFragment;
 import com.lis.qr_client.extra.utility.ObjectUtility;
@@ -20,11 +22,11 @@ import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Log
-public class MainMenuActivity extends BaseActivity {
+public class MainMenuActivity extends AppCompatActivity {
 
+    protected Toolbar toolbar;
     private Button btnFormulyar, btnInventory, btnProfile, btnScanQR;
     private ProgressBar pbInventory;
 
@@ -36,6 +38,8 @@ public class MainMenuActivity extends BaseActivity {
     private WeakHandler dialogHandler;
 
     private String url;
+
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,18 +62,30 @@ public class MainMenuActivity extends BaseActivity {
 
         //---get framing layout for dimming
 
-        final FrameLayout frameLayout = findViewById(R.id.frame_main_layout);
+        /*final FrameLayout frameLayout = findViewById(R.id.frame_main_layout);
         if (frameLayout != null) {
             frameLayout.getForeground().setAlpha(0);
-        }
+        }*/
         //---set toolbar
 
         toolbar = findViewById(R.id.toolbar);
+        TextView tv_toolbar_title = findViewById(R.id.tv_toolbar_title);
 
         if (toolbar != null) {
-            Utility.toolbarSetter(this, toolbar, getResources().getString(R.string.main_menu),
-                    frameLayout, false);
+            tv_toolbar_title.setText(getResources().getString(R.string.main_menu));
+            Utility.toolbarSetter(this, toolbar, "",
+                    null, false);
         }
+
+
+        /*set toolbar icons and actions*/
+
+        ImageView img_info = findViewById(R.id.img_btn_info);
+        img_info.setOnClickListener(onClickListener);
+
+        ImageView img_log_out = findViewById(R.id.img_btn_log_out);
+        img_log_out.setOnClickListener(onClickListener);
+
 
         //--------
 
@@ -120,8 +136,8 @@ public class MainMenuActivity extends BaseActivity {
 
                     Intent intent = new Intent(QrApplication.getInstance(), TestActivity.class);
                     startActivity(intent);
+                    break;
                 }
-                break;
                 case R.id.btnInventory: {
 
                     log.info("---Remove old saved data---");
@@ -135,27 +151,38 @@ public class MainMenuActivity extends BaseActivity {
                     if (url != null) {
 
                         String table_name = DbTables.TABLE_ADDRESS;
-                        new AsyncMultiDbManager(QrApplication.getInstance(), table_name, null, url, true,
-                                InventoryParamSelectActivity.class, new int[]{Intent.FLAG_ACTIVITY_NEW_TASK}, null,
+                        new AsyncMultiDbManager(QrApplication.getInstance(), table_name, null, url,
+                                true, InventoryParamSelectActivity.class,
+                                new int[]{Intent.FLAG_ACTIVITY_NEW_TASK}, null,
                                 btnInventory, pbInventory, true).runAsyncLoader();
                     } else {
                         log.warning("---URL IS NULL!---");
 
                     }
+                    break;
                 }
-                break;
                 case R.id.btnProfile: {
                     Intent intent = new Intent(QrApplication.getInstance(), ProfileActivity.class);
                     startActivity(intent);
+                    break;
                 }
-                break;
 
             /*call CameraActivity for scanning*/
                 case R.id.btnScanQR: {
                     Intent intent = new Intent(QrApplication.getInstance(), CameraActivity.class);
                     startActivityForResult(intent, REQUEST_SCAN_QR);
+                    break;
                 }
-                break;
+
+                case R.id.img_btn_info: {
+                    log.info("Getting the information...");
+                    break;
+                }
+                case R.id.img_btn_log_out: {
+                    log.info("Logging out...");
+                    logout();
+                    break;
+                }
 
             }
         }
@@ -234,6 +261,24 @@ public class MainMenuActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         log.info("---MainMenu -- onDestroy()---");
+        activity = null;
+
+    }
+
+    //---Methods----
+
+    public void logout() {
+
+        /*remove saved user's data*/
+        PreferenceUtility.removeLoginPreferences(QrApplication.getInstance(), MyPreferences.PREFERENCE_SAVE_USER,
+                MyPreferences.PREFERENCE_IS_USER_SAVED);
+
+        /*clear app's task and run login page*/
+        Intent intent = new Intent(QrApplication.getInstance(), LogInActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+
     }
 
 

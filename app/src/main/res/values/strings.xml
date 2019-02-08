@@ -2,7 +2,7 @@
 <resources>
     <string name="port">8090</string>
     <string name="server_ip">172.36.2.47</string>
-    <string name="localhost_ip">127.0.0.1</string>
+    <string name="localhost_ip" translatable="false">127.0.0.1</string>
     <!--<string name="emu_ip">10.0.3.2</string>-->
     <string name="emu_ip">10.11.12.110</string>
     <string name="test">Т</string>
@@ -10,7 +10,7 @@
     <string name="api_inventory_by_address_load">/inventory/address/</string>
     <string name="api_room_by_address_load">/addresses/rooms/</string>
     <string name="api_full_inventory_from_equipments">/equipments/inventory_num/full/</string>
-    <string name="api_login_check">/users/login</string>
+    <string name="api_login_check" translatable="false">/users/login</string>
 
 
     <string name="app_name" translatable="false">PFU Inventory</string>
@@ -74,8 +74,8 @@
     <string name="equipment_not_found">Обладнання не знайдено!</string>
     <string name="log_in">Вхід</string>
     <string name="sign_up">Реєстрація</string>
-    <string name="email_example">example@gmail.com</string>
-    <string name="password_example">8-16 max</string>
+    <string name="email_example" translatable="false">example@gmail.com</string>
+    <string name="password_example" translatable="false">8-16 max</string>
     <string name="toast_enter_email">Введіть email!</string>
     <string name="toast_enter_password">Введіть пароль!</string>
     <string name="ok_loading">Завантажую профіль...</string>
