@@ -66,16 +66,17 @@ public class MainMenuActivity extends AppCompatActivity {
         if (frameLayout != null) {
             frameLayout.getForeground().setAlpha(0);
         }*/
-        //---set toolbar
+       /* //---set toolbar
 
         toolbar = findViewById(R.id.toolbar);
         TextView tv_toolbar_title = findViewById(R.id.tv_toolbar_title);
+
 
         if (toolbar != null) {
             tv_toolbar_title.setText(getResources().getString(R.string.main_menu));
             Utility.toolbarSetter(this, toolbar, "",
                     null, false);
-        }
+        }*/
 
 
         /*set toolbar icons and actions*/
@@ -151,6 +152,7 @@ public class MainMenuActivity extends AppCompatActivity {
                     if (url != null) {
 
                         String table_name = DbTables.TABLE_ADDRESS;
+                        log.info("url is "+ url);
                         new AsyncMultiDbManager(QrApplication.getInstance(), table_name, null, url,
                                 true, InventoryParamSelectActivity.class,
                                 new int[]{Intent.FLAG_ACTIVITY_NEW_TASK}, null,

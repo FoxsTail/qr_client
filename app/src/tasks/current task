@@ -8,13 +8,24 @@
         +ripple button
         +edit text expand with pics and borders
         +visible/invisible passwd
+
     -main menu
         + drawable buttons colorful (menu buttons or usual)
         -elevation
         +title
         +custom toolbar
-        -title icons with layout
-
+        +title icons with layout
+    -params select
+        +spinner color old style
+        +separators
+        +toolbar
+        +items ion toolbar
+        +menu icons
+        +menu ripple bg
+        +menu all screen dimming
+        +spinner auto complete
+        +holo styled spinner underline
+        +internal edit text padding
 
 
 

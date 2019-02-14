@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/param_menu_item"
+            android:title=""
+          android:icon="@drawable/ic_menu_dots" app:showAsAction="always" >
+
+        <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+            <group android:id="@+id/g1" >
+            <item android:icon="@drawable/ic_restore_page"
+                  android:title="@string/restore_previous_session"
+                  android:id="@+id/menu_restore_page"
+                  app:showAsAction="always|withText"/>
+
+        </group>
+            <group android:id="@+id/g2">
+            <item android:icon="@drawable/ic_send_file_to_server"
+                  android:title="@string/send_file_to_server"
+                  android:id="@+id/menu_send_file"
+                  app:showAsAction="always|withText"/>
+            </group>
+        </menu>
+    </item>
+
+</menu>

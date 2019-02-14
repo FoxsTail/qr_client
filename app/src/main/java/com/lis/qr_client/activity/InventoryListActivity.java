@@ -172,7 +172,7 @@ public class InventoryListActivity extends BaseActivity {
                 onBackPressed();
                 return true;
             }
-            case R.id.item_log_out: {
+            case R.id.menu_restore_page: {
 
                 /*clean user's shared preferences (or all preferences?)*/
                 PreferenceUtility.removeLoginPreferences(this, MyPreferences.PREFERENCE_SAVE_USER,

@@ -1,16 +1,17 @@
 package com.lis.qr_client.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
+import android.support.v4.view.MenuCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.*;
-import com.badoo.mobile.util.WeakHandler;
 import com.lis.qr_client.R;
 import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
@@ -30,7 +31,7 @@ import java.util.Map;
 
 
 @Log
-public class InventoryParamSelectActivity extends BaseActivity {
+public class InventoryParamSelectActivity extends AppCompatActivity {
     private static final int LOAD_ADDRESS = 1;
     private static final int LOAD_ROOMS = 2;
 
@@ -55,6 +56,9 @@ public class InventoryParamSelectActivity extends BaseActivity {
 
 
     private String url;
+    private Toolbar toolbar;
+    private AutoCompleteTextView address_auto_tv;
+    private AutoCompleteTextView room_auto_tv;
 
 
     @Override
@@ -75,26 +79,29 @@ public class InventoryParamSelectActivity extends BaseActivity {
                 MyPreferences.ADDRESS_ID_PREFERENCES);
 
 
-        //---get framing layout for dimming
-        final FrameLayout frameLayout = findViewById(R.id.frame_paramSelect_layout);
-        frameLayout.getForeground().setAlpha(0);
+        /*//---get framing layout for dimming
+       */
+        final FrameLayout darkenedLayout = findViewById(R.id.frame_paramSelect_layout);
+        darkenedLayout.getForeground().setAlpha(0);
 
         //---set toolbar
         toolbar = findViewById(R.id.toolbar);
+        TextView tv_toolbar_title = findViewById(R.id.tv_toolbar_title);
 
         if (toolbar != null) {
-            Utility.toolbarSetter(this, toolbar, getString(R.string.select_room),
-                    frameLayout, true);
+            tv_toolbar_title.setText(getString(R.string.select_room));
+            Utility.toolbarSetter(this, toolbar, "",
+                    darkenedLayout, true);
         }
+
 
         //---------
 
         url = "http://" + getString(R.string.emu_ip) + ":" + getString(R.string.port);
 
 
-        spinAddress = findViewById(R.id.spinAddress);
-        spinRoom = findViewById(R.id.spinRoom);
-//        spinRoom.setEnabled(false);
+        address_auto_tv = findViewById(R.id.auto_complete_address);
+        room_auto_tv = findViewById(R.id.auto_complete_room);
 
         pbLoadEquipment = findViewById(R.id.pbLoadEquipment);
         pbLoadEquipment.setVisibility(View.INVISIBLE);
@@ -116,7 +123,32 @@ public class InventoryParamSelectActivity extends BaseActivity {
 
     }
 
-    //---------------------------//
+    //-------Menu-------
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.params_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_send_file: {
+                log.info("Sending to server page...");
+                break;
+            }
+            case R.id.menu_restore_page: {
+                log.info("Restoring page...");
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    //-------------Click listener--------------//
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -169,12 +201,12 @@ public class InventoryParamSelectActivity extends BaseActivity {
             switch (msg.what) {
                 case LOAD_ADDRESS: {
                     log.info("---Prepare address spinner---");
-                    spinnerPrepare(spinAddress, (List<Object>) msg.obj, getString(R.string.address), saved_address_preference);
+                    spinnerPrepare(address_auto_tv, (List<Object>) msg.obj, saved_address_preference);
                     break;
                 }
                 case LOAD_ROOMS: {
                     log.info("---Prepare room spinner---");
-                    spinnerPrepare(spinRoom, (List<Object>) msg.obj, getString(R.string.room), 0);
+                    spinnerPrepare(room_auto_tv, (List<Object>) msg.obj, 0);
                     break;
                 }
             }
@@ -188,14 +220,12 @@ public class InventoryParamSelectActivity extends BaseActivity {
      * Prepares spinner: sets adapter with passed data, prompt, itemSelected listener
      */
 
-    private void spinnerPrepare(Spinner spinner, List spinner_array, String spinner_prompt, int selection) {
+    private void spinnerPrepare(final AutoCompleteTextView auto_tv, List spinner_array, int selection) {
 
+        /*init adapter and set to the auto_complete_tv*/
         ArrayAdapter<Object> arrayAdapter = new ArrayAdapter<>(QrApplication.getInstance(),
-                android.R.layout.simple_spinner_item, spinner_array);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinner.setAdapter(arrayAdapter);
-        spinner.setPrompt(spinner_prompt);
+                R.layout.custom_simple_spinner_item, spinner_array);
+        auto_tv.setAdapter(arrayAdapter);
 
         if (selection > 0) {
 
@@ -203,37 +233,41 @@ public class InventoryParamSelectActivity extends BaseActivity {
             int spinner_position = spinner_array.indexOf(addresses.get(selection));
 
         /*set selection*/
-            spinner.setSelection(spinner_position);
+            auto_tv.setSelection(spinner_position);
         }
-
         log.info("---Set spinner listener---");
-        spinner.setOnItemSelectedListener(itemSelectedListener);
+        auto_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                log.info("---Spinner click! show dropdown---");
+                auto_tv.showDropDown();
+            }
+        });
+
+        auto_tv.setOnItemClickListener(onItemClickListener);
+
     }
 
     /**
-     * OnItemSelected;
+     * OnItemClicked;
      * loads rooms when address id selected
      */
 
-    //TODO: ! replace address-room-equipment to address-tech_platform(room from here we use)-equipment
-    AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            log.info("---OnItemSelected---");
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            log.info("---OnItemClicked---");
 
-            switch (parent.getId()) {
-                case R.id.spinAddress: {
-
-                    log.info("---spin Address selected---");
+            if (parent.getAdapter() == address_auto_tv.getAdapter()) {
+                log.info("---spin Address clicked---");
 
                     /*get value from selected Item*/
-                    chosen_address = parent.getItemAtPosition(position).toString();
+                chosen_address = parent.getItemAtPosition(position).toString();
 
                     /*if the value is empty*/
-                    if (chosen_address.equals(" ")) {
-                        log.info("---Nothing is selected (address)---");
-                        break;
-                    }
+                if (chosen_address.equals(" ")) {
+                    log.info("---Nothing is selected (address)---");
+                } else {
 
                     /*get id_address from address value*/
                     int id_address = addresses.getKey(chosen_address);
@@ -248,7 +282,7 @@ public class InventoryParamSelectActivity extends BaseActivity {
 
                     /*if loaded address equals to already loaded one - take data from sqlite*/
 
-                    if (saved_address > 0 && saved_address == id_address) {
+                    if (saved_address > -1 && saved_address == id_address) {
                        /*load rooms from sqlite from sqlite*/
 
                         Thread thread = new Thread(runLoadRooms);
@@ -277,8 +311,9 @@ public class InventoryParamSelectActivity extends BaseActivity {
                             String column_name = "room";
 
 
-                            AsyncMultiDbManager dbManager = new AsyncMultiDbManager(QrApplication.getInstance(), table_name, column_name,
-                                    url_room, false, null, null, runLoadRooms, false);
+                            AsyncMultiDbManager dbManager = new AsyncMultiDbManager(QrApplication.getInstance(),
+                                    table_name, column_name, url_room, false, null,
+                                    null, runLoadRooms, false);
 
 
                             log.info("--- call AsyncMapListLoader---");
@@ -293,28 +328,20 @@ public class InventoryParamSelectActivity extends BaseActivity {
                                 MyPreferences.ADDRESS_ID_PREFERENCES, id_address);
                     }
 
-
-                    break;
                 }
-                case R.id.spinRoom: {
-                    log.info("---spin Room selected---");
+            } else if (parent.getAdapter() == room_auto_tv.getAdapter()) {
+                log.info("---spin Room selected---");
 
                     /*get value from selected Item*/
-                    chosen_room = parent.getItemAtPosition(position).toString();
+                chosen_room = parent.getItemAtPosition(position).toString();
 
 
-                    if (chosen_room != null) {
-                        PreferenceUtility.savePreference(QrApplication.getInstance(), MyPreferences.PREFERENCE_FILE_NAME,
-                                MyPreferences.ROOM_ID_PREFERENCES, chosen_room);
-                    }
-
-                    break;
+                if (chosen_room != null) {
+                    PreferenceUtility.savePreference(QrApplication.getInstance(), MyPreferences.PREFERENCE_FILE_NAME,
+                            MyPreferences.ROOM_ID_PREFERENCES, chosen_room);
                 }
-            }
-        }
 
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
+            }
 
         }
     };
@@ -383,7 +410,9 @@ public class InventoryParamSelectActivity extends BaseActivity {
 //------
                /*set first elem null*/
             List<String> address_strings = new ArrayList<>();
+/*
             address_strings.add(" ");
+*/
             address_strings.addAll(addresses.values());
 
             log.info("---Call dialogHandler---");

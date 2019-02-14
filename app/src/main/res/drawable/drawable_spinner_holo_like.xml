@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item>
+    <shape android:shape="rectangle">
+        <solid android:color="@color/colorSeaGreen"/>
+    </shape>
+</item>
+    <item android:bottom="2dp">
+    <shape android:shape="rectangle">
+        <solid android:color="@color/colorWhite"/>
+    </shape>
+</item>
+    <item android:drawable="@drawable/drawable_triangle" >
+    </item>
+</layer-list>
+
+<!--
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<item><layer-list>
+    <item><shape>
+        <gradient android:angle="90" android:endColor="@color/myTextPrimaryColor" android:startColor="@color/myTextPrimaryColor" android:type="linear" />
+
+        <stroke android:width="1dp" android:color="@color/bg_eo" />
+
+        <corners android:radius="4dp" />
+
+        <padding android:bottom="3dp" android:left="3dp" android:right="3dp" android:top="3dp" />
+    </shape></item>
+    <item ><bitmap android:gravity="right|center" android:src="@drawable/expnd" />
+    </item>
+</layer-list></item>
+
+</selector> -->

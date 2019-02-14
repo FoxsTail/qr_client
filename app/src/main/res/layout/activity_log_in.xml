@@ -55,7 +55,7 @@
             android:layout_height="wrap_content" android:id="@+id/btn_log_in_the_app"
             android:background="@drawable/drawable_btn_color_ripple" android:padding="@dimen/button_padding"
             android:textColor="@color/colorWhite"
-            android:textSize="16dp"
+            android:textSize="@dimen/btn_size"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:paddingEnd="90dp"

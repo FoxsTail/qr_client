@@ -29,7 +29,9 @@ public class DbUtility {
         List convertedList = new ArrayList();
 
         /*first empty value for the spinner*/
+/*
         convertedList.add(" ");
+*/
 
         if (cursor != null) {
             if (cursor.moveToNext()) {

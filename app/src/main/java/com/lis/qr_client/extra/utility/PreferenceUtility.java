@@ -236,7 +236,7 @@ public class PreferenceUtility {
         log.info("---Load int from preferences---");
 
         SharedPreferences preferences = context.getSharedPreferences(preferenceFileName, MODE_PRIVATE);
-        int value = preferences.getInt(key, 0);
+        int value = preferences.getInt(key, -1);
         log.info("---value---" + value);
         return value;
     }

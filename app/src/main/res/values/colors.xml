@@ -12,6 +12,7 @@
     <color name="colorLightGrey">#fafafa</color>
     <color name="colorLightGrey2">#cacaca</color>
     <color name="colorLightGrey3">#bdbdbd</color>
+    <color name="colorUnderlineListGrey">#CECECE</color>
     <color name="colorGrey">#eeeeee</color>
     <color name="colorRed">#F31919</color>
 
@@ -21,6 +22,8 @@
     <color name="colorGreenBlue">#44ACC7</color>
     <color name="colorMediumBlue">#3CA4DE</color>
     <color name="colorBlue">#3A85CE</color>
+    <color name="colorDarkBlue">#1C456E</color>
+
 
     <!--  Gradient  -->
     <color name="start_gradient">@color/colorSeaGreen</color>
@@ -29,8 +32,9 @@
 
     <color name="btn_color">#45ADC4</color>
     <color name="colorAccent">#68BBBB</color>
+
     <color name="colorIconBlue">@color/colorMediumBlue</color>
-    <color name="colorActiveText">#1C456E</color>
+    <color name="colorActiveText">@color/colorDarkBlue</color>
     <color name="colorUnderlineGrey">#E5E5E5</color>
 
 

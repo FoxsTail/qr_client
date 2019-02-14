@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:title="Item" android:id="@+id/qr_menu_item1"/>
-    <item android:title="@string/log_out" android:tint="@color/colorWhite" android:id="@+id/item_log_out"/>
+    <item android:icon="@drawable/ic_send_file_to_server"
+          android:title="@string/send_file_to_server"
+          android:id="@+id/menu_send_file"
+          app:showAsAction="always|withText"/>
+    <item android:icon="@drawable/ic_restore_page" android:title="@string/restore_previous_session"
+          android:tint="@color/colorWhite" android:id="@+id/menu_restore_page"  app:showAsAction="always|withText"/>
 </menu>

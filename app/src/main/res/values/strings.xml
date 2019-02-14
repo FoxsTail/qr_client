@@ -3,8 +3,10 @@
     <string name="port">8090</string>
     <string name="server_ip">172.36.2.47</string>
     <string name="localhost_ip" translatable="false">127.0.0.1</string>
-    <!--<string name="emu_ip">10.0.3.2</string>-->
+<string name="emu_ip">10.0.3.2</string>
+<!--
     <string name="emu_ip">10.11.12.110</string>
+-->
     <string name="test">Т</string>
     <string name="api_addresses_load">/addresses/only_address</string>
     <string name="api_inventory_by_address_load">/inventory/address/</string>
@@ -30,9 +32,9 @@
     <string name="Inventory">Інвентарізация</string>
     <string name="Profile">Профіль</string>
     <string name="ScanQR">Сканувати QR-code</string>
-    <string name="select_address">Вибрати адресу</string>
-    <string name="select_room">Вибрати кімнату</string>
-    <string name="start">Почати</string>
+    <string name="select_address">Виберіть адресу</string>
+    <string name="select_room">Виберіть кімнату</string>
+    <string name="start">ПОЧАТИ</string>
     <string name="listLabel">Кімната</string>
     <string name="equipment_name">Назва обладнання</string>
     <string name="inventory_number">Інвентарний номер</string>
@@ -85,7 +87,7 @@
     <string name="connection_error">Помилка підключення!</string>
     <string name="try_again">Спробуйте ще раз.</string>
     <string name="log_out">Вихід</string>
-    <string name="to_log_in">Увійти</string>
+    <string name="to_log_in">УВІЙТИ</string>
     <string name="error_validation_email">Email введено з помилкою</string>
     <string name="error_validation_password">Занадто короткий пароль</string>
     <string name="profile">Профіль</string>
@@ -104,5 +106,7 @@
     <string name="scanned_title">Знайдено</string>
     <string name="saved">Збережено</string>
     <string name="forgot_password">Забули пароль?</string>
+    <string name="restore_previous_session">Відновити минулу сесію</string>
+    <string name="send_file_to_server">Відправити дані на сервер</string>
 
 </resources>

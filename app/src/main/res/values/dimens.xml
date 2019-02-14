@@ -15,5 +15,8 @@
     <!--Padding-->
     <dimen name="button_padding">20dp</dimen>
     <dimen name="edit_text_start_padding">15dp</dimen>
+    <dimen name="btn_size">16sp</dimen>
+    <dimen name="label_size">15sp</dimen>
+    <dimen name="smaller_title_text_size">24sp</dimen>
 
-    </resources>
+</resources>

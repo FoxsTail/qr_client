@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -78,8 +79,10 @@ public class Utility {
 
         if (actionBar != null) {
             if (isChildActivity) {
+                actionBar.setHomeAsUpIndicator(R.drawable.ic_back_arrow);
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setDisplayShowHomeEnabled(true);
+
             }
             if (frameLayout != null) {
                 actionBar.addOnMenuVisibilityListener(new ActionBar.OnMenuVisibilityListener() {
@@ -87,9 +90,9 @@ public class Utility {
                     public void onMenuVisibilityChanged(boolean b) {
                         if (b) {
                             log.info("visible");
-                            frameLayout.getForeground().setAlpha(140);
+                            frameLayout.getForeground().setAlpha(255);
                         } else {
-                            log.info(" ne visible");
+                            log.info("ne visible");
                             frameLayout.getForeground().setAlpha(0);
 
                         }
