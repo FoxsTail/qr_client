@@ -21,6 +21,6 @@ public class Workplace {
     private Boolean remote_workstation;
 
     public String getWorkplace() {
-        return position + " \n" + department + " \n" + direction;
+        return position + " " + department + "  " + direction;
     }
 }

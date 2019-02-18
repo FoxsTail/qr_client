@@ -84,7 +84,7 @@
     <string name="no_storage_write_permission">Нет разрешения на запись в файл! Невозможно сохранить сессию.</string>
     <string name="not_found">Не найдено!</string>
     <string name="not_found_title">Не найдено</string>
-    <string name="ok_loading">Загружаю профиль...</string>
+    <string name="ok_loading">Загружаю профиль…</string>
     <string name="other_room_title">В другой комнате</string>
     <string name="profile">Профиль</string>
     <string name="remote_desktop">Удаленное [..]</string>
@@ -97,4 +97,9 @@
     <string name="try_again">Попробуйте еще раз.</string>
     <string name="saved">Сохранено</string>
     <string name="scanned_title">Найдено</string>
+    <string name="personal_data">Персональные данные</string>
+    <string name="phone">Телефон</string>
+    <string name="restore_previous_session">Восстановить предыдущую сессию</string>
+    <string name="send_file_to_server">Отправить данные на сервер</string>
+    <string name="workplace">Должность</string>
 </resources>

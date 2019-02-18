@@ -50,7 +50,6 @@
         </string>
     <string name="address">Address</string>
     <string name="additional_params">Additional parameters:</string>
-    <string name="app_name" translatable="false"></string>
     <string name="quit_room_msg">Quit the room?</string>
     <string name="result">Result</string>
     <string name="room">Room</string>
@@ -87,7 +86,7 @@
     <string name="no_storage_write_permission">No permission to write file! Session saving error.</string>
     <string name="not_found">Not found!</string>
     <string name="not_found_title">Not found</string>
-    <string name="ok_loading">Loading profile...</string>
+    <string name="ok_loading">Loading profile…</string>
     <string name="other_room_title">In the other room</string>
     <string name="profile">Profile</string>
     <string name="remote_desktop">Remote [..]</string>
@@ -100,6 +99,10 @@
     <string name="toast_enter_email">Enter email!</string>
     <string name="toast_enter_password">Enter password!</string>
     <string name="try_again">Please, try again</string>
-    <string name="api_login_check" translatable="false"></string>
+    <string name="personal_data">Personal data</string>
+    <string name="phone">Phone</string>
+    <string name="restore_previous_session">Restore previous session</string>
+    <string name="send_file_to_server">Send data to server</string>
+    <string name="workplace">Workplace</string>
 
 </resources>

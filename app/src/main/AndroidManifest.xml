@@ -59,8 +59,8 @@
         <activity android:name=".activity.BaseActivity">
         </activity>
 
-        <!-- <activity android:name=".activity.MainMenuActivity" android:launchMode="singleTop">
-                </activity>-->
+         <activity android:name=".activity.MainMenuActivity" android:launchMode="singleTop">
+                </activity>
 <!--
         <activity android:name=".activity.TestActivity" >
             <intent-filter>
@@ -70,19 +70,21 @@
             </intent-filter>
 
         </activity> -->
+<!--
         <activity android:name=".activity.MainMenuActivity" android:theme="@style/SplashTheme" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>  </activity>
+-->
 
-        <!--<activity android:name=".activity.LogInActivity" android:theme="@style/SplashTheme" android:noHistory="true">
+        <activity android:name=".activity.LogInActivity" android:theme="@style/SplashTheme" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>  </activity> -->
+            </intent-filter>  </activity>
 
 
     </application>

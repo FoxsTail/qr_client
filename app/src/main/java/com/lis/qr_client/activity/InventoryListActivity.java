@@ -18,10 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.*;
 import com.badoo.mobile.util.WeakHandler;
 import com.lis.qr_client.R;
 import com.lis.qr_client.application.QrApplication;
@@ -102,16 +99,18 @@ public class InventoryListActivity extends BaseActivity {
                         MyPreferences.ROOM_ID_PREFERENCES);
 
 
-        //---get framing layout for dimming
+      /*  //---get framing layout for dimming
         final FrameLayout frameLayout = findViewById(R.id.frame_inventory_layout);
-        frameLayout.getForeground().setAlpha(0);
+        frameLayout.getForeground().setAlpha(0);*/
 
         //----set toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
+        TextView tv_toolbar_title = findViewById(R.id.tv_toolbar_title);
 
         if (toolbar != null) {
+            tv_toolbar_title.setText(getString(R.string.room_number) +" "+ room_number);
             Utility.toolbarSetter(this, toolbar,
-                    getString(R.string.room_number) + room_number, frameLayout, true);
+                   "", null, true);
         }
 
 
@@ -138,9 +137,9 @@ public class InventoryListActivity extends BaseActivity {
 
         //--bottom navigation bar
 
-        LinearLayout layout_home = findViewById(R.id.layout_home);
-        LinearLayout layout_scan = findViewById(R.id.layout_scan);
-        LinearLayout layout_finish = findViewById(R.id.layout_finish);
+        layout_home = findViewById(R.id.layout_home);
+        layout_scan = findViewById(R.id.layout_scan);
+        layout_finish = findViewById(R.id.layout_finish);
 
         layout_home.setOnClickListener(onClickListener);
         layout_scan.setOnClickListener(onClickListener);
@@ -434,9 +433,15 @@ public class InventoryListActivity extends BaseActivity {
 */
 
             /*enable buttons layout*/
-            layout_home.setEnabled(true);
-            layout_scan.setEnabled(true);
-            layout_finish.setEnabled(true);
+            if (layout_home != null) {
+                layout_home.setEnabled(true);
+            }
+            if (layout_scan != null) {
+                layout_scan.setEnabled(true);
+            }
+            if (layout_finish != null) {
+                layout_finish.setEnabled(true);
+            }
 
 
         }

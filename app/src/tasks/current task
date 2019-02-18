@@ -9,13 +9,13 @@
         +edit text expand with pics and borders
         +visible/invisible passwd
 
-    -main menu
+    +main menu
         + drawable buttons colorful (menu buttons or usual)
-        -elevation
+        ?elevation
         +title
         +custom toolbar
         +title icons with layout
-    -params select
+    +params select
         +spinner color old style
         +separators
         +toolbar
@@ -25,7 +25,32 @@
         +menu all screen dimming
         +spinner auto complete
         +holo styled spinner underline
-        +internal edit text padding
+        ?internal edit text padding
+        ?replace text views with label
+
+    +profile
+        +layer all gradient bg
+        +create drawable list on list pic
+        +down arrow
+        +place tv and labels
+        +place person's icon
+        ?checkbox style
+        - ?cleaning  user's address when inventory is on the board?
+
+    -inventory list
+        -buttom bar onPress white ripple
+        +bottom bar color
+        +icon white bg
+        +size btmbar
+        +toolbar size and view
+        +tab padding and color
+        +search icon
+        +cardview style
+        +cardView on press ripple
+        +"check" arrow
+        ?tab separator
+        ?sroll color
+
 
 
 

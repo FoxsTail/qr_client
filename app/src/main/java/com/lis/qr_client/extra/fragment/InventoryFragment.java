@@ -82,7 +82,7 @@ public class InventoryFragment extends Fragment {
 
         //TODO:make custom decoration
         DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-        divider.setDrawable(getResources().getDrawable(R.drawable.drawable_divider));
+        divider.setDrawable(getResources().getDrawable(R.drawable.drawable_divider_list));
         rv.addItemDecoration(divider);
 
         return rv;

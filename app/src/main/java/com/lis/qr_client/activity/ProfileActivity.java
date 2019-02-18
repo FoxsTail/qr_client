@@ -1,16 +1,11 @@
 package com.lis.qr_client.activity;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.badoo.mobile.util.WeakHandler;
@@ -60,11 +55,20 @@ public class ProfileActivity extends BaseActivity {
                     getResources().getString(R.string.profile), null, true);
         }
 
+        /*get back button*/
+        ImageView back_view = findViewById(R.id.img_profile_back);
+        back_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProfileActivity.super.onBackPressed();
+            }
+        });
+
 
         /*get text views*/
         tv_fio = findViewById(R.id.tv_fio);
         tv_workplace = findViewById(R.id.tv_workplace);
-        tv_private_data = findViewById(R.id.tv_private_data);
+        tv_private_data = findViewById(R.id.tv_personal_data);
         tv_phone_numbers = findViewById(R.id.tv_phone_numbers);
         tv_address = findViewById(R.id.tv_address);
 
@@ -200,6 +204,14 @@ public class ProfileActivity extends BaseActivity {
         log.info("---ProfileActivity -- onStop()---");
         super.onStop();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        log.info("---Profile -- onDestroy()---");
+        handler.removeCallbacksAndMessages(null);
+
             /*set null buttons and pb*/
         tv_fio = null;
         tv_workplace = null;
@@ -216,12 +228,5 @@ public class ProfileActivity extends BaseActivity {
         /*runnables*/
         runSetTextViews = null;
         runLoadUserData = null;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        log.info("---Profile -- onDestroy()---");
-        handler.removeCallbacksAndMessages(null);
     }
 }

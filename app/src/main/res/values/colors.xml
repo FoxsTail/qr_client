@@ -8,11 +8,20 @@
     <color name="colorBlack40">#4D000000</color>
     <color name="transparent_blue">#87CEFA</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorWhite35">#59ffffff</color>
+    <color name="colorWhite50">#80ffffff</color>
+    <color name="colorWhite75">#BFffffff</color>
     <color name="colorDark">#413f43</color>
     <color name="colorLightGrey">#fafafa</color>
     <color name="colorLightGrey2">#cacaca</color>
+    <color name="colorLightGrey50">#80cacaca</color>
+    <color name="colorLightGrey75">#BFcacaca</color>
     <color name="colorLightGrey3">#bdbdbd</color>
     <color name="colorUnderlineListGrey">#CECECE</color>
+
+    <color name="colorShadowGrey50">#80CECECE</color>
+    <color name="colorShadowGrey75">#BFCECECE</color>
+    <color name="colorDarker">#343434</color>
     <color name="colorGrey">#eeeeee</color>
     <color name="colorRed">#F31919</color>
 
@@ -23,6 +32,7 @@
     <color name="colorMediumBlue">#3CA4DE</color>
     <color name="colorBlue">#3A85CE</color>
     <color name="colorDarkBlue">#1C456E</color>
+    <color name="colorDarkBlue75">#BF1C456E</color>
 
 
     <!--  Gradient  -->
@@ -34,11 +44,15 @@
     <color name="colorAccent">#68BBBB</color>
 
     <color name="colorIconBlue">@color/colorMediumBlue</color>
+    <color name="colorOkIcon">#96CEED</color>
     <color name="colorActiveText">@color/colorDarkBlue</color>
     <color name="colorUnderlineGrey">#E5E5E5</color>
-
+    <color name="colorUnderlineGreyLight">#E0E0E0</color>
+    <!--  -->
 
     <color name="colorUserInput">@color/colorDark</color>
     <color name="colorUnfocused">@color/colorLightGrey2</color>
-    <color name="colorDarker">#343434</color>
+    <color name="textColor">@color/colorDarker</color>
+    <color name="colorTransparent">#00000000</color>
 </resources>
+
