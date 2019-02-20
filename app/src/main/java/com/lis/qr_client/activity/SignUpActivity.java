@@ -3,8 +3,6 @@ package com.lis.qr_client.activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Window;
-import android.view.WindowManager;
 import com.lis.qr_client.R;
 import com.lis.qr_client.extra.utility.Utility;
 
@@ -24,7 +22,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
-            Utility.toolbarSetter(this, toolbar, getString(R.string.sign_up), null, true);
+            Utility.toolbarSetterDarkArrow(this, toolbar, getString(R.string.sign_up), null, true);
         }
         //--------
     }

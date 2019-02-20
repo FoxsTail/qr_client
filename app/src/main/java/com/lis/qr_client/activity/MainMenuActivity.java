@@ -74,7 +74,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
         if (toolbar != null) {
             tv_toolbar_title.setText(getResources().getString(R.string.main_menu));
-            Utility.toolbarSetter(this, toolbar, "",
+            Utility.toolbarSetterDarkArrow(this, toolbar, "",
                     null, false);
         }*/
 

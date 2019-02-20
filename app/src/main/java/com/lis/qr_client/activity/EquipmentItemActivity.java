@@ -2,33 +2,31 @@ package com.lis.qr_client.activity;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Typeface;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.os.Bundle;
-import android.text.SpannableStringBuilder;
-import android.text.style.StyleSpan;
-import android.widget.ImageView;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 import com.lis.qr_client.R;
 import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.utility.DbUtility;
-import com.lis.qr_client.pojo.Equipment;
+import com.lis.qr_client.extra.utility.ObjectUtility;
 import com.lis.qr_client.extra.utility.Utility;
+import com.lis.qr_client.pojo.Equipment;
 import lombok.extern.java.Log;
 
 @Log
-public class EquipmentItemActivity extends BaseActivity {
-    private CollapsingToolbarLayout collapsingbar;
-
+public class EquipmentItemActivity extends AppCompatActivity {
 
     private DBHelper dbHelper;
     private SQLiteDatabase db;
     private Cursor cursor;
+
+    private Toolbar toolbar;
 /*
     private Context context = this;
 */
@@ -36,23 +34,21 @@ public class EquipmentItemActivity extends BaseActivity {
     private String inventory_num;
     Equipment equipment;
 
-    private TextView info;
+    private TextView tvName;
+    private TextView tvSerialNum;
+    private TextView tvInventoryNum;
     private TextView tvAdditional;
     private TextView tvUser;
     private TextView tvAddress;
-    private ImageView imageElement;
-
-    //TODO: while loading make it circle
-
+    private TextView tv_toolbar_title;
+    private Thread thread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //----Full screen
         Utility.fullScreen(this);
 
-
         super.onCreate(savedInstanceState);
-
         log.info("---EquipmentItemActivity- onCreate()--");
         setContentView(R.layout.activity_equipment_item);
 
@@ -64,24 +60,20 @@ public class EquipmentItemActivity extends BaseActivity {
 
         //---set toolbar
         toolbar = findViewById(R.id.toolbar);
+        tv_toolbar_title = findViewById(R.id.tv_toolbar_title);
+
 
         if (toolbar != null) {
-            Utility.toolbarSetter(this, toolbar, "", null, true);
-
+            Utility.toolbarSetterWhiteArrow(this, toolbar, "", null, true);
         }
 
-
-        /*get collapse bar, set title*/
-        collapsingbar = findViewById(R.id.collBar_element);
-
-        imageElement = findViewById(R.id.image_element);
-
-        info = findViewById(R.id.tv_info);
+        tvName = findViewById(R.id.tv_name);
+        tvSerialNum = findViewById(R.id.tv_serial_num);
+        tvInventoryNum = findViewById(R.id.tv_inventory_num);
         tvAdditional = findViewById(R.id.tv_additional);
         tvUser = findViewById(R.id.tv_user);
         tvAddress = findViewById(R.id.tv_address);
 
-        CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator_element_layout);
 
 
         /*set all for db access*/
@@ -90,42 +82,60 @@ public class EquipmentItemActivity extends BaseActivity {
 
 
         /*run thread with data loading from db*/
-        Thread thread = new Thread(runLoadEquipments);
+        thread = new Thread(runLoadEquipments);
         thread.start();
 
     }
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
-            /*stop waiting circle*/
-            collapsingbar.setTitle(equipment.getType());
-            imageElement.setImageResource(R.drawable.pic_videocard);
-
-            //---style----
-            //TODO: make it bold in th easy way
-            SpannableStringBuilder span;
-            StyleSpan bold = new StyleSpan(Typeface.BOLD);
-            String label_name = getString(R.string.name)+" ";
-            String label_inventory = R.string.inventory_number+": ";
-            String label_serial = getString(R.string.serial_number)+" ";
-            String label_additional = getString(R.string.additional_params)+" ";
-            String label_user = getString(R.string.current_user)+" ";
-            String label_tp = getString(R.string.tech_platform)+" ";
+            /*set toolbar name*/
+            tv_toolbar_title.setText(equipment.getType());
 
 
             //--------
-            info.setText(label_name + equipment.getVendor() + " " + equipment.getModel() + " " + equipment.getSeries() + "\n"
-                    + label_inventory + equipment.getInventory_num() + "\n"
-                    + label_serial + equipment.getSerial_num());
+            tvName.setText(equipment.getVendor() + " " + equipment.getModel() + " " + equipment.getSeries());
 
-            if (equipment.getAttributes() != null) {
-                tvAdditional.setText(label_additional + equipment.getAttributes());
+            tvSerialNum.setText(equipment.getSerial_num());
+            tvInventoryNum.setText(equipment.getInventory_num());
+
+
+            /* set attributes*/
+            String json_attributes = equipment.getAttributes();
+            if (json_attributes != null) {
+
+                String string_additional = ObjectUtility.jsonAttributesToString(json_attributes);
+                if (string_additional != null) {
+                    tvAdditional.setText(ObjectUtility.jsonAttributesToString(json_attributes));
+                } else {
+                    tvAdditional.setVisibility(View.GONE);
+                }
+            } else {
+                tvAdditional.setVisibility(View.GONE);
             }
 
-            tvUser.setText(label_user + equipment.getUser_info());
-            tvAddress.setText(label_tp + equipment.getAddress());
+            /*set user*/
+            String user_info = equipment.getUser_info();
+            if (user_info != null && !user_info.equals("")) {
+                tvUser.setText(user_info);
+            } else {
+                tvUser.setVisibility(View.GONE);
+
+            }
+
+
+            /*set address*/
+            String address = equipment.getAddress();
+            if (address != null && !address.equals("")) {
+                tvAddress.setText(user_info);
+            } else {
+                tvAddress.setVisibility(View.GONE);
+
+            }
+            tvAddress.setText(equipment.getAddress());
 
 
         }
@@ -157,7 +167,7 @@ public class EquipmentItemActivity extends BaseActivity {
 
             /*put equipment to ui*/
             handler.sendEmptyMessage(0);
-            ;
+
         }
     };
 
@@ -166,6 +176,27 @@ public class EquipmentItemActivity extends BaseActivity {
         super.onDestroy();
         log.info("---Equipment Item -- onDestroy()---");
         handler.removeCallbacksAndMessages(null);
+
+        if (thread != null) {
+            thread = null;
+        }
+        handler = null;
+        runLoadEquipments = null;
+
+        dbHelper = null;
+        db = null;
+        cursor = null;
+
+        toolbar = null;
+        tvName = null;
+        tvSerialNum = null;
+        tvInventoryNum = null;
+        tvAdditional = null;
+        tvUser = null;
+        tvAddress = null;
+        tv_toolbar_title = null;
+
+
     }
 }
 

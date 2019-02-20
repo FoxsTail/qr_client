@@ -121,12 +121,12 @@ public class CameraActivity extends AppCompatActivity {
     private void safeCameraOpen(int id) {
         d(TAG, "---Safe camera Open-----");
         try {
-            //releaseCameraAndPreview();
+            releaseCameraAndPreview();
             mCamera = Camera.open(id);
         } catch (Exception e) {
             d(TAG, "failed to open Camera");
             e.printStackTrace();
-            CameraActivity.this.finish();
+            finish();
         }
        // mCamera = Camera.open(id);
 

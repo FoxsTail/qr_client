@@ -18,6 +18,27 @@ public class ObjectUtility {
     //--------Map-----------
 
     /**
+     * Equipment attributes to the textView string
+     * */
+public static String jsonAttributesToString(String json_string){
+    try {
+        HashMap<String, String> attributes = new ObjectMapper().readValue(json_string, HashMap.class);
+        StringBuilder sb = new StringBuilder();
+
+        for (Map.Entry<String, String> entry : attributes.entrySet()) {
+            sb.append(entry.getKey() + ": " + entry.getValue()+"\n");
+        }
+        String desired_string = sb.toString();
+        /*remove extra new line, return*/
+        return desired_string.trim();
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    return "";
+}
+
+    /**
      * Input - string with json after qr code scanning,
      * output - parsed to HashMap<String, Object> json
      */

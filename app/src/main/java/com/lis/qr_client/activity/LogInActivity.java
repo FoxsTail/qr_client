@@ -1,7 +1,6 @@
 package com.lis.qr_client.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -13,8 +12,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import com.lis.qr_client.R;
 import com.lis.qr_client.application.QrApplication;
@@ -23,7 +20,6 @@ import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.async_helpers.AsyncOneDbManager;
 import com.lis.qr_client.extra.utility.DbUtility;
-import com.lis.qr_client.extra.utility.ObjectUtility;
 import com.lis.qr_client.extra.utility.PreferenceUtility;
 import com.lis.qr_client.pojo.User;
 import com.lis.qr_client.extra.utility.Utility;
@@ -62,7 +58,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         //---set toolbar
         toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
-            Utility.toolbarSetter(this, toolbar, getString(R.string.log_in), null, false);
+            Utility.toolbarSetterDarkArrow(this, toolbar, getString(R.string.log_in), null, false);
         }
 
         //----set views

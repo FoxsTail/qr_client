@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -68,10 +69,10 @@ public class Utility {
 
 
     /**
-     * Toolbar setter dimOnMenu, back button, name
+     * Toolbar setter dimOnMenu, back button, name. Dark
      */
-    public static void toolbarSetter(AppCompatActivity activity, @NonNull Toolbar toolbar, String title,
-                                     final FrameLayout frameLayout, boolean isChildActivity) {
+    public static void toolbarSetterDarkArrow(AppCompatActivity activity, @NonNull Toolbar toolbar, String title,
+                                              final FrameLayout frameLayout, boolean isChildActivity) {
         toolbar.setTitle(title);
         activity.setSupportActionBar(toolbar);
 
@@ -79,28 +80,65 @@ public class Utility {
 
         if (actionBar != null) {
             if (isChildActivity) {
-                actionBar.setHomeAsUpIndicator(R.drawable.ic_back_arrow);
-                actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setDisplayShowHomeEnabled(true);
-
+                setBackActivityArrow(actionBar, R.drawable.ic_back_arrow);
             }
             if (frameLayout != null) {
-                actionBar.addOnMenuVisibilityListener(new ActionBar.OnMenuVisibilityListener() {
-                    @Override
-                    public void onMenuVisibilityChanged(boolean b) {
-                        if (b) {
-                            log.info("visible");
-                            frameLayout.getForeground().setAlpha(255);
-                        } else {
-                            log.info("ne visible");
-                            frameLayout.getForeground().setAlpha(0);
-
-                        }
-                    }
-                });
+                setForegroundOnMenuVisible(actionBar, frameLayout);
             }
         }
     }
+
+
+    /**
+     * Toolbar setter dimOnMenu, back button, name. White
+     */
+    public static void toolbarSetterWhiteArrow(AppCompatActivity activity, @NonNull Toolbar toolbar, String title,
+                                               final FrameLayout frameLayout, boolean isChildActivity) {
+        toolbar.setTitle(title);
+        activity.setSupportActionBar(toolbar);
+
+        ActionBar actionBar = activity.getSupportActionBar();
+
+        if (actionBar != null) {
+            if (isChildActivity) {
+                setBackActivityArrow(actionBar, R.drawable.ic_back_arrow_white);
+
+            }
+            if (frameLayout != null) {
+                setForegroundOnMenuVisible(actionBar, frameLayout);
+            }
+        }
+    }
+
+    /**
+     * Set back arrow in the toolbar
+     */
+    public static void setBackActivityArrow(ActionBar actionBar,int drawable_arrow_icon) {
+        actionBar.setHomeAsUpIndicator(drawable_arrow_icon);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+    }
+
+    /**
+     * Set dimmed color for the foreground when menu is open, turn o, when menu closed
+     */
+    public static void setForegroundOnMenuVisible(ActionBar actionBar, final FrameLayout frameLayout) {
+        actionBar.addOnMenuVisibilityListener(new ActionBar.OnMenuVisibilityListener() {
+            @Override
+            public void onMenuVisibilityChanged(boolean b) {
+                if (b) {
+                    log.info("visible");
+                    frameLayout.getForeground().setAlpha(255);
+                } else {
+                    log.info("ne visible");
+                    frameLayout.getForeground().setAlpha(0);
+
+                }
+            }
+        });
+    }
+
+
 
     /**
      * Logout.
@@ -119,7 +157,7 @@ public class Utility {
         if (activity != null) {
             activity.startActivity(intent);
             activity.finish();
-        }else{
+        } else {
             log.info("activity is null");
         }
     }

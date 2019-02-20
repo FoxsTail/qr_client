@@ -109,7 +109,7 @@ public class InventoryListActivity extends BaseActivity {
 
         if (toolbar != null) {
             tv_toolbar_title.setText(getString(R.string.room_number) +" "+ room_number);
-            Utility.toolbarSetter(this, toolbar,
+            Utility.toolbarSetterDarkArrow(this, toolbar,
                    "", null, true);
         }
 

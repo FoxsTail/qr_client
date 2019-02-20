@@ -51,7 +51,7 @@ public class ProfileActivity extends BaseActivity {
         /*set toolbar*/
         toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
-            Utility.toolbarSetter(this, toolbar,
+            Utility.toolbarSetterDarkArrow(this, toolbar,
                     getResources().getString(R.string.profile), null, true);
         }
 

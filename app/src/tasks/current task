@@ -37,8 +37,7 @@
         ?checkbox style
         - ?cleaning  user's address when inventory is on the board?
 
-    -inventory list
-        -buttom bar onPress white ripple
+    +inventory list
         +bottom bar color
         +icon white bg
         +size btmbar
@@ -48,9 +47,21 @@
         +cardview style
         +cardView on press ripple
         +"check" arrow
+        +buttom bar onPress white ripple
         ?tab separator
         ?sroll color
+        ?search edit text
 
+    +inventory item
+        +toolbar with gradient
+        +toolbar items color
+        +text views with labels
+        +unpack attributes
+        +disable label when no info
+
+    -dialogs
+        -text color
+        -item for each
 
 
 

@@ -1,18 +1,12 @@
 package com.lis.qr_client.activity;
 
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.lis.qr_client.R;
-import com.lis.qr_client.application.QrApplication;
-import com.lis.qr_client.data.DBHelper;
 import com.lis.qr_client.extra.utility.Utility;
 import lombok.extern.java.Log;
 
@@ -34,7 +28,7 @@ public class TestActivity extends BaseActivity {
 
         if (toolbar != null) {
             tv_toolbar_title.setText(getString(R.string.select_room));
-            Utility.toolbarSetter(this, toolbar, "",
+            Utility.toolbarSetterDarkArrow(this, toolbar, "",
                     null, true);
         }
 

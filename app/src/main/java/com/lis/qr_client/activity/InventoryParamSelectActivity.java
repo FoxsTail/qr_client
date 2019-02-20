@@ -6,8 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.view.MenuCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
@@ -90,7 +88,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
 
         if (toolbar != null) {
             tv_toolbar_title.setText(getString(R.string.select_room));
-            Utility.toolbarSetter(this, toolbar, "",
+            Utility.toolbarSetterDarkArrow(this, toolbar, "",
                     darkenedLayout, true);
         }
 
