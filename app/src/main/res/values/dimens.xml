@@ -5,6 +5,9 @@
     <dimen name="textSize">16sp</dimen>
     <dimen name="tabTextSize">16sp</dimen>
     <dimen name="label_textSize">14sp</dimen>
+    <dimen name="dialogTitle">23sp</dimen>
+    <dimen name="dialogButtons">16sp</dimen>
+
 
     <dimen name="errorTextSize">14sp</dimen>
     <dimen name="hintTextSize">16sp</dimen>

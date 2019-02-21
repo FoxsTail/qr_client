@@ -51,7 +51,7 @@
     <string name="address">Address</string>
     <string name="additional_params">Additional parameters:</string>
     <string name="quit_room_msg">Quit the room?</string>
-    <string name="result">Result</string>
+    <string name="result_title">Result</string>
     <string name="room">Room</string>
     <string name="serial_number">Serial number</string>
     <string name="tech_platform">Technical platform</string>
@@ -78,7 +78,6 @@
     <string name="finish">Finish</string>
     <string name="finish_and_save">Finish and save to file?</string>
     <string name="forgot_password">Forget password?</string>
-    <string name="found_title">Found</string>
     <string name="home">Home</string>
     <string name="log_in">Log in</string>
     <string name="log_out">Log out</string>
@@ -92,7 +91,7 @@
     <string name="remote_desktop">Remote [..]</string>
     <string name="request_timeout">Server connection error!</string>
     <string name="saved">Saved</string>
-    <string name="scanned_title">Found</string>
+    <string name="found_title">Found</string>
     <string name="server_error">Server error</string>
     <string name="sign_up">Sign up</string>
     <string name="to_log_in">Log in</string>

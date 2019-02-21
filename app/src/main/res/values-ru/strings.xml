@@ -54,7 +54,7 @@
     <string name="address">Адрес</string>
     <string name="room">Комната</string>
     <string name="to_scan">Сканировать</string>
-    <string name="result">Результат</string>
+    <string name="result_title">Результат</string>
     <string name="done_loading">Загрузка завершена</string>
     <string name="done_all">Все загруженно</string>
     <string name="quit_room_msg">Выйти из комнаты?</string>
@@ -96,7 +96,6 @@
     <string name="toast_enter_password">Введите пароль!</string>
     <string name="try_again">Попробуйте еще раз.</string>
     <string name="saved">Сохранено</string>
-    <string name="scanned_title">Найдено</string>
     <string name="personal_data">Персональные данные</string>
     <string name="phone">Телефон</string>
     <string name="restore_previous_session">Восстановить предыдущую сессию</string>

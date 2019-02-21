@@ -15,6 +15,8 @@ import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.extra.async_helpers.AsyncMultiDbManager;
+import com.lis.qr_client.extra.dialog_fragment.ExitDialogFragment;
+import com.lis.qr_client.extra.dialog_fragment.ItemDialogFragment;
 import com.lis.qr_client.extra.dialog_fragment.ScanDialogFragment;
 import com.lis.qr_client.extra.utility.ObjectUtility;
 import com.lis.qr_client.extra.utility.PreferenceUtility;
@@ -55,30 +57,6 @@ public class MainMenuActivity extends AppCompatActivity {
         int id_user = PreferenceUtility.getIntegerDataFromPreferences(this, MyPreferences.PREFERENCE_ID_USER);
         log.info(String.valueOf(id_user));
 
-      /*
-        TODO: set dim only for the main window, exclude toolbar
-        idea: get toolbar heidht, get window, set window dim\foreground-toolbar-height
-         */
-
-        //---get framing layout for dimming
-
-        /*final FrameLayout frameLayout = findViewById(R.id.frame_main_layout);
-        if (frameLayout != null) {
-            frameLayout.getForeground().setAlpha(0);
-        }*/
-       /* //---set toolbar
-
-        toolbar = findViewById(R.id.toolbar);
-        TextView tv_toolbar_title = findViewById(R.id.tv_toolbar_title);
-
-
-        if (toolbar != null) {
-            tv_toolbar_title.setText(getResources().getString(R.string.main_menu));
-            Utility.toolbarSetterDarkArrow(this, toolbar, "",
-                    null, false);
-        }*/
-
-
         /*set toolbar icons and actions*/
 
         ImageView img_info = findViewById(R.id.img_btn_info);
@@ -109,6 +87,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     }
 
+
     Handler.Callback callback = new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -120,8 +99,8 @@ public class MainMenuActivity extends AppCompatActivity {
 
             log.info("Scanned msg: " + scanned_msg);
 
-            dialogFragment.callDialog(getFragmentManager(), bundle, scanned_msg,
-                    getString(R.string.inventory_scan_result), "qr_scan");
+            dialogFragment.callDialog(getSupportFragmentManager(), bundle, scanned_msg,
+                    getString(R.string.result_title), R.drawable.ic_check_circle,"qr_scan");
             return false;
         }
     };
@@ -152,7 +131,7 @@ public class MainMenuActivity extends AppCompatActivity {
                     if (url != null) {
 
                         String table_name = DbTables.TABLE_ADDRESS;
-                        log.info("url is "+ url);
+                        log.info("url is " + url);
                         new AsyncMultiDbManager(QrApplication.getInstance(), table_name, null, url,
                                 true, InventoryParamSelectActivity.class,
                                 new int[]{Intent.FLAG_ACTIVITY_NEW_TASK}, null,

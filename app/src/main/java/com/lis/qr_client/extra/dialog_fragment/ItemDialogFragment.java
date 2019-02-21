@@ -56,9 +56,12 @@ public class ItemDialogFragment extends DialogFragment {
 
         alertBuilder = new AlertDialog.Builder(getActivity());
 
-
         alertBuilder.setTitle(title)
-                .setItems(R.array.itemsArray, dialogListener);
+                /*.setItems(R.array.itemsArray, dialogListener)*/
+                .setMessage(R.string.show_full_info)
+                .setPositiveButton(R.string.yes, dialogListener)
+                .setNegativeButton(R.string.back, dialogListener);
+
         return alertBuilder.create();
 
     }
@@ -69,19 +72,32 @@ public class ItemDialogFragment extends DialogFragment {
         @Override
         public void onClick(DialogInterface dialog, int which) {
 
-            /* get dialog array items resources */
-            List<String> itemsOptionsArray = Arrays.asList(context.getResources().getStringArray(R.array.itemsArray));
-            int item_info = itemsOptionsArray.indexOf(context.getResources().getString(R.string.item_info));
+            switch (which) {
+                case Dialog.BUTTON_NEGATIVE: {
+                    log.info("Back to list");
+                    dialog.dismiss();
+                    break;
+                }
+                case DialogInterface.BUTTON_POSITIVE: {
+                    log.info("Get full inventory info");
+                    fullItemInfo();
+                    break;
+             /*   default: {
+            *//* get dialog array items resources *//*
+                    List<String> itemsOptionsArray = Arrays.asList(context.getResources().getStringArray(R.array.itemsArray));
+                    int item_info = itemsOptionsArray.indexOf(context.getResources().getString(R.string.item_info));
 
-            if (which == item_info) {
-                log.info("Get full inventory info");
+                    if (which == item_info) {
+                        log.info("Get full inventory info");
 
-                fullItemInfo();
+                        fullItemInfo();
 
-            } else {
-                log.info("Back to list");
-                dialog.dismiss();
+                    } else {
+                        log.info("Back to list");
+                        dialog.dismiss();
 
+                    }*/
+                }
             }
         }
     };
@@ -118,14 +134,15 @@ public class ItemDialogFragment extends DialogFragment {
         /*load full equipment data from server*/
         AsyncOneDbManager asyncOneManager = new AsyncOneDbManager
                 (context, table_name, null, full_url, true,
-                        EquipmentItemActivity.class,new int[]{Intent.FLAG_ACTIVITY_NEW_TASK}, new Pair<String, Object>("inventory_num", inventory_num),
+                        EquipmentItemActivity.class, new int[]{Intent.FLAG_ACTIVITY_NEW_TASK}, new Pair<String, Object>("inventory_num", inventory_num),
                         null, HttpMethod.GET);
 
         asyncOneManager.runAsyncLoader();
 
     }
 
-    public void callDialog(Context context, FragmentManager fragmentManager, Bundle bundle, InventoryAdapter adapter, String inventory_num, String tag) {
+    public void callDialog(Context context, FragmentManager fragmentManager, Bundle bundle,
+                           InventoryAdapter adapter, String inventory_num, String tag) {
         log.info("-----callDialog-----");
         this.context = context;
         this.inventory_num = inventory_num;

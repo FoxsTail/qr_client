@@ -1,48 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 android:background="@color/colorWhite">
-    <LinearLayout android:layout_height="match_parent" xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="match_parent" android:orientation="vertical">
-    <android.support.design.widget.CollapsingToolbarLayout android:layout_width="wrap_content"
-                                                           android:layout_height="wrap_content"
-                                                           xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                           android:id="@+id/collBar_1"
-                                                           android:fitsSystemWindows="true"
-                                                           app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-                                                           app:contentScrim="@color/colorWhite"
-                                                           android:textAlignment="textStart" layout_height=""
-                                                           xmlns:android="http://schemas.android.com/apk/res/android">
-
-
-        <TextView android:layout_width="439dp" android:layout_height="wrap_content" android:text="Ok"
-                  app:layout_collapseMode="pin" android:fitsSystemWindows="true"/>
-
-        <ImageView android:layout_width="wrap_content" android:layout_height="match_parent"
-                   app:layout_collapseMode="parallax" android:scaleType="centerCrop"
-                   android:id="@+id/image_1" android:src="@drawable/pic_ok"/>
-    </android.support.design.widget.CollapsingToolbarLayout>
-
-        <android.support.design.widget.CollapsingToolbarLayout android:layout_width="354dp"
-                                                               android:layout_height="301dp"
-                                                               android:id="@+id/collBar_2"
-                                                               android:fitsSystemWindows="true"
-                                                               app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-                                                               app:contentScrim="@color/colorWhite"
-                                                               android:textAlignment="textStart" layout_height=""
-        >
-
-
-            <TextView android:layout_width="439dp" android:layout_height="wrap_content" android:text="Ok"
-                      app:layout_collapseMode="pin" android:fitsSystemWindows="true"/>
-
-            <ImageView android:layout_width="match_parent" android:layout_height="280dp"
-                       app:layout_collapseMode="parallax" android:scaleType="centerCrop"
-                       android:id="@+id/image_2" android:src="@drawable/pic_ok"/>
-        </android.support.design.widget.CollapsingToolbarLayout>
-
+<!--
+<LinearLayout android:layout_height="match_parent" android:layout_width="match_parent" android:orientation="vertical"
+              xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                   android:src="@drawable/ic_escape_inventory"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/exit"/>
     </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:text="Some long enough message" android:paddingStart="20dp"/>
+
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/exit" android:text="@string/yes"/>
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/stay" android:text="@string/no"/>
+    </LinearLayout>
+
+</LinearLayout>-->
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+          android:text="Some long enough message" android:paddingStart="20dp"
+          xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/custom_test"/>

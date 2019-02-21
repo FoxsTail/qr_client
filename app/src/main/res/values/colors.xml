@@ -54,5 +54,6 @@
     <color name="colorUnfocused">@color/colorLightGrey2</color>
     <color name="textColor">@color/colorDarker</color>
     <color name="colorTransparent">#00000000</color>
+    <color name="colorDialogButton">#039789</color>
 </resources>
 

@@ -1,7 +1,7 @@
 
 +start from login layout check all the conditions
 
--design
++design
 
     +login page
         +toolbar
@@ -59,10 +59,15 @@
         +unpack attributes
         +disable label when no info
 
-    -dialogs
-        -text color
-        -item for each
-
+    +dialogs
+        +text color
+        +item for each
+        +drawables
+        +exit inventory dialog
+        +found dialog
+        +not_found dialog
+        + alert and other_room dialog
+        dialog choose the action
 
 
 -----

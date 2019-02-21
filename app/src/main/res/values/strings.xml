@@ -22,7 +22,7 @@
     <string name="next">Далі</string>
     <string name="password">Ваш пароль</string>
     <string name="email">Email адреса</string>
-    <string name="name">Ім\'я:</string>
+    <string name="name">Ім\'я</string>
     <string name="del">Видалити</string>
     <string name="equipments">Тест</string>
     <string name="message">Повідомлення</string>
@@ -42,12 +42,12 @@
     <string name="type">Тип</string>
     <string name="ok">Ок</string>
     <string name="cancel">Відмінити</string>
-    <string name="inventory_scan_result">Результат сканування</string>
+    <string name="inventory_scan_result">Результат \nсканування</string>
 
     <string name="item_info">Повна інформація</string>
     <string name="delete_from_list">Видалити зі списку</string>
     <string name="back">Назад</string>
-    <string name="choose_action">Обрати дію</string>
+    <string name="choose_action">Оберіть дію</string>
     <string name="Lorem_ipsum">Morbi rutrum nulla id orci feugiat viverra. Praesent maximus sed lorem sed porta. Nullam
         porttitor ornare lacus vel auctor. Phasellus eu cursus ipsum, eu lacinia dolor. Aenean finibus dui vel nunc
         tincidunt varius sit amet sed urna. Phasellus vulputate dui eu dui molestie, consequat eleifend nibh imperdiet.
@@ -60,14 +60,13 @@
     <string name="address">Адреса</string>
     <string name="room">Кімната</string>
     <string name="to_scan">Сканувати</string>
-    <string name="result">Результат</string>
     <string name="done_loading">Завантяження завершене</string>
     <string name="done_all">Все завантажено</string>
-    <string name="quit_room_msg">Вийти з кімнаты?</string>
-    <string name="serial_number">Серійний номер:</string>
-    <string name="additional_params">Додаткові параметры:</string>
-    <string name="current_user">Поточний коричтувач:</string>
-    <string name="tech_platform">Технічна платформа:</string>
+    <string name="quit_room_msg">Вийти з кімнати?</string>
+    <string name="serial_number">Серійний номер</string>
+    <string name="additional_params">Додаткові параметры</string>
+    <string name="current_user">Поточний коричтувач</string>
+    <string name="tech_platform">Технічна платформа</string>
 
 
     <string name="room_number">Кімната №</string>
@@ -94,16 +93,16 @@
     <string name="no_data_about_user">Даних по користувачеві не знайдено!</string>
     <string name="remote_desktop">Віддалене \n робоче місце</string>
     <string name="not_found">Не знайдено!</string>
-    <string name="exit">вихід</string>
+    <string name="exit">Bихід</string>
     <string name="home">На головну</string>
     <string name="finish">Завершити</string>
     <string name="no_storage_write_permission">Нема дозволу для запису у файл! Неможливо зберегти сессію</string>
     <string name="finish_and_save">Завершити та зберегти результат у файл?</string>
-    <string name="found_title">Знайдено</string>
     <string name="already_scanned_title">Вже відскановано</string>
     <string name="other_room_title">В іншій кімнаті</string>
     <string name="not_found_title">Не знайдено</string>
-    <string name="scanned_title">Знайдено</string>
+    <string name="found_title">Знайдено</string>
+    <string name="result_title">Результат</string>
     <string name="saved">Збережено</string>
     <string name="forgot_password">Забули пароль?</string>
     <string name="restore_previous_session">Відновити минулу сесію</string>
@@ -111,5 +110,9 @@
     <string name="personal_data">Персональні дані</string>
     <string name="workplace">Посада</string>
     <string name="phone">Телефон</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
+    <string name="stay">Лишитись</string>
+    <string name="show_full_info">Показати повну інформацію по обладнанню?</string>
 
 </resources>

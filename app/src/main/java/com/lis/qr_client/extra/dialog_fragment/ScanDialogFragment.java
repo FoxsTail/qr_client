@@ -1,19 +1,22 @@
 package com.lis.qr_client.extra.dialog_fragment;
 
-import android.app.*;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentManager;
+import android.view.Gravity;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.lis.qr_client.R;
-import com.lis.qr_client.application.QrApplication;
 import lombok.extern.java.Log;
 
 @Log
-public class ScanDialogFragment extends DialogFragment {
+public class ScanDialogFragment extends android.support.v4.app.DialogFragment {
     public static final String ARG_TITLE = "ScanDialogFragment.Title";
     public static final String ARG_MESSAGE = "ScanDialogFragment.Message";
+    public static final String ARG_ICON = "ScanDialogFragment.Icon";
     protected AlertDialog.Builder builder;
 
     @Override
@@ -22,24 +25,43 @@ public class ScanDialogFragment extends DialogFragment {
 
         /*Ger all arguments*/
         Bundle args = getArguments();
-        String title = args.getString(ARG_TITLE);
-        String message = args.getString(ARG_MESSAGE);
+        builder = new AlertDialog.Builder(getActivity(), R.style.MyDialogs);
 
+        if (args != null) {
+            String title = args.getString(ARG_TITLE);
+            String message = args.getString(ARG_MESSAGE);
+            int icon = args.getInt(ARG_ICON);
 
         /*build new dialog with arguments*/
-        builder = new AlertDialog.Builder(getActivity());
 
+            builder.setMessage(message);
+
+            if (icon != 0) {
+                builder.setIcon(icon);
+            }
            /*set positive/negative buttons*/
-        builder.setTitle(title)
-                .setPositiveButton(R.string.ok, dialogListener)
-               // .setNegativeButton(R.string.cancel, dialogListener)
-                .setTitle(title);
-
-        builder.setMessage(message);
+            builder.setTitle(title)
+                    .setPositiveButton(R.string.ok, dialogListener)
+                    .setTitle(title);
+        } else {
+            log.info("Args are null");
+        }
 
         return builder.create();
+
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        log.info("-----Start dialog-----");
+        final TextView textView = getDialog().findViewById(android.R.id.message);
+        textView.setTextSize(18);
+
+        textView.setGravity(Gravity.CENTER_VERTICAL);
+        textView.setPadding(90,textView.getPaddingTop(),textView.getPaddingRight(),0);
+
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -83,12 +105,14 @@ public class ScanDialogFragment extends DialogFragment {
         log.info("-----Cancel-----");
     }
 
-    public void callDialog(FragmentManager fragmentManager,  Bundle bundle, String msg, String title, String tag){
+    public void callDialog(FragmentManager fragmentManager, Bundle bundle, String msg, String title, int drawable_icon,
+                           String tag) {
         bundle.putString(ScanDialogFragment.ARG_TITLE, title);
         bundle.putString(ScanDialogFragment.ARG_MESSAGE, msg);
+        bundle.putInt(ScanDialogFragment.ARG_ICON, drawable_icon);
 
         log.info("-----Call dialog-----");
-        log.info("-----Show args-----"+bundle.size());
+        log.info("-----Show args-----" + bundle.size());
 
 
         /*FragmentManager fragmentManager  =((AppCompatActivity) context).getFragmentManager();
@@ -98,10 +122,11 @@ public class ScanDialogFragment extends DialogFragment {
         if(old_fragment != null){
             fragmentManager.beginTransaction().remove(old_fragment).commit();
         }*/
-
         this.setArguments(bundle);
+
         /*even if Jesus asks u, don't put the Activity instead of the AppCompatActivity*/
         this.show(fragmentManager, tag);
+
     }
 
 }

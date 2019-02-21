@@ -217,8 +217,8 @@ public class InventoryListActivity extends BaseActivity {
 
                 position = toScanEquipments.indexOf(searched_map);
 
-                dialogFragment.callDialog(getFragmentManager(),
-                        bundle, scanned_msg, getString(R.string.found_title), dialog_tag);
+                dialogFragment.callDialog(getSupportFragmentManager(),
+                        bundle, scanned_msg, getString(R.string.found_title),R.drawable.ic_check_circle, dialog_tag);
 
 
                 //if result in toScan list, remove, notify adapter
@@ -254,7 +254,8 @@ public class InventoryListActivity extends BaseActivity {
                     scanned_msg = getString(R.string.equipment_already_scanned, inventoryNum);
 
                     new ScanDialogFragment().callDialog
-                            (getFragmentManager(), bundle, scanned_msg, getString(R.string.already_scanned_title), dialog_tag);
+                            (getSupportFragmentManager(), bundle, scanned_msg,
+                                    getString(R.string.already_scanned_title), R.drawable.ic_alert_circle, dialog_tag);
                     log.info(scanned_msg);
 
                     //still couldn't find: show "No such item" in dialog
@@ -270,16 +271,16 @@ public class InventoryListActivity extends BaseActivity {
                     }
 
                     dialog_tag = "qr_found_in_address";
-                    new ScanDialogFragment().callDialog(getFragmentManager(), bundle, scanned_msg,
-                            getString(R.string.other_room_title), dialog_tag);
+                    new ScanDialogFragment().callDialog(getSupportFragmentManager(), bundle, scanned_msg,
+                            getString(R.string.other_room_title), R.drawable.ic_alert_circle, dialog_tag);
                 } else {
 
                     log.info("--Equipment was not found in this ");
 
                     dialog_tag = "qr_not_found";
                     scanned_msg = getString(R.string.equipment_not_found);
-                    new ScanDialogFragment().callDialog(getFragmentManager(),
-                            bundle, scanned_msg, getString(R.string.not_found_title), dialog_tag);
+                    new ScanDialogFragment().callDialog(getSupportFragmentManager(),
+                            bundle, scanned_msg, getString(R.string.not_found_title),R.drawable.ic_x_circle, dialog_tag);
                 }
             }
             return false;
@@ -398,7 +399,7 @@ public class InventoryListActivity extends BaseActivity {
             SliderAdapter sliderAdapter = new SliderAdapter(getSupportFragmentManager());
 
             String titleToScan = getString(R.string.to_scan);
-            String titleResult = getString(R.string.result);
+            String titleResult = getString(R.string.result_title);
 
 
             /*add list to scan to the visual component*/
@@ -466,8 +467,8 @@ public class InventoryListActivity extends BaseActivity {
 
             log.info("Bundle size to pass " + bundle.size());
 
-            finishDialog.callDialog(getFragmentManager(), bundle, getString(R.string.finish_and_save),
-                    getString(R.string.finish), "finish");
+            finishDialog.callDialog(getSupportFragmentManager(), bundle, getString(R.string.finish_and_save),
+                    getString(R.string.finish), 0,"finish");
         }
     };
 
@@ -556,7 +557,8 @@ public class InventoryListActivity extends BaseActivity {
     public void onBackPressed() {
         log.info("InventoryListActivity on backPressed");
         ExitDialogFragment exitDialogFragment = new ExitDialogFragment();
-        exitDialogFragment.callDialog(getFragmentManager(), new Bundle(), getString(R.string.quit_room_msg), getString(R.string.exit), "exit");
+        exitDialogFragment.callDialog(getSupportFragmentManager(), new Bundle(), getString(R.string.quit_room_msg),
+                getString(R.string.exit), R.drawable.ic_escape_inventory, "exit");
     }
 
     /*or knock it from context in full info()*/

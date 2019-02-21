@@ -169,7 +169,7 @@ public static String jsonAttributesToString(String json_string){
     public static String convertToStringForCsv(String[] list_titles, List<Map<String, Object>> listScanned,
                                                List<Map<String, Object>> listOtherRoom,
                                                List<Map<String, Object>> listNotFound) {
-        final String SCANNED_STATE = QrApplication.getInstance().getString(R.string.scanned_title);
+        final String SCANNED_STATE = QrApplication.getInstance().getString(R.string.found_title);
         final String OTHER_ROOM_STATE = QrApplication.getInstance().getString(R.string.other_room_title);
         final String NOT_FOUND_STATE = QrApplication.getInstance().getString(R.string.not_found_title);
 

@@ -63,7 +63,6 @@
     </style>
 
 
-
     <!--TextInputLayout-->
     <style name="TextInputLayoutAppearance" parent="Widget.Design.TextInputLayout">
         <item name="errorTextAppearance">@style/ErrorText</item>
@@ -94,5 +93,37 @@
     </style>
 
 
+    <!--Dialog-->
+
+    <style name="MyDialogs" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!--title-->
+        <item name="android:textColor">@color/colorDarker</item>
+        <item name="android:windowTitleStyle">@style/MyDialogTitle</item>
+        <!--text-->
+        <item name="android:textColorPrimary">@color/colorDarker</item>
+        <!--Text size is in the dialog class file in onStartMethod-->
+        <!--Buttons-->
+        <item name="android:colorAccent">@color/colorDialogButton</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">@dimen/dialogButtons</item>
+
+        <!--Width and viewportWidth set to 24 and 26.0, same for height -->
+    </style>
+
+    <style name="MyDialogTitle">
+        <item name="android:textSize">@dimen/dialogTitle</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+
+    </style>
+
 
 </resources>
+
+<!--
+
+        android:fontFamily="sans-serif"           // roboto regular
+        android:fontFamily="sans-serif-light"     // roboto light
+        android:fontFamily="sans-serif-condensed" // roboto condensed
+        android:fontFamily="sans-serif-black"     // roboto black
+        android:fontFamily="sans-serif-thin"      // roboto thin (android 4.2)
+        android:fontFamily="sans-serif-medium"    // roboto medium (android 5.0)-->
