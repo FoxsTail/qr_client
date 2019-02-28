@@ -17,10 +17,7 @@
         <item name="android:textColor">@color/colorDarker</item>
         <item name="android:textColorSecondary">@color/colorDarker</item>
         <item name="android:dropDownListViewStyle">@style/SpinnerDropDownStyle</item>
-
-
     </style>
-
     <!-- other -->
 
     <!-- Menu -->

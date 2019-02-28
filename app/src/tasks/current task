@@ -1,81 +1,4 @@
 
-+start from login layout check all the conditions
-
-+design
-
-    +login page
-        +toolbar
-        +ripple button
-        +edit text expand with pics and borders
-        +visible/invisible passwd
-
-    +main menu
-        + drawable buttons colorful (menu buttons or usual)
-        ?elevation
-        +title
-        +custom toolbar
-        +title icons with layout
-    +params select
-        +spinner color old style
-        +separators
-        +toolbar
-        +items ion toolbar
-        +menu icons
-        +menu ripple bg
-        +menu all screen dimming
-        +spinner auto complete
-        +holo styled spinner underline
-        ?internal edit text padding
-        ?replace text views with label
-
-    +profile
-        +layer all gradient bg
-        +create drawable list on list pic
-        +down arrow
-        +place tv and labels
-        +place person's icon
-        ?checkbox style
-        - ?cleaning  user's address when inventory is on the board?
-
-    +inventory list
-        +bottom bar color
-        +icon white bg
-        +size btmbar
-        +toolbar size and view
-        +tab padding and color
-        +search icon
-        +cardview style
-        +cardView on press ripple
-        +"check" arrow
-        +buttom bar onPress white ripple
-        ?tab separator
-        ?sroll color
-        ?search edit text
-
-    +inventory item
-        +toolbar with gradient
-        +toolbar items color
-        +text views with labels
-        +unpack attributes
-        +disable label when no info
-
-    +dialogs
-        +text color
-        +item for each
-        +drawables
-        +exit inventory dialog
-        +found dialog
-        +not_found dialog
-        + alert and other_room dialog
-        dialog choose the action
-
-
------
--wtf with camera?
-----
-
--all in background
-
 ---
 -when addr and room 've been chosen - show button start with animation
 
@@ -88,5 +11,8 @@
 //-----------questions-------------
 Если в асинктаске при запуске следущего активити указать флаг new_task, будет реально новый таск запущен и что будет с
 памятью? Можно ли избежать?
+
+
+
 
 

@@ -1,9 +1,11 @@
 
 ------Camera------
-try to run in the completely different loop (handlerThread)
++ try to run in the completely different loop (handlerThread)
 
 
 ------Camera 2------
+***2 surface, where one of is an image reader - is very hard for the app and renders too slow***
+
 Allocation - You can easily catch the buffer type Allocation in ViewfinderProcessor.java to get a byte array as in the old Camera API.
 
 Get the original buffer and take data from there

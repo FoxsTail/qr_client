@@ -14,6 +14,7 @@ import android.media.ImageReader;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.renderscript.Allocation;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -387,6 +388,7 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
                     ImageFormat.JPEG, 2);
 
             imageReader.setOnImageAvailableListener(onImageListener, mBackgroundHandler);
+
 
             Surface readerSurface = imageReader.getSurface();
 

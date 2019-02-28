@@ -103,5 +103,13 @@
     <string name="restore_previous_session">Restore previous session</string>
     <string name="send_file_to_server">Send data to server</string>
     <string name="workplace">Workplace</string>
+    <string name="no">No</string>
+    <string name="scan_canceled">Scan canceled</string>
+    <string name="scan_message">Scan message</string>
+    <string name="show_full_info">Show full info</string>
+    <string name="stay">Stay</string>
+    <string name="turn_off_flashlight">Turn off flash</string>
+    <string name="turn_on_flashlight">Turn on flash</string>
+    <string name="yes">Yes</string>
 
 </resources>

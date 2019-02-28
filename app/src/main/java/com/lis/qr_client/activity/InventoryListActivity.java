@@ -20,6 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.badoo.mobile.util.WeakHandler;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.lis.qr_client.R;
 import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
@@ -108,9 +110,9 @@ public class InventoryListActivity extends BaseActivity {
         TextView tv_toolbar_title = findViewById(R.id.tv_toolbar_title);
 
         if (toolbar != null) {
-            tv_toolbar_title.setText(getString(R.string.room_number) +" "+ room_number);
+            tv_toolbar_title.setText(getString(R.string.room_number) + " " + room_number);
             Utility.toolbarSetterDarkArrow(this, toolbar,
-                   "", null, true);
+                    "", null, true);
         }
 
 
@@ -218,7 +220,7 @@ public class InventoryListActivity extends BaseActivity {
                 position = toScanEquipments.indexOf(searched_map);
 
                 dialogFragment.callDialog(getSupportFragmentManager(),
-                        bundle, scanned_msg, getString(R.string.found_title),R.drawable.ic_check_circle, dialog_tag);
+                        bundle, scanned_msg, getString(R.string.found_title), R.drawable.ic_check_circle, dialog_tag);
 
 
                 //if result in toScan list, remove, notify adapter
@@ -280,7 +282,7 @@ public class InventoryListActivity extends BaseActivity {
                     dialog_tag = "qr_not_found";
                     scanned_msg = getString(R.string.equipment_not_found);
                     new ScanDialogFragment().callDialog(getSupportFragmentManager(),
-                            bundle, scanned_msg, getString(R.string.not_found_title),R.drawable.ic_x_circle, dialog_tag);
+                            bundle, scanned_msg, getString(R.string.not_found_title), R.drawable.ic_x_circle, dialog_tag);
                 }
             }
             return false;
@@ -468,7 +470,7 @@ public class InventoryListActivity extends BaseActivity {
             log.info("Bundle size to pass " + bundle.size());
 
             finishDialog.callDialog(getSupportFragmentManager(), bundle, getString(R.string.finish_and_save),
-                    getString(R.string.finish), 0,"finish");
+                    getString(R.string.finish), 0, "finish");
         }
     };
 
@@ -515,16 +517,20 @@ public class InventoryListActivity extends BaseActivity {
         if (data == null) {
             return;
         }
-
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_SCAN_QR) {
+
                 final String scan_result = data.getStringExtra("scan_result");
 
-                /*show alertDialog with scanned data*/
+/*
+                show alertDialog with scanned data
+*/
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                       /* converts gotten data from json to map*/
+/*
+                        converts gotten data from json to map
+*/
                         scannedMap = ObjectUtility.scannedJsonToMap(scan_result);
                         dialogHandler.sendEmptyMessage(1);
                     }

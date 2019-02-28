@@ -1,7 +1,12 @@
 package com.lis.qr_client.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,13 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.*;
 import com.badoo.mobile.util.WeakHandler;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.lis.qr_client.R;
 import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.DbTables;
 import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.extra.async_helpers.AsyncMultiDbManager;
-import com.lis.qr_client.extra.dialog_fragment.ExitDialogFragment;
-import com.lis.qr_client.extra.dialog_fragment.ItemDialogFragment;
 import com.lis.qr_client.extra.dialog_fragment.ScanDialogFragment;
 import com.lis.qr_client.extra.utility.ObjectUtility;
 import com.lis.qr_client.extra.utility.PreferenceUtility;
@@ -83,12 +88,12 @@ public class MainMenuActivity extends AppCompatActivity {
 
         pbInventory = findViewById(R.id.pbInventory);
 
-        dialogHandler = new WeakHandler(callback);
+        dialogHandler = new WeakHandler(showDialogHandler);
 
     }
 
 
-    Handler.Callback callback = new Handler.Callback() {
+    Handler.Callback showDialogHandler = new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
 
@@ -152,7 +157,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 case R.id.btnScanQR: {
                     Intent intent = new Intent(QrApplication.getInstance(), CameraActivity.class);
                     startActivityForResult(intent, REQUEST_SCAN_QR);
-                    break;
                 }
 
                 case R.id.img_btn_info: {
@@ -170,9 +174,7 @@ public class MainMenuActivity extends AppCompatActivity {
     };
 
 
-    /*
-    If scan was successful, returned alertDialog with parsed data
-    */
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -185,11 +187,15 @@ public class MainMenuActivity extends AppCompatActivity {
 
                 final String scan_result = data.getStringExtra("scan_result");
 
-                /*show alertDialog with scanned data*/
+/*
+                show alertDialog with scanned data
+*/
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                       /* converts gotten data from json to map*/
+/*
+                        converts gotten data from json to map
+*/
                         scannedMap = ObjectUtility.scannedJsonToMap(scan_result);
                         dialogHandler.sendEmptyMessage(1);
                     }
@@ -201,6 +207,7 @@ public class MainMenuActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.mission_was_canceled), Toast.LENGTH_LONG).show();
         }
     }
+
 
     //----------------------------------------//
 
@@ -233,7 +240,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
             /*other ref's*/
         onClickListener = null;
-        callback = null;
+        showDialogHandler = null;
 
         toolbar = null;
     }

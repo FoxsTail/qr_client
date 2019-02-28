@@ -1,6 +1,6 @@
 1. Menu
     +take out to the separate file
-    -set items
+    +set items
 
 2. Utilities
     +separate per main logic
@@ -9,31 +9,124 @@
 
 
 4. Camera
-    -change to background
-    -replace with camera 2
+    +change to background
+    ?replace with camera 2
+
+    -camera 2
+        +show active preview screen
+        +full screen
+        +check user's permission
+        +remove memory leak
+        -analyze data from preview
+            -image reader replace
+                -allocation
+
+
+    +camera
+     +normal thread handling
+        +open camera without lags
+            +surface changed put to the thread
+        +check permission
+     +different device
+        +5.0 ok
+        +6.0 ok
+        +7.0 increase nums of skipped frames, sometimes SIGSEGV error
+        +8.0 autofocus issues, increase frames skipping, permissions
+
+        +inventory list camera
+        -flashlight button
+
+
 
 6. Navigation
     +back button
     +toolbar back button
-    -long click
-    -daren place click to close
+    +daren place click to close
 
 7. Design
-    -grid layout
-
-    -adapt for all phones
+    +-adapt for all phones
 
     +basic colors
 
     +plan main design
 
-    -create design to the working field
+    +create design to the working field
 
     -animation
 
     -Visual effects
         -animation
-        -darken
+        +darken
+
+        +start from login layout check all the conditions
+
+        +design
+
+            +login page
+                +toolbar
+                +ripple button
+                +edit text expand with pics and borders
+                +visible/invisible passwd
+
+            +main menu
+                + drawable buttons colorful (menu buttons or usual)
+                ?elevation
+                +title
+                +custom toolbar
+                +title icons with layout
+            +params select
+                +spinner color old style
+                +separators
+                +toolbar
+                +items ion toolbar
+                +menu icons
+                +menu ripple bg
+                +menu all screen dimming
+                +spinner auto complete
+                +holo styled spinner underline
+                ?internal edit text padding
+                ?replace text views with label
+
+            +profile
+                +layer all gradient bg
+                +create drawable list on list pic
+                +down arrow
+                +place tv and labels
+                +place person's icon
+                ?checkbox style
+                - ?cleaning  user's address when inventory is on the board?
+
+            +inventory list
+                +bottom bar color
+                +icon white bg
+                +size btmbar
+                +toolbar size and view
+                +tab padding and color
+                +search icon
+                +cardview style
+                +cardView on press ripple
+                +"check" arrow
+                +buttom bar onPress white ripple
+                ?tab separator
+                ?sroll color
+                ?search edit text
+
+            +inventory item
+                +toolbar with gradient
+                +toolbar items color
+                +text views with labels
+                +unpack attributes
+                +disable label when no info
+
+            +dialogs
+                +text color
+                +item for each
+                +drawables
+                +exit inventory dialog
+                +found dialog
+                +not_found dialog
+                + alert and other_room dialog
+                dialog choose the action
 
 8. AsyncTask
     +make abstract parent
@@ -66,3 +159,4 @@
         -put sorted data to scanned list
         -sort search for everyone
     -get allEquipments from sqLite
+    -all in bg (inventory list for sure)

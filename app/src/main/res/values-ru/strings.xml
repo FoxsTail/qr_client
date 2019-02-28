@@ -101,4 +101,12 @@
     <string name="restore_previous_session">Восстановить предыдущую сессию</string>
     <string name="send_file_to_server">Отправить данные на сервер</string>
     <string name="workplace">Должность</string>
+    <string name="no">Нет</string>
+    <string name="scan_canceled">Сканирование отменено</string>
+    <string name="scan_message">Расположите QR-код в середине квадрата</string>
+    <string name="show_full_info">Показать полную інформацию по оборудованию?</string>
+    <string name="stay">Остаться</string>
+    <string name="turn_off_flashlight">Выключить вспышку</string>
+    <string name="turn_on_flashlight">Включить вспышку</string>
+    <string name="yes">Да</string>
 </resources>

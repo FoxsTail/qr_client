@@ -190,7 +190,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
     //--------Spinners stuff----------//
 
 
-    /*Handler callback*/
+    /*Handler showDialogHandler*/
 
     private Handler.Callback handlerCallback = new Handler.Callback() {
         @Override

@@ -32,13 +32,6 @@
     + data in profile
     - password field cancel the enter in password
 
-//-------no need--------
-2. Sing up
-    -Activity + xml
-    -Validation at client (correctness)
-    -Sing up api
-    -on success login page
-//---------------
 
 3. Profile
     + simple xml
@@ -51,15 +44,7 @@
         - Phone numbers
         + Address
 
-                //---Changer---
 
-                -For profile data changer
-
-                - Change button (same page   vs   page with edit text instead of textView)
-                - validate
-                - change api
-                - load to local db
-                - reload page, show result
 
         +google design
 
@@ -111,13 +96,10 @@
             + show dialog with analyze result
 
 
-        + Long press
+        + Press
             +shows context menu with item "full info"
                 +on full item check if there any equipment with the following inventory_number
                 +on not found show notification
-                +on success show page with vector pic
-                    -load pics to resources folder
-                    -select pic by type
                 +show detail about the equipment
 
 
@@ -131,3 +113,23 @@
 
     ? think about session saving button (save and continue later) ?
 
+
+
+//-------no need--------
+2. Sing up
+    -Activity + xml
+    -Validation at client (correctness)
+    -Sing up api
+    -on success login page
+
+
+       //---Changer---
+
+                    -For profile data changer
+
+                    - Change button (same page   vs   page with edit text instead of textView)
+                    - validate
+                    - change api
+                    - load to local db
+                    - reload page, show result
+//---------------

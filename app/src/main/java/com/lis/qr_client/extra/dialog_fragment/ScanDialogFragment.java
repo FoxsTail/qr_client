@@ -56,7 +56,7 @@ public class ScanDialogFragment extends android.support.v4.app.DialogFragment {
         super.onStart();
         log.info("-----Start dialog-----");
         final TextView textView = getDialog().findViewById(android.R.id.message);
-        textView.setTextSize(18);
+        textView.setTextSize(16);
 
         textView.setGravity(Gravity.CENTER_VERTICAL);
         textView.setPadding(90,textView.getPaddingTop(),textView.getPaddingRight(),0);
