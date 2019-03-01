@@ -165,23 +165,12 @@ public class InventoryListActivity extends BaseActivity {
     }
 
     //-----------Menu------------//
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
+                log.info("home up pressed");
                 onBackPressed();
-                return true;
-            }
-            case R.id.menu_restore_page: {
-
-                /*clean user's shared preferences (or all preferences?)*/
-                PreferenceUtility.removeLoginPreferences(this, MyPreferences.PREFERENCE_SAVE_USER,
-                        MyPreferences.PREFERENCE_IS_USER_SAVED);
-
-                /*launch welcome page*/
-                Intent intent = new Intent(this, WelcomeActivity.class);
-                startActivity(intent);
             }
         }
         return super.onOptionsItemSelected(item);
@@ -422,15 +411,23 @@ public class InventoryListActivity extends BaseActivity {
             viewPager.setAdapter(sliderAdapter);
 
 
+            try {
+
             /*get list to scan and already scanned lists*/
-            toScanFragment = (InventoryFragment) sliderAdapter.getFragmentByTitle(titleToScan);
-            toScanEquipments = toScanFragment.getAdapter().getInventories();
-            resultFragment = (InventoryFragment) sliderAdapter.getFragmentByTitle(titleResult);
-            scannedEquipments = resultFragment.getAdapter().getInventories();
+                toScanFragment = (InventoryFragment) sliderAdapter.getFragmentByTitle(titleToScan);
+                toScanEquipments = toScanFragment.getAdapter().getInventories();
+                resultFragment = (InventoryFragment) sliderAdapter.getFragmentByTitle(titleResult);
+                scannedEquipments = resultFragment.getAdapter().getInventories();
 
 
-            Toast.makeText(QrApplication.getInstance(), getString(R.string.done_all), Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(QrApplication.getInstance(), getString(R.string.done_all), Toast.LENGTH_SHORT).show();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                Toast.makeText(QrApplication.getInstance(), getString(R.string.load_error_try_again),
+                        Toast.LENGTH_SHORT).show();
+                log.info("NullPointer, some error occurred: " + e.getStackTrace());
+                activity.finish();
+            }
 /*
             btnScanInventory.setEnabled(true);
 */
@@ -483,9 +480,17 @@ public class InventoryListActivity extends BaseActivity {
             switch (v.getId()) {
                 case R.id.layout_home: {
                     log.info("Inventory list --- home button pressed");
+
                     Intent intent = new Intent(QrApplication.getInstance(), MainMenuActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(ScanDialogFragment.ARG_INTENT, intent);
+
+                    ExitDialogFragment exitDialogFragment = new ExitDialogFragment();
+                    exitDialogFragment.callDialog(getSupportFragmentManager(), bundle, getString(R.string.quit_to_the_main_msg),
+                            getString(R.string.exit), R.drawable.ic_escape_inventory, "exit");
+
                     break;
                 }
                 case R.id.layout_scan: {
@@ -622,6 +627,11 @@ public class InventoryListActivity extends BaseActivity {
                 if (scannedEquipments != null) {
                     PreferenceUtility.savePreference(context, preferenceFileName,
                             MyPreferences.PREFERENCE_SCANNED_LIST, scannedEquipments);
+                }
+
+                if (room_number != null) {
+                    PreferenceUtility.savePreference(context, preferenceFileName,
+                            MyPreferences.ROOM_ID_PREFERENCES, room_number);
                 }
             }
         }).start();

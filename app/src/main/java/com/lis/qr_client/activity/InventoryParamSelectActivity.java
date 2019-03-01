@@ -139,6 +139,19 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
             }
             case R.id.menu_restore_page: {
                 log.info("Restoring page...");
+
+                boolean is_saved_session=PreferenceUtility.loadBooleanPreference(QrApplication.getInstance(),
+                        MyPreferences.PREFERENCE_FILE_NAME, MyPreferences.PREFERENCE_INVENTORY_STATE_BOOLEAN);
+
+                if(is_saved_session) {
+                    /*ok, load old session*/
+                    Intent intent = new Intent(QrApplication.getInstance(), InventoryListActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }else{
+                    /*nope, show alert*/
+                    Toast.makeText(QrApplication.getInstance(), "Nope, no previous session", Toast.LENGTH_SHORT).show();
+                }
                 break;
             }
         }
@@ -166,11 +179,7 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
                 if (url != null) {
 
                 /*remove previous session data*/
-                    PreferenceUtility.removeOldPreferences(QrApplication.getInstance(),
-                            MyPreferences.PREFERENCE_FILE_NAME,
-                            MyPreferences.PREFERENCE_INVENTORY_STATE_BOOLEAN,
-                            MyPreferences.PREFERENCE_TO_SCAN_LIST,
-                            MyPreferences.PREFERENCE_SCANNED_LIST);
+                    PreferenceUtility.removeOldInventorySessionData();
 
                     AsyncMultiDbManager asyncMultiDbManager = new AsyncMultiDbManager
                             (QrApplication.getInstance(), null, null, null, true,
@@ -227,11 +236,12 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
 
         if (selection > 0) {
 
-        /*get item_id from spinner by it's value*/
+       // get item_id from spinner by it's value
             int spinner_position = spinner_array.indexOf(addresses.get(selection));
+            log.info("---Spinner position is---"+spinner_position);
 
-        /*set selection*/
-            auto_tv.setSelection(spinner_position);
+       /* set selection
+            auto_tv.setSelection(spinner_position);*/
         }
         log.info("---Set spinner listener---");
         auto_tv.setOnClickListener(new View.OnClickListener() {
@@ -275,6 +285,8 @@ public class InventoryParamSelectActivity extends AppCompatActivity {
                     int saved_address = PreferenceUtility.loadIntPreference
                             (QrApplication.getInstance(), MyPreferences.PREFERENCE_FILE_NAME,
                                     MyPreferences.ADDRESS_ID_PREFERENCES);
+
+
                     log.info("---pref is " + saved_address + "---");
 
 

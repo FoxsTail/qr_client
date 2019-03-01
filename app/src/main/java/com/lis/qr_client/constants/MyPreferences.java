@@ -23,6 +23,7 @@ public class MyPreferences {
     public static final String PREFERENCE_ID_USER = "id_user";
     public static final String PREFERENCE_IS_USER_SAVED = "is_user_saved";
     public static final String ADDRESS_ID_PREFERENCES = "address_id";
+    public static final String ADDRESS_NAME_PREFERENCES = "address_name";
     public static final String ROOM_ID_PREFERENCES = "room";
     public static final String PREFERENCE_INVENTORY_STATE_BOOLEAN = "inventory_state";
     public static final String PREFERENCE_TO_SCAN_LIST = "to_scan_list";

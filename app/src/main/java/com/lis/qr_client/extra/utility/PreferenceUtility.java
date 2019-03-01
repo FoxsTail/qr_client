@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.pojo.User;
 import lombok.extern.java.Log;
@@ -21,6 +22,17 @@ import static android.content.Context.MODE_PRIVATE;
 @Log
 public class PreferenceUtility {
 
+
+    /** remove previous inventory session data*/
+
+    public static void removeOldInventorySessionData(){
+        /*remove previous session data*/
+        PreferenceUtility.removeOldPreferences(QrApplication.getInstance(),
+                MyPreferences.PREFERENCE_FILE_NAME,
+                MyPreferences.PREFERENCE_INVENTORY_STATE_BOOLEAN,
+                MyPreferences.PREFERENCE_TO_SCAN_LIST,
+                MyPreferences.PREFERENCE_SCANNED_LIST);
+    }
 
     /**
      * remove data from preferences

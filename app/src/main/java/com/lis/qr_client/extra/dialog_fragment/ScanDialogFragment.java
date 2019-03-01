@@ -17,6 +17,8 @@ public class ScanDialogFragment extends android.support.v4.app.DialogFragment {
     public static final String ARG_TITLE = "ScanDialogFragment.Title";
     public static final String ARG_MESSAGE = "ScanDialogFragment.Message";
     public static final String ARG_ICON = "ScanDialogFragment.Icon";
+    public static final String ARG_INTENT= "ScanDialogFragment.Intent";
+
     protected AlertDialog.Builder builder;
 
     @Override

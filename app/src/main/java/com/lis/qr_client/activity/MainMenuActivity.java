@@ -157,10 +157,15 @@ public class MainMenuActivity extends AppCompatActivity {
                 case R.id.btnScanQR: {
                     Intent intent = new Intent(QrApplication.getInstance(), CameraActivity.class);
                     startActivityForResult(intent, REQUEST_SCAN_QR);
+                    break;
                 }
 
                 case R.id.img_btn_info: {
                     log.info("Getting the information...");
+                    ScanDialogFragment dialogFragment = new ScanDialogFragment();
+                    dialogFragment.callDialog(getSupportFragmentManager(), new Bundle(),
+                                    getString(R.string.plain_info), getString(R.string.info), R.drawable.ic_info,
+                            "info");
                     break;
                 }
                 case R.id.img_btn_log_out: {

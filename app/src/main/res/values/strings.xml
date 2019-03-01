@@ -63,6 +63,7 @@
     <string name="to_scan">Сканувати</string>
     <string name="done_loading">Завантяження завершене</string>
     <string name="done_all">Все завантажено</string>
+    <string name="quit_to_the_main_msg">Вийти на головну сторінку?</string>
     <string name="quit_room_msg">Вийти з кімнати?</string>
     <string name="serial_number">Серійний номер</string>
     <string name="additional_params">Додаткові параметры</string>
@@ -71,9 +72,9 @@
 
 
     <string name="room_number">Кімната №</string>
-    <string name="equipment_already_scanned">Обладнання с номером %1$s вжe сканувалося</string>
+    <string name="equipment_already_scanned">Обладнання з номером %1$s вжe сканувалося</string>
     <string name="equipment_in_the_other_room">Обладнання знайдено в інший кімнаті</string>
-    <string name="equipment_not_found">Обладнання не знайдено!</string>
+    <string name="equipment_not_found">Обладнання з номером не знайдено!</string>
     <string name="log_in">Вхід</string>
     <string name="sign_up">Реєстрація</string>
     <!--    <string name="email_example" translatable="false">example@gmail.com</string>
@@ -119,5 +120,11 @@
     <string name="turn_on_flashlight">Увімкнути спалах</string>
     <string name="scan_canceled">Сканування відмінено</string>
     <string name="no_permission_for_camera_use">Немає дозволу на використання камери!</string>
+    <string name="info">Інформація</string>
+    <string name="plain_info">Вітаємо у додатку PFU Inventory!
+        \nТут буде розташована інформація та відповіді на
+        запитання. \nПриємного користування!
+    </string>
+    <string name="load_error_try_again">Помилка при завантаженні сторінки. Спробуйте ще раз.</string>
 
 </resources>

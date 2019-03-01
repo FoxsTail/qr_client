@@ -9,6 +9,7 @@ import com.lis.qr_client.application.QrApplication;
 import com.lis.qr_client.constants.MyBundle;
 import com.lis.qr_client.constants.MyPreferences;
 import com.lis.qr_client.extra.utility.ObjectUtility;
+import com.lis.qr_client.extra.utility.PreferenceUtility;
 import com.lis.qr_client.pojo.UniversalSerializablePojo;
 import lombok.extern.java.Log;
 
@@ -60,8 +61,9 @@ public class FinishInventoryDialogFragment extends ScanDialogFragment {
                             null);
                     Toast.makeText(QrApplication.getInstance(), getString(R.string.saved), Toast.LENGTH_SHORT).show();
                     getActivity().finish();
+                    PreferenceUtility.removeOldInventorySessionData();
+                    break;
                 }
-                break;
                 case Dialog.BUTTON_NEGATIVE: {
                     dismiss();
                 }

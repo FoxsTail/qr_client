@@ -87,6 +87,8 @@ public class CameraActivity extends AppCompatActivity {
 
         if (permissionsGranted) {
 
+            releaseCameraAndPreview();
+
         /*prepare thread*/
             if (cameraHandlerThread == null) {
                 cameraHandlerThread = new CameraHandlerThread("CameraHandlerThread");
@@ -108,6 +110,12 @@ public class CameraActivity extends AppCompatActivity {
         super.onPause();
         d(TAG, "---OnPause-----");
         releaseCameraAndPreview();
+
+        /*remove surface*/
+        surface.release();
+        surfaceHolder = null;
+
+        previewCallback = null;
 
         if (cameraHandlerThread != null) {
             cameraHandlerThread.stopCameraThread();
@@ -145,20 +153,36 @@ public class CameraActivity extends AppCompatActivity {
             }
         }
 
+        public void openCameraOnSurfaceCreated(){
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    surface = surfaceHolder.getSurface();
+                    if (surface == null) {
+                        // preview surface does not exist
+                        log.info("preview surface does not exist");
+                        return;
+                    }
+
+                    /*when surface is ready open camera*/
+                    mCamera = safeCameraOpen(CAMERA_ID);
+                }
+            });
+
+        }
+
         public void setupOnSurfaceChanged(final SurfaceHolder surfaceHolder) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
                     log.info("runnable surface changed Current thread is: " + Thread.currentThread());
-                    surface = surfaceHolder.getSurface();
-                    if (surface == null) {
-                        // preview surface does not exist
+
+                    if (mCamera == null) {
+                        log.info("camera is null");
                         return;
                     }
 
-                    /*when surface is ready open camera*/
-                    safeCameraOpen(CAMERA_ID);
-
+                    log.info("stop preview");
 
                     try {
                         mCamera.stopPreview();
@@ -167,23 +191,30 @@ public class CameraActivity extends AppCompatActivity {
                     }
 
                     try {
+                        log.info("set display");
+
                         mCamera.setDisplayOrientation(90);
                         mCamera.setPreviewDisplay(surfaceHolder);
 
                          /*
                          get the pic size for setting the buffer size
                           */
+                        log.info("set preview size");
+
                         Camera.Size previewSize = mCamera.getParameters().getPreviewSize();
                         int dataBufferSize = (int) (previewSize.height * previewSize.width *
                                 (ImageFormat.getBitsPerPixel(mCamera.getParameters().getPreviewFormat()) / 8.0));
                         mCamera.addCallbackBuffer(new byte[dataBufferSize]);
 
-
+                        log.info("set preview and start");
                         mCamera.setPreviewCallbackWithBuffer(previewCallback);
                         mCamera.startPreview();
                         previewing = true;
 
+
                         /*setup autofocus*/
+                        log.info("autofocus");
+
                         Camera.Parameters parameters = mCamera.getParameters();
                         List<String> focus_modes = parameters.getSupportedFocusModes();
                         if (focus_modes != null && focus_modes.contains(Camera.Parameters.FLASH_MODE_AUTO)) ;
@@ -214,37 +245,33 @@ public class CameraActivity extends AppCompatActivity {
     * thread camera open which init instance of cameraHandlerThread and runs openCamera method.
     * */
 
-    private void safeCameraOpen(int id) {
+    private Camera safeCameraOpen(int id) {
         d(TAG, "---Safe camera Open-----");
         log.info("Current thread is: " + Thread.currentThread());
 
         try {
-            releaseCameraAndPreview();
-
             d(TAG, "---Open camera----");
-            mCamera = Camera.open(id);
-        } catch (Exception e) {
+            return Camera.open(id);
+        } catch (Throwable e) {
             d(TAG, "failed to open Camera");
             e.printStackTrace();
             finish();
         }
+
+        return null;
     }
+
 
     private void releaseCameraAndPreview() {
         // mPreview.setCamera(null);
         d(TAG, "---Release Camera-----");
         if (mCamera != null) {
-            previewing = false;
-            mCamera.setPreviewCallbackWithBuffer(null);
             try {
                 mCamera.stopPreview();
             } catch (Exception e) {
-
             }
-            /*release surface*/
-            if (surface != null) {
-                surface.release();
-            }
+            //mCamera.setPreviewCallbackWithBuffer(null);
+            previewing = false;
 
             mCamera.release();
             mCamera = null;
@@ -257,6 +284,7 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         public void surfaceCreated(SurfaceHolder surfaceHolder) {
             d(TAG, "---Surface Created-----");
+            cameraHandlerThread.openCameraOnSurfaceCreated();
 
         }
 
@@ -319,7 +347,7 @@ public class CameraActivity extends AppCompatActivity {
             * Sometimes it works, sometimes no, idk how to fix this shit
             * */
 
-            if (skipFirstPreviewFrame < 6) {
+            if (skipFirstPreviewFrame < 10) {
                 skipFirstPreviewFrame++;
                 /*return data to user to use the same buffer*/
                 mCamera.addCallbackBuffer(data);

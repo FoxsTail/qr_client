@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TextView;
@@ -14,16 +15,23 @@ import lombok.extern.java.Log;
 
 @Log
 public class ExitDialogFragment extends ScanDialogFragment {
+    private Intent intent;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
 
         log.info("Exit on createDialog");
 
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            intent = bundle.getParcelable(ARG_INTENT);
+        }
+
         builder.setPositiveButton(getString(R.string.no), dialogListener);
         builder.setNegativeButton(getString(R.string.yes), dialogListener);
 
-         return builder.create();
+        return builder.create();
 
     }
 
@@ -37,14 +45,21 @@ public class ExitDialogFragment extends ScanDialogFragment {
                 case Dialog.BUTTON_POSITIVE: {
                     /*stay*/
                     Toast.makeText(getActivity(), getString(R.string.stay), Toast.LENGTH_SHORT).show();
+                    break;
                 }
-                break;
                 case Dialog.BUTTON_NEGATIVE: {
                     /*go away*/
                     dismiss();
-                    getActivity().finish();
+                    if (intent != null) {
+                                   log.info("Have intent. Go to activity...");
+                        startActivity(intent);
+                    } else {
+                        log.info("No intent. Finish activity...");
+
+                        getActivity().finish();
+                    }
+                    break;
                 }
-                break;
             }
         }
     };
